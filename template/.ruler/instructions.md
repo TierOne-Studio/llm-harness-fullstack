@@ -120,6 +120,7 @@ These skills MUST fire when their condition holds, even if the prompt didn't sur
 | `plan-mode` | 3+ steps OR multi-file OR architectural OR debugging-with-uncertain-root-cause. |
 | `cross-repo-workspace` | Session has access to two or more repos (primary cwd is one, others in Additional working directories). |
 | `react-patterns` | Frontend change touching components, hooks, or rendering (`apps/web`). |
+| `react-state-management` | Frontend change that reads, writes, or stores data the component didn't compute itself — server responses, `fetch`/`useEffect` data loads, or any new `useState`/`useReducer`/store/context holding shared or fetched data (`apps/web`). Server data lives in the server-cache layer, never `useState`. |
 | `accessibility` | Frontend change touching UI markup or interactive elements. |
 | `async-error-handling` | Any change adding/modifying async code (`await`, `Promise.*`, external I/O) on either tier. |
 | `database-transactions` | Backend change with a multi-statement DB write (across rows or tables). |
