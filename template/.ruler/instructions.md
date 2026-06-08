@@ -298,6 +298,7 @@ Situation → skill lookup. (Skill bodies are the canonical source; this is the 
 | Cleaning up recently-modified code | `code-simplifier` |
 | Function getting branch-heavy or nested | `cyclomatic-complexity` |
 | Auditing the skill library itself | `meta-skill-hygiene` |
+| Setting up CI / pre-commit / the merge quality gate (typecheck·lint·test·e2e) | `quality-gates` |
 | Async work — Promise composition, AbortSignal, where to catch | `async-error-handling` |
 | Non-trivial TS generics / conditional / mapped types | `typescript-advanced-types` |
 | Hot-path runtime perf (tight loops, large datasets, high-frequency events) | `js-performance-patterns` |

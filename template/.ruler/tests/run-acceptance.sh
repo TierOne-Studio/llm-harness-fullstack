@@ -45,7 +45,7 @@ assert_true() {
 SKILL_LIST="async-error-handling bug-investigation code-simplifier cross-repo-workspace \
 cyclomatic-complexity decision-rules design-review documentation-and-adrs \
 failure-mode-analysis git-workflow js-performance-patterns meta-skill-hygiene plan-mode \
-pushback-templates repo-conventions rlm-explore tdd-workflow typescript-advanced-types \
+pushback-templates quality-gates repo-conventions rlm-explore tdd-workflow typescript-advanced-types \
 \
 accessibility ai-ui-patterns bundle-size compound-pattern frontend-security hoc-pattern \
 hooks-pattern mixin-pattern module-pattern playwright-best-practices \

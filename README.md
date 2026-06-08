@@ -44,7 +44,8 @@ npx ruler apply
 │   └── lessons-curator.md
 └── skills/                # guides — the union of both stacks:
                            #   process: tdd-workflow, design-review, plan-mode, bug-investigation,
-                           #            failure-mode-analysis, decision-rules, repo-conventions, …
+                           #            failure-mode-analysis, decision-rules, repo-conventions,
+                           #            quality-gates, …
                            #   frontend: react-patterns, react-state-management, react-routing,
                            #            react-data-fetching, react-forms, accessibility,
                            #            frontend-security, vite, vitest, shadcn, tailwind-v4-shadcn, …
@@ -56,6 +57,13 @@ npx ruler apply
 The `repo-conventions` skill ships as a fill-in skeleton covering **both** tiers (frontend
 feature layout / state / routing / auth, backend module layout / authz / persistence) **plus**
 the shared-contract seam — fill it in with your project's actual choices.
+
+The `quality-gates` skill ships ready-to-copy CI + pre-commit templates (`templates/ci.yml`,
+`templates/pre-commit`) so the practices the skills *teach* become a gate the toolchain
+*enforces*: typecheck, lint, unit tests, and the Playwright FE↔BE seam run on every PR and
+block a red merge. Skills and review agents steer the model *before* it acts; the gate is the
+deterministic backstop that catches what advice doesn't. Copy them into `.github/workflows/`
+and `.husky/` to turn that guidance into enforcement.
 
 ## Commands
 

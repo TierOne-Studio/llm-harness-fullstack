@@ -273,6 +273,12 @@ run_case "pushback" \
   "pushback-templates,decision-rules"
 
 echo
+echo "--- Case: CI / pre-commit quality gate"
+run_case "quality-gate" \
+  "set up the CI pipeline and pre-commit hooks to run typecheck lint and tests on every pull request" \
+  "quality-gates"
+
+echo
 echo "--- Case: unfamiliar codebase"
 run_case "rlm" \
   "I'm new to this repo — help me understand the chat feature's architecture" \
