@@ -78,6 +78,21 @@ CLAUDE.md does NOT enumerate ADRs, file paths, or code symbols — see `document
 
 ## P3 — CODE-CHANGE DEFAULTS
 
+### P3.0 Tier routing — select skills by tier (no cross-tier redundancy)
+
+The frontend and backend live in ONE repo, so the FIRST step of any code task is to identify **which workspace(s) the change touches**, then load ONLY the matching stack skills. Pulling the other tier's stack skills into a single-tier task is redundant context — don't do it.
+
+| Change touches | Load the stack skills for… | Do NOT load |
+|---|---|---|
+| `apps/web` (frontend) | **Frontend** (Skill Pointers § Frontend) | the Backend skills (`nestjs-*`, `nodejs-best-practices`, `database-transactions`, `db-write-protocol`) |
+| `apps/api` (backend) | **Backend** (Skill Pointers § Backend) | the Frontend skills (`react-*`, `accessibility`, `frontend-security`, `vite`/`vitest`/`shadcn`/`tailwind-v4-shadcn`, `bundle-size`, `ai-ui-patterns`, the React design-pattern skills) |
+| `packages/contracts` (shared types) | the contract seam (`repo-conventions` § 17) + whichever consuming tier you also edit | — |
+| a cross-tier vertical slice (contract + API + UI) | BOTH tier sets + the contract seam | — |
+
+The **Shared / process skills always apply on any tier** — they are stack-neutral and are never "the other tier's skills": `tdd-workflow`, `repo-conventions`, `plan-mode`, `design-review`, `failure-mode-analysis`, `decision-rules`, `bug-investigation`, `rlm-explore`, `code-simplifier`, `cyclomatic-complexity`, `documentation-and-adrs`, `git-workflow`, `pushback-templates`, `meta-skill-hygiene`, `async-error-handling`, `typescript-advanced-types`, `js-performance-patterns`, `cross-repo-workspace`.
+
+The review subagents (P4) apply this SAME routing: each reads only the lens(es) matching the tier(s) the diff touches (Frontend / Backend / Shared-contract), never both stacks for a single-tier diff.
+
 ### P3.1 TDD applies to every executable-code change
 
 Use `tdd-workflow`. Failing test first, minimal implementation, run the relevant suite, mini self-review. On a fullstack change, the failing test lives on the tier you're changing (a Vitest/Testing-Library test for `apps/web`, a Jest/Nest test for `apps/api`, a Playwright test for the seam). Either follow TDD or include exactly one of the four valid waiver phrases (`tdd-workflow` § Waivers): `TDD waived — non-code change.` / `TDD waived — type-only.` / `TDD waived — config change with no behavior impact.` / `TDD waived — ADR-only change.`
@@ -264,10 +279,11 @@ In addition, the response MUST end with a `Skills consulted:` line listing every
 
 ## SKILL POINTERS
 
-Situation → skill lookup. (Skill bodies are the canonical source; this is the fastest-path index.)
+Situation → skill lookup. (Skill bodies are the canonical source; this is the fastest-path index.) Grouped by tier per **P3.0**: the Shared rows apply on any tier; load the Frontend rows ONLY for `apps/web` changes and the Backend rows ONLY for `apps/api` changes.
 
 | Situation | Skill |
 |---|---|
+| _**▸ Shared / process — apply on ANY tier**_ | |
 | Implementing/fixing/refactoring code | `tdd-workflow` + `repo-conventions` (force-fire) |
 | Designing the change before writing it | `plan-mode` |
 | Listing edge cases before the failing test | `failure-mode-analysis` |
@@ -285,6 +301,7 @@ Situation → skill lookup. (Skill bodies are the canonical source; this is the 
 | Non-trivial TS generics / conditional / mapped types | `typescript-advanced-types` |
 | Hot-path runtime perf (tight loops, large datasets, high-frequency events) | `js-performance-patterns` |
 | Workspace with two or more repos | `cross-repo-workspace` |
+| _**▸ Frontend (`apps/web`) — load ONLY for frontend changes**_ | |
 | **Frontend** — components, hooks, lifting state, refs, lists | `react-patterns` |
 | Where frontend state lives — local / lifted / context / store / cache | `react-state-management` |
 | Server data — fetching, caching, invalidation, optimistic updates | `react-data-fetching` |
@@ -297,10 +314,12 @@ Situation → skill lookup. (Skill bodies are the canonical source; this is the 
 | Bundle audit, tree-shaking, lazy routes, dep additions | `bundle-size` |
 | Vite config / build optimization | `vite` |
 | Vitest config and feature-by-feature test API | `vitest` |
-| Tailwind 4 + shadcn integration / shadcn primitive patterns | `tailwind-v4-shadcn` / `shadcn` |
+| Tailwind v4 + shadcn project setup / theming / CSS-variable architecture / dark mode | `tailwind-v4-shadcn` |
+| shadcn day-to-day — add/search components, composition rules, semantic colors | `shadcn` |
 | Streaming/chat AI UIs | `ai-ui-patterns` |
 | Modern React composition idioms | `react-composition-2026` (+ `react-2026` for the broader stack tour) |
 | Frontend design patterns — custom hooks, HOCs, render-props, providers, compound, presentational/container, modules, mixins, proxies | `hooks-pattern` / `hoc-pattern` / `render-props-pattern` / `provider-pattern` / `compound-pattern` / `presentational-container-pattern` / `module-pattern` / `mixin-pattern` / `proxy-pattern` |
+| _**▸ Backend (`apps/api`) — load ONLY for backend changes**_ | |
 | **Backend** — comprehensive NestJS rules (40 rules: arch, DI, security, perf, testing) | `nestjs-best-practices` |
 | NestJS tactical patterns — providers (factory/dynamic-modules/scopes), cross-cutting (Guard/Pipe/Interceptor/Middleware), mixins | `nestjs-patterns` (index → `patterns/<name>.md`) |
 | Designing/reviewing a new domain module (clean architecture, dependency rule) | `nestjs-clean-architecture` |
