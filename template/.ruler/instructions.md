@@ -157,7 +157,7 @@ MUST address every HIGH/CRITICAL issue before declaring done. A BLOCK from any r
 
 ### P5.1 Memory consult — read FIRST
 
-Before any code change, MUST consult the auto-memory system — read the `MEMORY.md` index (loaded at session start) and any linked `feedback`-type memories for the area being changed. Past corrections live there; ignoring them re-creates resolved problems. The `lessons-curator` skill describes the memory layout and survey procedure.
+Before any code change, MUST consult the auto-memory system — read the `MEMORY.md` index (loaded at session start) and any linked `feedback`-type memories for the area being changed. Past corrections live there; ignoring them re-creates resolved problems. The `lessons-curator` subagent describes the memory layout and survey procedure.
 
 ### P5.2 Scope discipline
 
@@ -209,7 +209,7 @@ When you disagree with the user's framing, see a simpler in-scope alternative, s
 
 Signals: `"no, that's wrong"`, `"you should have"`, `"we discussed this"`, `"stop doing X"`, `"next time"`, `"don't do that"`. When the user issues a correction, the IMMEDIATE next response MUST:
 
-1. Write a `feedback`-type memory entry per the auto-memory system (rule + **Why** + **How to apply**) and add a one-line entry to the memory index. The `lessons-curator` skill carries the file-layout details. Save unconditionally — even when the correction feels minor.
+1. Write a `feedback`-type memory entry per the auto-memory system (rule + **Why** + **How to apply**) and add a one-line entry to the memory index. The `lessons-curator` subagent carries the file-layout details. Save unconditionally — even when the correction feels minor.
 2. Output the literal line: `Lesson captured to memory. Want lessons-curator to refine it? (reply 'yes' / 'curate that' / 'skip')`
 
 `lessons-curator` (read-only) then proposes ONE concrete change (skill / CLAUDE.md / settings.json) for approval. It does not write files. Memory is the durable record; curator is optional refinement.
