@@ -40,12 +40,17 @@ assert_true() {
   fi
 }
 
+# agent_has_tool <agent-file> <Tool> — true if the YAML frontmatter grants <Tool>.
+agent_has_tool() {
+  awk '/^---$/{c++; next} c==1' "$1" | grep -qE "^[[:space:]]*-[[:space:]]+$2[[:space:]]*$"
+}
+
 # The canonical skills shipped by this fullstack harness (union of both stacks).
 # Process / shared:
 SKILL_LIST="async-error-handling bug-investigation code-simplifier cross-repo-workspace \
 cyclomatic-complexity decision-rules design-review documentation-and-adrs \
 failure-mode-analysis git-workflow js-performance-patterns meta-skill-hygiene plan-mode \
-pushback-templates quality-gates repo-conventions rlm-explore tdd-workflow typescript-advanced-types \
+pushback-templates quality-gates repo-conventions rlm-explore spec-workflow tdd-workflow typescript-advanced-types \
 \
 accessibility ai-ui-patterns bundle-size compound-pattern frontend-security hoc-pattern \
 hooks-pattern mixin-pattern module-pattern playwright-best-practices \
@@ -57,7 +62,7 @@ render-props-pattern shadcn tailwind-v4-shadcn vite vitest \
 database-transactions db-write-protocol nestjs-best-practices nestjs-clean-architecture \
 nestjs-patterns nodejs-best-practices"
 
-AGENT_LIST="architect-reviewer code-reviewer qa-validator security-reviewer lessons-curator"
+AGENT_LIST="architect-reviewer code-reviewer qa-validator security-reviewer lessons-curator acceptance-verifier spec-steward"
 
 # ---------------------------------------------------------------------------
 echo "=== T1: Structure — instructions, ruler config, every skill + agent present ==="
@@ -178,7 +183,7 @@ echo
 echo "=== T8: Skill-pointer cross-reference integrity (named skills exist) ==="
 for s in tdd-workflow design-review plan-mode repo-conventions react-patterns \
          react-state-management react-routing frontend-security nestjs-best-practices \
-         nestjs-clean-architecture nestjs-patterns database-transactions decision-rules; do
+         nestjs-clean-architecture nestjs-patterns database-transactions decision-rules spec-workflow; do
   assert_true "T8: instructions.md references '$s' AND its skill dir exists" \
     "grep -q '$s' '$INSTRUCTIONS' && test -d '$SKILLS/$s'"
 done
@@ -187,6 +192,17 @@ done
 echo
 echo "=== T9: No stray dev artifacts in the shipped template ==="
 assert_true "T9: no *.bak files under .ruler/" "[ \$(find '$RULER_DIR' -name '*.bak' | wc -l) -eq 0 ]"
+
+# ---------------------------------------------------------------------------
+echo
+echo "=== T10: Write-scope — spec-steward is the ONLY Edit/Write agent (no-leak guard) ==="
+assert_true "T10: spec-steward has Edit" "agent_has_tool '$AGENTS/spec-steward.md' Edit"
+assert_true "T10: spec-steward has Write" "agent_has_tool '$AGENTS/spec-steward.md' Write"
+for a in $AGENT_LIST; do
+  [ "$a" = "spec-steward" ] && continue
+  assert_true "T10: '$a' has NO Edit (read-only sensor)" "! agent_has_tool '$AGENTS/$a.md' Edit"
+  assert_true "T10: '$a' has NO Write (read-only sensor)" "! agent_has_tool '$AGENTS/$a.md' Write"
+done
 
 # ---------------------------------------------------------------------------
 echo
