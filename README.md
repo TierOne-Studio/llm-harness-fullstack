@@ -24,11 +24,17 @@ npx @tierone/llm-harness-fullstack init
 npx @tierone/llm-harness-fullstack update
 ```
 
-Then regenerate your agent config:
+Then regenerate your agent config with [ruler](https://github.com/intellectronica/ruler).
+Use the **scoped** package name — the bare `ruler` on npm is an unrelated package with no
+executable, so plain `npx ruler apply` fails with *"could not determine executable to run"*:
 
 ```bash
-npx ruler apply
+npx @intellectronica/ruler apply
 ```
+
+> **Tip:** to keep typing the short `ruler` command, add it to your project once —
+> `npm i -D @intellectronica/ruler` — after which `npx ruler apply` resolves to the
+> local binary instead of the unrelated public package.
 
 ## What you get
 
