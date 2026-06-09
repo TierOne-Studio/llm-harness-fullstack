@@ -42,7 +42,7 @@ function parse(argv) {
 function runInit(args) {
   const res = init({ cwd: args.cwd, force: args.force });
   console.log(`✓ Installed ${res.package}@${res.version} → ${res.rulerDir}`);
-  console.log(`  ${res.fileCount} files. Run \`ruler apply\` to generate agent config.`);
+  console.log(`  ${res.fileCount} files. Run \`npx @intellectronica/ruler apply\` to generate agent config.`);
 }
 
 function runUpdate(args) {
