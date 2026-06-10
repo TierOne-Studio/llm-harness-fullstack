@@ -55,7 +55,7 @@ Frontend (`apps/web`):
 - `react-forms` — diff modifies a form.
 - `react-data-fetching` — diff adds/modifies a query/mutation hook.
 - `accessibility` — any UI diff. Force-fire per CLAUDE.md P3.4.
-- `react-performance` / `react-render-optimization` — diff calls out perf or adds memoization.
+- `react-performance` (incl. its deep render-mechanics topics) — diff calls out perf or adds memoization.
 - `frontend-security` — diff touches an XSS sink, `dangerouslySetInnerHTML`, URL/redirect handling, or `VITE_*` env exposure.
 - `bundle-size` — diff adds a dependency or a heavy import to a route/bundle.
 - `playwright-best-practices` — diff modifies `e2e/` tests exercising the FE↔BE seam.

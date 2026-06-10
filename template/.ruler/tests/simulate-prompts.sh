@@ -124,7 +124,7 @@ echo
 echo "--- Case: rendering performance"
 run_case "perf-rerender" \
   "Investigate why this component rerenders on every keystroke and reduce the rerender cost" \
-  "react-performance,react-render-optimization,react-state-management"
+  "react-performance,react-state-management"
 
 echo
 echo "--- Case: bundle work"

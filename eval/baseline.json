@@ -4,17 +4,17 @@
       "backend": "cli",
       "cases": 32,
       "meanRecall": 1,
-      "meanPrecision": 0.784,
+      "meanPrecision": 0.737,
       "perfectRecallRate": 1,
-      "updatedAt": "2026-06-10T02:10:57.587Z"
+      "updatedAt": "2026-06-10T16:26:13.099Z"
     },
     "claude-sonnet-4-6": {
       "backend": "cli",
       "cases": 32,
-      "meanRecall": 1,
-      "meanPrecision": 0.584,
-      "perfectRecallRate": 1,
-      "updatedAt": "2026-06-10T02:52:29.741Z"
+      "meanRecall": 0.984,
+      "meanPrecision": 0.556,
+      "perfectRecallRate": 0.969,
+      "updatedAt": "2026-06-10T16:34:09.657Z"
     }
   },
   "adherence": {

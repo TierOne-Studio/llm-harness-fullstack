@@ -1,8 +1,9 @@
 # Skill Catalog
 
-54 skills in 7 families. The directories are **flat by requirement** — agent runtimes
+44 skills in 6 families. The directories are **flat by requirement** — agent runtimes
 (Claude Code, Codex, Cursor) discover skills as `skills/<name>/SKILL.md`, so grouping
-lives here, not in the filesystem. Tier routing rules (what loads when) are in
+lives here, not in the filesystem. Depth lives in each skill's `topics/` / `patterns/` /
+`rules/` files, read on demand. Tier routing rules (what loads when) are in
 `instructions.md` § P3.0 and § Skill Pointers; this page is the human-facing map.
 
 ```mermaid
@@ -37,20 +38,9 @@ mindmap
       react-routing
       react-forms
       react-performance
-      react-render-optimization
       react-testing
-      react-composition-2026
+      react-design-patterns
       react-2026
-    🧩 React design patterns
-      hooks-pattern
-      hoc-pattern
-      render-props-pattern
-      provider-pattern
-      compound-pattern
-      presentational-container-pattern
-      module-pattern
-      mixin-pattern
-      proxy-pattern
     🎨 Frontend platform & quality
       vite
       vitest
@@ -97,38 +87,23 @@ mindmap
 |---|---|
 | [typescript-advanced-types](./typescript-advanced-types/SKILL.md) | Generics, conditional/mapped/template-literal types (index + topics) |
 | [async-error-handling](./async-error-handling/SKILL.md) | Promise composition, AbortSignal, where to catch |
-| [js-performance-patterns](./js-performance-patterns/SKILL.md) | Hot-path runtime performance (loops, large data, high-frequency events) |
+| [js-performance-patterns](./js-performance-patterns/SKILL.md) | Hot-path runtime performance — 12 patterns (index + topics) |
 | [code-simplifier](./code-simplifier/SKILL.md) | Surgical cleanup of recently-modified code, behavior preserved |
 | [cyclomatic-complexity](./cyclomatic-complexity/SKILL.md) | Flattening branch-heavy, nested functions |
 
-## ⚛️ React core — `apps/web` changes (10)
+## ⚛️ React core — `apps/web` changes (9)
 
 | Skill | What it gives you |
 |---|---|
 | [react-patterns](./react-patterns/SKILL.md) | Components, hooks, lifting state, refs, lists |
 | [react-state-management](./react-state-management/SKILL.md) | WHERE state lives — the four-layer model; server data never in `useState` |
-| [react-data-fetching](./react-data-fetching/SKILL.md) | Server data: caching, invalidation, optimistic updates |
+| [react-data-fetching](./react-data-fetching/SKILL.md) | Server data: caching, invalidation, optimistic updates — 11 patterns (index + topics) |
 | [react-routing](./react-routing/SKILL.md) | Routes, guards, expired-session flow, code-split per route |
 | [react-forms](./react-forms/SKILL.md) | RHF + Zod, schema-first, accessible field errors |
-| [react-performance](./react-performance/SKILL.md) | Rerender cost, memoization, virtualization — the overview |
-| [react-render-optimization](./react-render-optimization/SKILL.md) | Deep render mechanics — 25 patterns (index + topics) |
+| [react-performance](./react-performance/SKILL.md) | Measurement discipline + the 25-pattern deep render-mechanics catalog (index + topics) |
 | [react-testing](./react-testing/SKILL.md) | Vitest + Testing Library + Playwright layer choice |
-| [react-composition-2026](./react-composition-2026/SKILL.md) | Modern composition idioms |
-| [react-2026](./react-2026/SKILL.md) | The broader modern-React stack tour |
-
-## 🧩 React design patterns (9)
-
-| Skill | What it gives you |
-|---|---|
-| [hooks-pattern](./hooks-pattern/SKILL.md) | Custom hook design |
-| [hoc-pattern](./hoc-pattern/SKILL.md) | Higher-order components |
-| [render-props-pattern](./render-props-pattern/SKILL.md) | Render props |
-| [provider-pattern](./provider-pattern/SKILL.md) | Context providers |
-| [compound-pattern](./compound-pattern/SKILL.md) | Compound components sharing implicit state |
-| [presentational-container-pattern](./presentational-container-pattern/SKILL.md) | Smart/dumb component split |
-| [module-pattern](./module-pattern/SKILL.md) | Module encapsulation |
-| [mixin-pattern](./mixin-pattern/SKILL.md) | Mixins (and when not to) |
-| [proxy-pattern](./proxy-pattern/SKILL.md) | Proxies for interception |
+| [react-design-patterns](./react-design-patterns/SKILL.md) | Nine classic patterns — hooks, HOC, render props, provider, compound, presentational/container, module, mixin, proxy (index + patterns) |
+| [react-2026](./react-2026/SKILL.md) | The modern stack tour + composition idioms (index + topics) |
 
 ## 🎨 Frontend platform & quality (9)
 
@@ -149,7 +124,7 @@ mindmap
 | Skill | What it gives you |
 |---|---|
 | [nestjs-best-practices](./nestjs-best-practices/SKILL.md) | 40 rules across 10 categories (arch, DI, security, perf, testing…) |
-| [nestjs-clean-architecture](./nestjs-clean-architecture/SKILL.md) | 4-layer domain modules + the dependency rule |
+| [nestjs-clean-architecture](./nestjs-clean-architecture/SKILL.md) | 4-layer domain modules + the dependency rule (index + topics) |
 | [nestjs-patterns](./nestjs-patterns/SKILL.md) | Tactical providers, Guards/Pipes/Interceptors, mixins (index + patterns) |
 | [nodejs-best-practices](./nodejs-best-practices/SKILL.md) | Framework selection, async patterns, security defaults |
 

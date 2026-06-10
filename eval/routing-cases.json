@@ -3,7 +3,7 @@
   "cases": [
     { "id": "feat-route", "prompt": "Add a new protected route that fetches user profile data and shows a loading state", "expected": ["react-routing", "react-data-fetching", "react-state-management"] },
     { "id": "feat-form", "prompt": "Add a new signup form with email validation and async submit error handling", "expected": ["react-forms", "async-error-handling"] },
-    { "id": "perf-rerender", "prompt": "Investigate why this component rerenders on every keystroke and reduce the rerender cost", "expected": ["react-performance", "react-render-optimization"] },
+    { "id": "perf-rerender", "prompt": "Investigate why this component rerenders on every keystroke and reduce the rerender cost", "expected": ["react-performance"] },
     { "id": "perf-bundle", "prompt": "Add a new dependency for date formatting and check the bundle size impact", "expected": ["bundle-size"] },
     { "id": "a11y-dialog", "prompt": "Add a confirmation dialog with keyboard navigation and focus management", "expected": ["accessibility"] },
     { "id": "sec-xss", "prompt": "Render user-submitted markdown safely without enabling raw HTML injection", "expected": ["frontend-security"] },
