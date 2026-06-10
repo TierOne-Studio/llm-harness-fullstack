@@ -130,7 +130,7 @@ Declare the path before any other work, as a literal line:
 - `Path: fast — qualifies: ≤2 files, single tier, no high-risk surface (P3.3), no contract/schema change, no new dependency.` ALL five must hold.
 - `Path: full` — anything else, with one clause naming the disqualifier (e.g. `Path: full — touches packages/contracts`).
 
-**Fast chain:** `tdd-workflow` + `repo-conventions` + `design-review` only; spec = one-paragraph delta (P3.0.1); `qa-validator` only if observable behavior changes; no other subagents. **Full chain:** per Workflow chains below. **Escalation:** the moment a fast-path change stops qualifying (file count grows, risk surface touched), STOP, output `Path: full — escalated: <reason>`, and switch chains (per P5.7). The declaration is auditable — a wrong path claim is a P8 contract violation.
+**Fast chain:** `tdd-workflow` + `repo-conventions` + `design-review` only; spec = one-paragraph delta (P3.0.1); `qa-validator` only if observable behavior changes; no other subagents. The fast path skips subagents and the spec PRE gate — NOT the waiver discipline: a fast-path non-code change still carries its exact TDD waiver phrase (P3.1). **Full chain:** per Workflow chains below. **Escalation:** the moment a fast-path change stops qualifying (file count grows, risk surface touched), STOP, output `Path: full — escalated: <reason>`, and switch chains (per P5.7). The declaration is auditable — a wrong path claim is a P8 contract violation.
 
 ---
 

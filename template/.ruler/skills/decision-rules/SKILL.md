@@ -1,6 +1,6 @@
 ---
 name: decision-rules
-description: Use when interpreting an ambiguous user request, when scope is unclear, when a test fails but looks wrong, when CLAUDE.md and a skill seem to disagree, or whenever a default decision is needed under uncertainty across either tier of a fullstack monorepo (React frontend or NestJS backend). Provides the full decision table with rationale per row. NOT for unambiguous requests, code-quality questions (use design-review), or workflow procedures (use plan-mode / tdd-workflow).
+description: Use when interpreting an ambiguous user request, when scope is unclear, when choosing between two libraries, approaches, or options (the tie-breaker defaults and the tradeoff framing live here), when a test fails but looks wrong, when CLAUDE.md and a skill seem to disagree, when deciding whether to push back on a proposal, or whenever a default decision is needed under uncertainty on either tier of a fullstack monorepo. Provides the full decision table with rationale per row. NOT for unambiguous requests, code-quality questions (use design-review), or workflow procedures (use plan-mode / tdd-workflow).
 ---
 
 # Decision Rules — Defaults Under Ambiguity

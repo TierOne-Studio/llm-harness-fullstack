@@ -108,6 +108,22 @@ On `update`:
 `update` requires `git`, `npm`, and `tar` on `PATH` (`update --force` and `init` have
 no such requirements). The shipped template is text-only.
 
+## Supported model floor (measured)
+
+Both eval layers were baselined on a cost-floor model (Haiku 4.5) and a consumer-grade
+model (Sonnet 4.6), 3-vote majority per adherence case. Measured result: **skill routing
+is perfect on both tiers** (mean recall 1.000, 32/32 prompts), and gate adherence is
+**1.000 on Sonnet** vs **0.952 on Haiku** — Haiku's one failing gate is the approval
+pause on branch creation, and several of its passes are split votes (2/3), i.e. marginal.
+The marginal layer on both tiers is exact-literal-string emission (the verbatim
+`Awaiting approval (…)` line, the exact waiver phrases): models reliably *do* the gated
+behavior but less reliably emit the mandated token. This is why command-shaped gates
+belong to the deterministic permission layer (`quality-gates` →
+`templates/claude-settings.json`) with the prose protocol as fallback — that division is
+by design. Practical floor: **Sonnet-class for full prose-gate fidelity; Haiku-class is
+sufficient when the deterministic permission layer is installed** (it owns exactly the
+gates Haiku fumbles).
+
 ## Evals (how the harness proves itself)
 
 Two layers of self-test guard the shipped template:

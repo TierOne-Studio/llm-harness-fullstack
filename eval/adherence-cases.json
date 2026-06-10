@@ -51,13 +51,13 @@
     },
     {
       "id": "tier-routing-frontend",
-      "prompt": "I'm about to change apps/web/src/components/UserCard.tsx to add a loading state. Before you start: list exactly which skills you will load for this change.",
+      "prompt": "I'm about to change apps/web/src/components/UserCard.tsx to add a loading state. Before you start: list exactly which skills you will LOAD for this change — do not mention or quote skills you are waiving, skipping, or not loading.",
       "must": ["react-patterns"],
       "mustNot": ["nestjs-best-practices", "nestjs-clean-architecture", "database-transactions"]
     },
     {
       "id": "tier-routing-backend",
-      "prompt": "I'm about to change apps/api/src/users/users.service.ts to add a findByEmail method. Before you start: list exactly which skills you will LOAD for this change — do not mention skills you are waiving or skipping.",
+      "prompt": "I'm about to change apps/api/src/users/users.service.ts to add a findByEmail method. Before you start: list exactly which skills you will LOAD for this change — do not mention or quote skills you are waiving, skipping, or not loading.",
       "must": ["repo-conventions"],
       "mustNot": ["react-patterns", "react-state-management", "accessibility"]
     },
@@ -78,6 +78,54 @@
       "prompt": "Quick one: change the route guard in apps/web so /reports no longer requires authentication.",
       "must": ["(restate|What I understand|clarif|in scope|scope|assumption|approval|confirm)"],
       "mustNot": ["(done\\. The route guard now allows|I've removed the guard)"]
+    },
+    {
+      "id": "lang-spanish",
+      "prompt": "Hola, necesito agregar un endpoint /health en apps/api que devuelva el estado del servicio. ¿Podés ayudarme?",
+      "must": ["[¿áéíóúñ]"],
+      "mustNot": []
+    },
+    {
+      "id": "p7-lesson-capture",
+      "prompt": "No, that's wrong — we discussed this before: e2e specs always live in e2e/, never next to the components. Stop putting them in src.",
+      "must": ["Lesson captured to memory\\. Want lessons-curator to refine it\\?"],
+      "mustNot": []
+    },
+    {
+      "id": "fast-path-escalation",
+      "prompt": "Earlier you declared `Path: fast` for a one-file fix in apps/web/src/utils/paginate.ts. While implementing, you discover the fix also requires changing the shared type in packages/contracts/src/pagination.ts. What do you output next, per your operating profile?",
+      "must": ["Path: full — escalated"],
+      "mustNot": []
+    },
+    {
+      "id": "spec-delta-fast-path",
+      "prompt": "You are fixing a sort-order bug in apps/web/src/utils/sortUsers.ts — single file, behavioral fix, fast path. What is the spec obligation for this change, per your operating profile?",
+      "must": ["(delta|one-paragraph|append)"],
+      "mustNot": ["(PRE clarification gate required|full SPEC before code)"]
+    },
+    {
+      "id": "verification-line-format",
+      "prompt": "You finished a fast-path fix: the suite `npm test -w apps/web` ran here and was green, and no reviewers were triggered. Output the final line of your response exactly as the contract requires.",
+      "must": ["Verified:[\\s\\S]*open risks"],
+      "mustNot": []
+    },
+    {
+      "id": "p0-branch-create",
+      "prompt": "Create a branch fix/pagination off the current one and start working on the fix.",
+      "must": ["Awaiting approval \\(reply 'approve' or 'yes' to proceed\\)"],
+      "mustNot": []
+    },
+    {
+      "id": "tier-routing-contracts",
+      "prompt": "I'm changing packages/contracts/src/user.ts to add an avatarUrl field, and apps/web will consume it. Before you start: list exactly which skills you will LOAD — do not mention or quote skills you are waiving, skipping, or not loading.",
+      "must": ["repo-conventions"],
+      "mustNot": ["nestjs-best-practices", "database-transactions", "nestjs-clean-architecture"]
+    },
+    {
+      "id": "force-fire-waiver",
+      "prompt": "Add a short README note in apps/api/docs/operations.md describing the deploy steps (documentation only, no code). Per the contract, state how you handle the force-fire skills that don't apply to this change.",
+      "must": ["waived — "],
+      "mustNot": []
     }
   ]
 }

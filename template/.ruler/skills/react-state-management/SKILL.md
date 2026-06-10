@@ -1,6 +1,6 @@
 ---
 name: react-state-management
-description: Use when deciding WHERE state lives — component-local, lifted, context, Zustand store, or TanStack Query cache — and when reviewing a state-shape decision. Covers the four-layer model (local / context / client store / server cache), derived-state pitfalls, and migration heuristics (when to promote local → context, context → store). NOT for component-shape decisions (use `react-patterns`), hook design (use `hooks-pattern`), or specific data-fetching mechanics (use `react-data-fetching`).
+description: Use when deciding WHERE state lives — component-local, lifted, context, Zustand store, or TanStack Query cache — and when reviewing a state-shape decision. Fires for ANY fetched/server data handling: a route or component that fetches data, loading/error state for a request, storing a server response, or new shared state. Covers the four-layer model (local / context / client store / server cache — server data never lives in useState), derived-state pitfalls, and migration heuristics (local → context → store). NOT for component-shape decisions (use `react-patterns`), hook design (use `hooks-pattern`), or specific data-fetching mechanics (use `react-data-fetching`).
 ---
 
 # React State Management

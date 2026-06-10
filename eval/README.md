@@ -11,12 +11,21 @@ the future outcome-eval milestone).
 | `routing-eval.mjs` | Given the shipped skill catalog, does a model route canonical prompts to the right skills? | mean recall ≥ baseline − 0.05 |
 | `adherence-eval.mjs` | Under the full `instructions.md`, does a model actually emit the gates (approval pause, waiver phrase, tier routing, path declaration)? | pass rate ≥ baseline − 0.10 |
 
+**Metric definitions.** Routing *recall* (gated) = expected discretionary skills found.
+Routing *precision* (informative) ignores P3.4 force-fire skills — the instructions order
+the model to load those on every change, so returning them is obedience, not over-loading;
+what precision measures is *wrongly loaded* discretionary skills (e.g. a backend skill on a
+frontend prompt). Adherence cases pass on **majority vote** across `--repeats N` runs
+(default 1; baselines use 3 — observed single-shot noise is ±0.15 on the CLI backend);
+split votes are reported as `unstable`, which marks the instruction being tested as
+marginal.
+
 ## Running
 
 ```bash
 npm run eval            # both evals
 node eval/routing-eval.mjs --cases 5          # quick subset
-node eval/adherence-eval.mjs --model claude-sonnet-4-6
+node eval/adherence-eval.mjs --model claude-sonnet-4-6 --repeats 3
 node eval/routing-eval.mjs --update-baseline  # re-baseline after intended changes
 ```
 
@@ -30,10 +39,13 @@ Default model is Haiku-class (`claude-haiku-4-5-20251001`) for cost; pass
 
 ## Baselines
 
-`baseline.json` is committed. Evals compare against it and fail CI on
-regression beyond tolerance. After an *intended* change (new skills, rewritten
-descriptions, instruction edits), re-run with `--update-baseline` and commit the
-new numbers — the diff is the reviewable evidence of behavioral impact.
+`baseline.json` is committed, **keyed per model** (`routing.<model-id>`,
+`adherence.<model-id>`): Haiku is the cost floor gated on every PR; Sonnet is the
+consumer-grade tier (CI `workflow_dispatch` with `full_matrix=true`). Evals compare
+against the entry for the model they ran and fail CI on regression beyond tolerance.
+After an *intended* change (new skills, rewritten descriptions, instruction edits),
+re-run with `--update-baseline` and commit the new numbers — the diff is the
+reviewable evidence of behavioral impact.
 
 ## Adding cases
 

@@ -27,6 +27,18 @@ const SKILLS_DIR = join(here, '..', 'template', '.ruler', 'skills');
 const BASELINE_PATH = join(here, 'baseline.json');
 const RECALL_TOLERANCE = 0.05;
 
+// P3.4 force-fire skills: the instructions order the model to load these on
+// (nearly) every change, so returning them is obedience, not over-loading.
+// Precision neither credits nor penalizes them unless a case expects them —
+// what's left measures WRONGLY loaded discretionary skills (e.g. a backend
+// skill on a frontend prompt).
+const FORCE_FIRE = new Set([
+  'tdd-workflow', 'repo-conventions', 'failure-mode-analysis', 'design-review',
+  'plan-mode', 'spec-workflow', 'cross-repo-workspace', 'react-patterns',
+  'react-state-management', 'accessibility', 'async-error-handling',
+  'database-transactions',
+]);
+
 const backend = skipIfNoBackend('routing-eval');
 const model = argValue('--model', DEFAULT_MODEL);
 const limit = Number(argValue('--cases', Infinity));
@@ -79,7 +91,9 @@ for (const c of selected) {
   const got = new Set(returned);
   const hit = c.expected.filter((s) => got.has(s));
   const recall = hit.length / c.expected.length;
-  const precision = returned.length ? returned.filter((s) => c.expected.includes(s)).length / returned.length : 0;
+  const credited = returned.filter((s) => c.expected.includes(s)).length;
+  const penalized = returned.filter((s) => !c.expected.includes(s) && !FORCE_FIRE.has(s)).length;
+  const precision = credited + penalized > 0 ? credited / (credited + penalized) : returned.length ? 1 : 0;
   sumRecall += recall;
   sumPrecision += precision;
   if (recall === 1) perfect += 1;
@@ -102,8 +116,9 @@ if (failures.length) {
 
 if (updateBaseline) {
   const baseline = existsSync(BASELINE_PATH) ? readJson(BASELINE_PATH) : {};
-  baseline.routing = {
-    model,
+  if (!baseline.routing || typeof baseline.routing.meanRecall === 'number') baseline.routing = {};
+  baseline.routing[model] = {
+    backend,
     cases: selected.length,
     meanRecall: Number(meanRecall.toFixed(3)),
     meanPrecision: Number(meanPrecision.toFixed(3)),
@@ -111,13 +126,13 @@ if (updateBaseline) {
     updatedAt: new Date().toISOString(),
   };
   writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2) + '\n');
-  console.log(`Baseline written → ${BASELINE_PATH}`);
+  console.log(`Baseline written → ${BASELINE_PATH} [routing.${model}]`);
   process.exit(0);
 }
 
-const baseline = existsSync(BASELINE_PATH) ? readJson(BASELINE_PATH).routing : null;
+const baseline = existsSync(BASELINE_PATH) ? readJson(BASELINE_PATH).routing?.[model] : null;
 if (!baseline) {
-  console.log('No routing baseline recorded yet — run with --update-baseline to set one.');
+  console.log(`No routing baseline for ${model} — run with --update-baseline to set one.`);
   process.exit(0);
 }
 const floor = baseline.meanRecall - RECALL_TOLERANCE;
