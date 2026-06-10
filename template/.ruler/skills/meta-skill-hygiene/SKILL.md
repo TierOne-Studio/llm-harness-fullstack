@@ -44,6 +44,8 @@ skill-name/
 
 The parent SKILL.md tells the agent which sub-file to load for which situation; the model loads only what's relevant. Don't pre-emptively split — apply this when the skill genuinely passes ~500 lines OR when distinct sub-shapes (patterns, rules, references) emerge.
 
+**Enforced ceiling.** The template's acceptance suite (`tests/run-acceptance.sh` T13) WARNs at >400 lines per SKILL.md and FAILS at >800 — a monolith past that point must be split before it ships. Index-style skills pass trivially; the budget is on the always-loaded entry point, not the on-demand topic files.
+
 ### 4. Contradictions
 
 Skill rule contradicts CLAUDE.md or another skill.

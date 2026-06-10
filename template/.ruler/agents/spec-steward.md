@@ -117,7 +117,7 @@ Governing SPEC(s): <paths>
 
 ### Sources read
 - CLAUDE.md, spec-workflow, documentation-and-adrs, docs/specs/README.md
-Confidence: 0.XX (per CLAUDE.md P8.1)
+Confidence: 0.XX (your independent judgment of this verdict — calibration anchors in design-review § Calibration)
 ```
 
 ## Forbidden behaviors

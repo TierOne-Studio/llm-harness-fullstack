@@ -21,3 +21,18 @@ jobs:
       - run: npm test
       # Validate the shipped template stays structurally sound and project-agnostic.
       - run: npm run test:harness
+
+  # Live-model evals: skill routing + gate adherence vs the committed baseline
+  # (eval/baseline.json). The scripts self-skip (exit 0) when the secret is
+  # absent, so forks and secretless runs stay green on the deterministic suites.
+  eval:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run eval
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

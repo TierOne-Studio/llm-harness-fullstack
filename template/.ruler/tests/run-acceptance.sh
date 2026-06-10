@@ -206,6 +206,52 @@ done
 
 # ---------------------------------------------------------------------------
 echo
+echo "=== T11: Instruction budget + fast path + no duplicated conflict table ==="
+# Hard token budget on the always-loaded profile (P3 of the improvement plan):
+# growth pressure needs a backstop. Raise ONLY with eval evidence (eval/).
+assert_true "T11: instructions.md within line budget (<= 350 lines)" \
+  "[ \$(wc -l < '$INSTRUCTIONS') -le 350 ]"
+assert_true "T11: instructions.md within word budget (<= 3800 words)" \
+  "[ \$(wc -w < '$INSTRUCTIONS') -le 3800 ]"
+assert_true "T11: fast/full path declaration section exists (P3.6)" \
+  "grep -q 'Path: fast' '$INSTRUCTIONS' && grep -q 'Path: full' '$INSTRUCTIONS'"
+assert_true "T11: P8.1 is the verification line, not a self-scored rubric" \
+  "grep -q 'Verified:' '$INSTRUCTIONS' && ! grep -q '5 × 0.20' '$INSTRUCTIONS'"
+assert_true "T11: P3.5 stays a pointer — no conflict table duplicated from decision-rules §6" \
+  "! awk '/^### P3.5/,/^### P3.6/' '$INSTRUCTIONS' | grep -q '^|'"
+assert_true "T11: decision-rules §6 declares itself canonical" \
+  "grep -qi 'CANONICAL' '$SKILLS/decision-rules/SKILL.md'"
+
+# ---------------------------------------------------------------------------
+echo
+echo "=== T12: De-duplication — no compiled AGENTS.md / build tooling in the payload ==="
+assert_true "T12: nestjs-best-practices ships no compiled AGENTS.md" \
+  "! test -f '$SKILLS/nestjs-best-practices/AGENTS.md'"
+assert_true "T12: nestjs-best-practices ships no build scripts/" \
+  "! test -d '$SKILLS/nestjs-best-practices/scripts'"
+
+# ---------------------------------------------------------------------------
+echo
+echo "=== T13: Deterministic gates shipped (permission template) + skill-size hygiene ==="
+CS="$SKILLS/quality-gates/templates/claude-settings.json"
+assert_true "T13: claude-settings.json template exists" "test -f '$CS'"
+assert_true "T13: it denies pushes to main" "grep -q 'git push origin main' '$CS'"
+assert_true "T13: it prompts on publish + DB CLIs + rm -rf" \
+  "grep -q 'npm publish' '$CS' && grep -q 'psql' '$CS' && grep -q 'rm -rf' '$CS'"
+# Skill-size ceiling: SKILL.md is the index; depth belongs in topic files read on
+# demand (the nestjs-patterns layout). Warn > 400 lines, fail > 800.
+for f in "$SKILLS"/*/SKILL.md; do
+  lines=$(wc -l < "$f")
+  s=$(basename "$(dirname "$f")")
+  if [ "$lines" -gt 400 ] && [ "$lines" -le 800 ]; then
+    echo "WARN: skill '$s' SKILL.md is $lines lines (> 400) — consider index+topics split"
+  fi
+  assert_true "T13: skill '$s' SKILL.md <= 800 lines (index+topics beyond that)" \
+    "[ $lines -le 800 ]"
+done
+
+# ---------------------------------------------------------------------------
+echo
 echo "==========================="
 echo "Acceptance results: $PASS passed, $FAIL failed"
 if [ "$FAIL" -gt 0 ]; then

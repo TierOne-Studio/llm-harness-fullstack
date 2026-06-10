@@ -344,7 +344,7 @@ Shared contracts (packages/contracts):
 - nestjs-best-practices § security / nestjs-patterns cross-cutting (if apps/api touched)
 - .claude/settings.json (permissions.deny block reviewed)
 
-Confidence: 0.XX (computed per CLAUDE.md P8.1 rubric)
+Confidence: 0.XX (your independent judgment of this verdict — calibration anchors in design-review § Calibration)
 ```
 
 ## Meta-findings (skill-improvement signal)

@@ -17,7 +17,10 @@ Commands:
 
 Options:
   --force    init: overwrite an existing .ruler (keeps unrelated files)
+             update: overwrite instead of merge — no git/npm needed; your edits
+             to harness-shipped files are lost, your own files are kept
   --dry-run  update: report what would change without writing
+             (exits 1 if the merge would conflict — usable as a CI check)
   --cwd DIR  operate on DIR instead of the current directory
 `;
 
@@ -46,13 +49,13 @@ function runInit(args) {
 }
 
 function runUpdate(args) {
-  const res = update({ cwd: args.cwd, dryRun: args.dryRun });
+  const res = update({ cwd: args.cwd, dryRun: args.dryRun, force: args.force });
   if (res.status === 'up-to-date') {
     console.log(`✓ Already up to date (${res.version}).`);
     return;
   }
   const verb = args.dryRun ? 'Would update' : 'Updating';
-  console.log(`${verb} ${res.from} → ${res.to}`);
+  console.log(`${verb} ${res.from} → ${res.to}${res.forced ? ' (forced — overwrite, no merge)' : ''}`);
   const counts = res.changes.reduce((m, c) => ((m[c.action] = (m[c.action] || 0) + 1), m), {});
   for (const [action, n] of Object.entries(counts)) console.log(`  ${action}: ${n}`);
 

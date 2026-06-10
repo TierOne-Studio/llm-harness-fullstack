@@ -138,7 +138,7 @@ If the gates ever diverge between repos:
 
 ## Output contract addition
 
-When this skill fires, the response's `Skills consulted:` line MUST include `cross-repo-workspace`. When Rule 1 caused a lens-switch (file in a non-primary repo), the response MUST also state:
+When this skill fires AND Rule 1 caused a lens-switch (file in a non-primary repo), the response MUST state:
 
 > Lens-switch: applied **<target-repo>** conventions for files under `/<target-repo>/`. Read `<absolute-path>/.ruler/skills/repo-conventions/SKILL.md` before editing.
 

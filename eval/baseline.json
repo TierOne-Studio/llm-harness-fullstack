@@ -1,0 +1,16 @@
+{
+  "routing": {
+    "model": "claude-haiku-4-5-20251001",
+    "cases": 32,
+    "meanRecall": 0.943,
+    "meanPrecision": 0.405,
+    "perfectRecallRate": 0.875,
+    "updatedAt": "2026-06-10T01:21:21.104Z"
+  },
+  "adherence": {
+    "model": "claude-haiku-4-5-20251001",
+    "cases": 13,
+    "passRate": 0.769,
+    "updatedAt": "2026-06-10T01:28:51.593Z"
+  }
+}
