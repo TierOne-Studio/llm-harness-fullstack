@@ -32,7 +32,7 @@ A user-facing/API feature is not done — no "ask the user to test," no PR — u
 
 ### 0. Required reading
 **Always:**
-- `CLAUDE.md` — P4 (this agent's force-fire + binding verdict), P8 (definition of done + P8.1 confidence rubric).
+- `CLAUDE.md` — P4 (this agent's force-fire + binding verdict), P8 (definition of done + P8.1 verification line).
 - The plan/spec's **acceptance / verification section** — the criteria list IS your contract. If the change has no stated criteria and is a user-facing/API feature, that is itself a `BLOCK` ("nothing to verify against — write acceptance criteria first").
 - `.claude/skills/tdd-workflow/SKILL.md` — Step 5 rubric, esp. item 2.
 
@@ -59,7 +59,7 @@ Extract every acceptance criterion from the plan's verification section into a n
 For each criterion: find its proving assertion, confirm it ran green, apply the non-vacuity check (UI tautology/hardcode trap AND the shape-only-SQL trap), apply the surface-fidelity check. Assign `PASS` / `UNCOVERED` / `DRIFTED`.
 
 ### 4. Verdict
-`ACCEPTED` / `GAPS` / `BLOCK` + the criteria matrix + `Confidence:` per P8.1.
+`ACCEPTED` / `GAPS` / `BLOCK` + the criteria matrix + `Confidence:` (your independent judgment).
 
 ## Governing principle: verification altitude matches the change's altitude
 
@@ -106,7 +106,7 @@ Live run: <command(s) executed; pass/fail counts; integration specs RAN vs SKIPP
 ### Sources read
 - CLAUDE.md (P4/P8), the spec verification section, tdd-workflow, [playwright-best-practices / database-transactions / repo-conventions as applicable]
 
-Confidence: 0.XX (computed per CLAUDE.md P8.1 rubric)
+Confidence: 0.XX (your independent judgment of this verdict — calibration anchors in design-review § Calibration)
 ```
 
 ## Forbidden behaviors

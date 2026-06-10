@@ -64,12 +64,14 @@ The `repo-conventions` skill ships as a fill-in skeleton covering **both** tiers
 feature layout / state / routing / auth, backend module layout / authz / persistence) **plus**
 the shared-contract seam — fill it in with your project's actual choices.
 
-The `quality-gates` skill ships ready-to-copy CI + pre-commit templates (`templates/ci.yml`,
-`templates/pre-commit`) so the practices the skills *teach* become a gate the toolchain
-*enforces*: typecheck, lint, unit tests, and the Playwright FE↔BE seam run on every PR and
-block a red merge. Skills and review agents steer the model *before* it acts; the gate is the
-deterministic backstop that catches what advice doesn't. Copy them into `.github/workflows/`
-and `.husky/` to turn that guidance into enforcement.
+The `quality-gates` skill ships ready-to-copy CI + pre-commit + permission templates
+(`templates/ci.yml`, `templates/pre-commit`, `templates/claude-settings.json`) so the
+practices the skills *teach* become a gate the toolchain *enforces*: typecheck, lint, unit
+tests, and the Playwright FE↔BE seam run on every PR and block a red merge, and Claude
+Code's own permission system denies pushes to `main` and prompts on publish/deploy/DB-write
+commands. Skills and review agents steer the model *before* it acts; the gates are the
+deterministic backstop that catches what advice doesn't. Copy them into `.github/workflows/`,
+`.husky/`, and `.claude/` to turn that guidance into enforcement.
 
 ## Commands
 
@@ -85,7 +87,8 @@ and `.husky/` to turn that guidance into enforcement.
 | Flag | Applies to | Effect |
 |---|---|---|
 | `--force` | `init` | Overwrite an existing `.ruler` (unrelated files are preserved). |
-| `--dry-run` | `update` | Report what would change without writing anything. |
+| `--force` | `update` | Overwrite instead of merge — needs no `git`/`npm`/`tar`. Your edits to harness-shipped files are lost; files you created are kept. The escape hatch when the recorded base version can't be downloaded. |
+| `--dry-run` | `update` | Report what would change without writing anything. Exits `1` if the merge would conflict, so it works as a CI check. |
 | `--cwd DIR` | both | Operate on `DIR` instead of the current directory. |
 
 ## How `update` works (3-way merge)
@@ -102,8 +105,39 @@ On `update`:
    re-run `update`.
 5. Files you created yourself (never shipped by the harness) are left untouched.
 
-`update` requires `git`, `npm`, and `tar` on `PATH`. `init` has no such requirements.
-The shipped template is text-only.
+`update` requires `git`, `npm`, and `tar` on `PATH` (`update --force` and `init` have
+no such requirements). The shipped template is text-only.
+
+## Supported model floor (measured)
+
+Both eval layers were baselined on a cost-floor model (Haiku 4.5) and a consumer-grade
+model (Sonnet 4.6), 3-vote majority per adherence case. Measured result: **skill routing
+is perfect on both tiers** (mean recall 1.000, 32/32 prompts), and gate adherence is
+**1.000 on Sonnet** vs **0.952 on Haiku** — Haiku's one failing gate is the approval
+pause on branch creation, and several of its passes are split votes (2/3), i.e. marginal.
+The marginal layer on both tiers is exact-literal-string emission (the verbatim
+`Awaiting approval (…)` line, the exact waiver phrases): models reliably *do* the gated
+behavior but less reliably emit the mandated token. This is why command-shaped gates
+belong to the deterministic permission layer (`quality-gates` →
+`templates/claude-settings.json`) with the prose protocol as fallback — that division is
+by design. Practical floor: **Sonnet-class for full prose-gate fidelity; Haiku-class is
+sufficient when the deterministic permission layer is installed** (it owns exactly the
+gates Haiku fumbles).
+
+## Evals (how the harness proves itself)
+
+Two layers of self-test guard the shipped template:
+
+- **Deterministic** (`npm run test:harness`): structural acceptance suite (frontmatter,
+  cross-reference integrity, project-agnosticism, write-scope guard, instruction budget,
+  skill-size ceilings) + a keyword-level skill-trigger simulation. Zero cost, runs everywhere.
+- **Live-model** (`npm run eval`, see [`eval/`](./eval/README.md)): a routing eval (does a
+  model route canonical prompts to the right skills, given the shipped catalog?) and a
+  gate-adherence eval (under the full `instructions.md`, does it actually emit the approval
+  pause, waiver phrases, tier routing, and path declaration?). Scores gate against the
+  committed `eval/baseline.json`; the scripts self-skip when no `ANTHROPIC_API_KEY` or
+  `claude` CLI is available. After an intended behavioral change, re-run with
+  `--update-baseline` and commit the diff — that diff is the evidence of impact.
 
 ## License
 

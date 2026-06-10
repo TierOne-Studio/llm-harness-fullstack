@@ -28,6 +28,26 @@ Copy to `.github/workflows/ci.yml`. Two jobs so the fast checks fail quickly whi
 
 It triggers on every PR and on push to `main`, cancels superseded runs, and runs on the Node version your repo standardizes on. Each step uses `--if-present`, so a workspace missing a given script degrades gracefully instead of failing — wire the scripts you actually have.
 
+## Permission gate (`templates/claude-settings.json`)
+
+P0.2's approval-required operations table is enforced **deterministically** here, not by
+prose: copy the template to `.claude/settings.json` (or merge it into yours) and Claude
+Code's permission system itself denies pushes to `main` and prompts on every other
+command-shaped gate (git mutations, publish/deploy, dependency changes, DB CLIs, `rm -rf`).
+The prose in P0 then only has to cover what a command pattern *can't* express — semantic
+gates like "weakening a route guard" or "storing a token in localStorage".
+
+```bash
+mkdir -p .claude
+cp .ruler/skills/quality-gates/templates/claude-settings.json .claude/settings.json
+```
+
+Caveats: patterns are prefix matches — creative command phrasings (`git push origin
+HEAD:main`, a push inside a shell script) can slip past, which is why P0.1 keeps the
+"treat the rule as absolute even when a pattern slips through" line. Extend the lists as
+your toolchain grows (new deploy CLIs, ORM migrate commands). Other agent runtimes
+(Cursor, Copilot) have their own permission configs — port the same lists there.
+
 ## Pre-commit (`templates/pre-commit`)
 
 A fast LOCAL gate so a broken commit never even reaches CI. It uses husky + lint-staged to lint/format only **staged** files (seconds, not minutes); the heavy typecheck/test/e2e stay in CI where they belong.

@@ -1,0 +1,36 @@
+{
+  "routing": {
+    "claude-haiku-4-5-20251001": {
+      "backend": "cli",
+      "cases": 32,
+      "meanRecall": 1,
+      "meanPrecision": 0.784,
+      "perfectRecallRate": 1,
+      "updatedAt": "2026-06-10T02:10:57.587Z"
+    },
+    "claude-sonnet-4-6": {
+      "backend": "cli",
+      "cases": 32,
+      "meanRecall": 1,
+      "meanPrecision": 0.584,
+      "perfectRecallRate": 1,
+      "updatedAt": "2026-06-10T02:52:29.741Z"
+    }
+  },
+  "adherence": {
+    "claude-haiku-4-5-20251001": {
+      "backend": "cli",
+      "cases": 21,
+      "repeats": 3,
+      "passRate": 0.952,
+      "updatedAt": "2026-06-10T03:18:33.145Z"
+    },
+    "claude-sonnet-4-6": {
+      "backend": "cli",
+      "cases": 21,
+      "repeats": 3,
+      "passRate": 1,
+      "updatedAt": "2026-06-10T03:44:05.299Z"
+    }
+  }
+}

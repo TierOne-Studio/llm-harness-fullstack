@@ -30,7 +30,7 @@ Before evaluating any code, MUST Read.
 
 **Always read:**
 
-- `CLAUDE.md` — at minimum P3 (Code-Change Defaults, including P3.4 mandatory-skill matrix), P4 (verification matrix), P8 (output contract + P8.1 confidence rubric).
+- `CLAUDE.md` — at minimum P3 (Code-Change Defaults, including P3.4 mandatory-skill matrix), P4 (verification matrix), P8 (output contract + P8.1 verification line).
 - `.claude/skills/design-review/SKILL.md` — the MUST principles + calibration anchors.
 - `.claude/skills/repo-conventions/SKILL.md` — what's correct *for this repo*. The project's binding facts span both tiers: frontend conventions (component shape, state-management split, forms, routing/guards, styling/toasts, auth/token storage) and backend conventions (error handling, persistence, tenant/org scoping, logging, DTO style). Check the diff against whatever `repo-conventions` documents rather than against a hardcoded contract.
 - `.claude/skills/async-error-handling/SKILL.md` — Promise composition, error propagation, AbortSignal, no-retries, catch-at-the-boundary.
@@ -160,12 +160,12 @@ A backend repo-conventions violation can be HIGH (errors, tenant scoping, parame
 The implementation must comply with `CLAUDE.md`'s output contract — not just be correct:
 
 - **Design review block (P3 + P8 item 8):** does the response include the `Design review:` block with the principle grid + trade-offs? Missing block = HIGH.
-- **Confidence line (P8.1):** does the response include `Confidence: 0.XX` computed via the 5-row rubric? Missing or vibes-based confidence = MED.
+- **Verification line (P8.1):** does the response end with the `Verified: ... | reviewers: ... | open risks: ...` line, with every claim in it evidenced in the response (the suite command that ran, the verdicts received)? Missing line, or claims without evidence, = MED.
 - **Multi-file format (P8):** if 2+ files were changed, is the response structured file-by-file with clear path headers? Dumping unrelated context = LOW.
 - **Tests-first ordering (P8 items 5–6):** does the response present tests BEFORE implementation? Reversed order = LOW (the work itself is fine, the deliverable is sloppy).
 - **High-risk restate (P3.3):** if change touches auth/sessions/RBAC/payments/secrets/PII/public API/migrations, was the requirements restate done before the code? Missing = HIGH.
 - **Forbidden waiver phrases (P3.2):** does the response contain "small change", "obvious fix", "trivial", "just a refactor"? Each occurrence = MED.
-- **CLAUDE.md layered-router audit (per `documentation-and-adrs` § "Layered-router principle"):** if the diff modifies `CLAUDE.md`, scan the additions for Layer-3 artifact citations: architecture-decision-record IDs, file paths (`src/...`, `apps/...`, `packages/...`, `docs/...`, `.claude/...`), code symbols / decorators / class names, subagent internal step numbers. Each occurrence = **MED**, with the fix being "move the citation to the relevant skill or subagent; CLAUDE.md keeps only the skill/subagent name." Boundary cases — literal command tokens (`git push`, `INSERT`, AI-attribution trailer strings) and structural output labels (`Skills consulted:`, `Confidence:`) are allowed.
+- **CLAUDE.md layered-router audit (per `documentation-and-adrs` § "Layered-router principle"):** if the diff modifies `CLAUDE.md`, scan the additions for Layer-3 artifact citations: architecture-decision-record IDs, file paths (`src/...`, `apps/...`, `packages/...`, `docs/...`, `.claude/...`), code symbols / decorators / class names, subagent internal step numbers. Each occurrence = **MED**, with the fix being "move the citation to the relevant skill or subagent; CLAUDE.md keeps only the skill/subagent name." Boundary cases — literal command tokens (`git push`, `INSERT`, AI-attribution trailer strings) and structural output labels (`Verified:`, `Path:`, `Design review:`, `Confidence:`) are allowed.
 - **Architecture-decision audit (per `documentation-and-adrs`):** if the diff introduces a structural change — a new persistence layer, new auth library / global guard, app-wide bootstrap modification, new public-API or shared-contract change, or anything cited from `CLAUDE.md`/`repo-conventions`/skills — and the project records architecture decisions, there MUST be a corresponding decision record in the same PR. Missing record for a structural change = **HIGH**. Additionally, if the diff contradicts an existing accepted decision (enumerate the project's decision records) without a superseding one, that is **HIGH** regardless of code quality — the rationale on file is now wrong.
 - **Dependency-rule audit (per `nestjs-clean-architecture`, backend):** for any file under a domain module's `domain/` layer, run a quick import-scan. Each occurrence is its own finding:
   - `import` from an ORM package (e.g. `@nestjs/typeorm`, `typeorm`) or an `infrastructure/` path inside a `domain/*.ts` file → **HIGH** (domain depends on infrastructure).
@@ -285,7 +285,7 @@ Shared contracts (packages/contracts) — include if the diff touches packages/c
 
 ### CLAUDE.md compliance
 - `Design review:` block present:                 yes / no
-- `Confidence:` line present + rubric-computed:   yes / no
+- `Verified:` line present, every claim evidenced:  yes / no
 - Multi-file format (if applicable):              pass / fail / N/A
 - Tests-first ordering:                           pass / fail
 - High-risk restate (P3.3) if applicable:         pass / fail / N/A
@@ -297,7 +297,7 @@ Shared contracts (packages/contracts) — include if the diff touches packages/c
 - CLAUDE.md (sections cited)
 - design-review, repo-conventions, <tier skills read>
 
-Confidence: 0.XX (computed per CLAUDE.md P8.1 rubric)
+Confidence: 0.XX (your independent judgment of this verdict — calibration anchors in design-review § Calibration)
 ```
 
 **Note:** Test coverage / edge-case observations are NOT this subagent's mandate — they're `qa-validator`'s. Security findings (AuthZ/AuthN/secrets, XSS sinks like `dangerouslySetInnerHTML`, `VITE_*` env leakage) are NOT this subagent's mandate — they're `security-reviewer`'s. If you notice a critical gap outside your mandate, name it briefly and tell the engineer to invoke the appropriate subagent. Don't try to do their job.

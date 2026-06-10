@@ -48,7 +48,7 @@ ADRs are **append-only**. Don't edit accepted ADRs except to update Status (Acce
 - Other CLAUDE.md sections by P-number (e.g., "see P3.4").
 - Literal command tokens that ARE the rule (e.g., `git push`, `INSERT`, `Co-Authored-By: Claude` — strings the rule literally matches at the tool boundary).
 - Domain category names (auth, RBAC, payments, PII, XSS — concepts, not artifacts).
-- Output structural labels (`Skills consulted:`, `Confidence:` — response markers the contract enforces).
+- Output structural labels (`Verified:`, `Path:`, `Design review:`, `Confidence:` — response markers the contract enforces).
 
 **CLAUDE.md MUST NOT reference:**
 

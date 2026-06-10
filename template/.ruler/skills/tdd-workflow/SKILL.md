@@ -64,7 +64,7 @@ Before declaring the change complete, verify (in order):
 - **Errors are actionable** (typed, contextual, redacted). Use the framework's error/exception types per `repo-conventions`, not plain `Error` — on the backend that means NestJS built-in exceptions; on the frontend that means typed errors surfaced through the UI (error boundary, toast, form error state).
 - **Backward compatibility preserved** unless the user explicitly told you otherwise. For changes to shared contracts (commonly `packages/contracts`), a breaking type change is a backward-compat concern for BOTH tiers — confirm both the producer and the consumer are updated.
 - **Security / performance flags raised explicitly** when applicable: new auth surface, new external call, new SQL, new big-O hot path. If none apply, state "no security/perf flags raised."
-- **Confidence ≥ 0.9** per the rubric in `CLAUDE.md` P8.1. If lower, revise the weakest area before declaring done.
+- **The P8.1 verification line is honestly satisfiable.** The relevant suite(s) ran HERE and were green (cite the command), every triggered reviewer returned a verdict, and remaining gaps are named under `open risks:` — if a load-bearing item is missing, revise before declaring done rather than omitting it from the line.
 
 The design-principles check is delegated to `design-review`; do not duplicate it here.
 

@@ -217,7 +217,7 @@ Plan reviewed: <number of steps, files involved, tier(s) touched, scope summary>
 - CLAUDE.md (sections cited)
 - repo-conventions, design-review, plan-mode, and tier-specific skills (react-patterns/react-state-management and/or nestjs-best-practices/nestjs-clean-architecture)
 
-Confidence: 0.XX (computed per CLAUDE.md P8.1 rubric)
+Confidence: 0.XX (your independent judgment of this verdict — calibration anchors in design-review § Calibration)
 ```
 
 ## Meta-findings (skill-improvement signal)

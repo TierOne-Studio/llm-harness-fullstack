@@ -158,6 +158,6 @@ Each rule file contains:
 - Correct code example with explanation
 - Additional context and references
 
-## Full Compiled Document
-
-For the complete guide with all rules expanded: `AGENTS.md`
+The `rules/` files are the canonical form. (Upstream also publishes a single-file
+compiled build; it is intentionally not shipped here — it duplicates `rules/` and
+the two copies drift.)

@@ -36,7 +36,7 @@ Before evaluating coverage, MUST Read:
 
 **Always read:**
 
-- `CLAUDE.md` — at minimum P3, P4, P8 (output contract + P8.1 confidence rubric).
+- `CLAUDE.md` — at minimum P3, P4, P8 (output contract + P8.1 verification line).
 - `.claude/skills/tdd-workflow/SKILL.md` — Step 5 self-review checklist + 10-item test quality rubric.
 - `.claude/skills/failure-mode-analysis/SKILL.md` — the 8 failure-mode categories you'll cross-check below.
 - `.claude/skills/repo-conventions/SKILL.md` — the project's binding test conventions per tier (test naming/location, frontend render helpers, backend testing-module setup, which types cross the seam) — per `repo-conventions`.
@@ -275,7 +275,7 @@ Tests: <ran / passed / failed / not run + reason>
 - tdd-workflow, failure-mode-analysis, repo-conventions
 - tier-specific: react-testing/accessibility (frontend) and/or nestjs-best-practices/nestjs-clean-architecture (backend)
 
-Confidence: 0.XX (computed per CLAUDE.md P8.1 rubric)
+Confidence: 0.XX (your independent judgment of this verdict — calibration anchors in design-review § Calibration)
 ```
 
 ## Meta-findings (skill-improvement signal)
