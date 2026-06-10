@@ -278,6 +278,19 @@ assert_true "T14: every skill-internal relative pointer resolves to a real file"
 
 # ---------------------------------------------------------------------------
 echo
+echo "=== T15: Skill catalog — README lists every skill, and only real skills ==="
+CATALOG="$SKILLS/README.md"
+assert_true "T15: skills/README.md (the visual catalog) exists" "test -f '$CATALOG'"
+for d in "$SKILLS"/*/; do
+  s=$(basename "$d")
+  assert_true "T15: catalog lists '$s'" "grep -q '](./$s/SKILL.md)' '$CATALOG'"
+done
+for s in $(grep -oE '\]\(\./[A-Za-z0-9-]+/SKILL\.md\)' "$CATALOG" | sed -E 's|\]\(\./([^/]+)/SKILL\.md\)|\1|' | sort -u); do
+  assert_true "T15: catalog entry '$s' is a real skill dir" "test -d '$SKILLS/$s'"
+done
+
+# ---------------------------------------------------------------------------
+echo
 echo "==========================="
 echo "Acceptance results: $PASS passed, $FAIL failed"
 if [ "$FAIL" -gt 0 ]; then
