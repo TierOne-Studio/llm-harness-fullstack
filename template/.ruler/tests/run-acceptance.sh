@@ -52,12 +52,10 @@ cyclomatic-complexity decision-rules design-review documentation-and-adrs \
 failure-mode-analysis git-workflow js-performance-patterns meta-skill-hygiene plan-mode \
 pushback-templates quality-gates repo-conventions rlm-explore spec-workflow tdd-workflow typescript-advanced-types \
 \
-accessibility ai-ui-patterns bundle-size compound-pattern frontend-security hoc-pattern \
-hooks-pattern mixin-pattern module-pattern playwright-best-practices \
-presentational-container-pattern provider-pattern proxy-pattern react-2026 \
-react-composition-2026 react-data-fetching react-forms react-patterns react-performance \
-react-render-optimization react-routing react-state-management react-testing \
-render-props-pattern shadcn tailwind-v4-shadcn vite vitest \
+accessibility ai-ui-patterns bundle-size frontend-security playwright-best-practices \
+react-2026 react-data-fetching react-design-patterns react-forms react-patterns \
+react-performance react-routing react-state-management react-testing \
+shadcn tailwind-v4-shadcn vite vitest \
 \
 database-transactions db-write-protocol nestjs-best-practices nestjs-clean-architecture \
 nestjs-patterns nodejs-best-practices"
@@ -275,6 +273,28 @@ while IFS= read -r f; do
 done < <(find "$SKILLS" -name '*.md')
 assert_true "T14: every skill-internal relative pointer resolves to a real file" \
   "[ $BROKEN_LINKS -eq 0 ]"
+
+# ---------------------------------------------------------------------------
+echo
+echo "=== T16: Harness metadata — every skill declares tier/family/gist ==="
+for s in $SKILL_LIST; do
+  f="$SKILLS/$s/SKILL.md"
+  assert_true "T16: skill '$s' has harness tier/family/gist" \
+    "grep -q '^harness:' '$f' && grep -qE '^  tier: (frontend|backend|shared)$' '$f' && grep -qE '^  family: [a-z-]+$' '$f' && grep -qE '^  gist: \"' '$f'"
+done
+
+# ---------------------------------------------------------------------------
+echo
+echo "=== T15: Skill catalog — README lists every skill, and only real skills ==="
+CATALOG="$SKILLS/README.md"
+assert_true "T15: skills/README.md (the visual catalog) exists" "test -f '$CATALOG'"
+for d in "$SKILLS"/*/; do
+  s=$(basename "$d")
+  assert_true "T15: catalog lists '$s'" "grep -q '](./$s/SKILL.md)' '$CATALOG'"
+done
+for s in $(grep -oE '\]\(\./[A-Za-z0-9-]+/SKILL\.md\)' "$CATALOG" | sed -E 's|\]\(\./([^/]+)/SKILL\.md\)|\1|' | sort -u); do
+  assert_true "T15: catalog entry '$s' is a real skill dir" "test -d '$SKILLS/$s'"
+done
 
 # ---------------------------------------------------------------------------
 echo

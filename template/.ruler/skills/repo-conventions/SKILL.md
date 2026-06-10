@@ -1,6 +1,10 @@
 ---
 name: repo-conventions
 description: Use ALWAYS when implementing, reviewing, or refactoring executable code in this repository; pair with `tdd-workflow`. ALSO use when discussing this project's architecture, monorepo/workspace layout, the frontend (feature layout, state model, routing, auth flow, forms, styling, data fetching, error handling) OR the backend (NestJS module layout, repository pattern, authz/RBAC, error handling, logging, DTO style) OR the shared contracts package — even on non-code turns. Documents the conventions specific to THIS fullstack codebase (the stack, the layering, the binding choices on both tiers). NOT for generic React/NestJS questions (use the stack skills) or read-only investigations of unrelated codebases.
+harness:
+  tier: shared
+  family: process
+  gist: "YOUR repo's binding facts (fill-in skeleton, both tiers + seam)"
 ---
 
 # Repo Conventions (Fullstack)

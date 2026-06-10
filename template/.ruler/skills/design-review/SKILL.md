@@ -1,6 +1,10 @@
 ---
 name: design-review
 description: Use BEFORE declaring any code change complete. Reviews the change against SOLID, DRY, KISS, SoC, YAGNI, cohesion/coupling, fail-fast, explicitness, single source of truth, and the SHOULD heuristics. Required for all executable-code deliverables across both tiers (React frontend in apps/web and NestJS backend in apps/api) and shared contracts in packages/contracts. NOT for non-code outputs (docs, content, JQL, SQL reads, plain explanations).
+harness:
+  tier: shared
+  family: process
+  gist: "SOLID/DRY/KISS pass + the verification line, before declaring done"
 ---
 
 # Design Review
@@ -107,7 +111,7 @@ If a principle was deliberately traded off, state it explicitly. Conflict resolu
 8. No retries; no try/catch as bandage?
 9. No speculative design or unused abstractions?
 10. Backward compatibility preserved (unless told otherwise)?
-11. Confidence ≥ 0.9?
+11. Is the P8.1 verification line honestly satisfiable (suites ran green here, reviewer verdicts in hand, gaps named under `open risks:`)?
 
 If any answer is "no", revise before declaring done.
 

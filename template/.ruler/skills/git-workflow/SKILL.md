@@ -1,6 +1,10 @@
 ---
 name: git-workflow
 description: Use when committing, pushing, branching, creating PRs, merging, rebasing, or any git operation that mutates remote or local repository state. NOT for read-only operations like status, log, diff, show, blame, or branch listing.
+harness:
+  tier: shared
+  family: process
+  gist: "Branch/commit/PR mutations done safely"
 ---
 
 # Git Workflow

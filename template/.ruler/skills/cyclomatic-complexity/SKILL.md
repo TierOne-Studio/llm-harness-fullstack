@@ -1,6 +1,10 @@
 ---
 name: cyclomatic-complexity
 description: Use when writing or reviewing functions with multiple branches, nested conditionals, or growing if-else chains — to reduce cyclomatic complexity via early returns, guard clauses, and extract-method. NOT for inherently linear code, simple two-branch conditions, or framework-imposed structure (route handlers with one path, JSX render functions with one return, NestJS decorators).
+harness:
+  tier: shared
+  family: language
+  gist: "Flattening branch-heavy, nested functions"
 ---
 
 # Cyclomatic Complexity — Early Returns and Flat Functions

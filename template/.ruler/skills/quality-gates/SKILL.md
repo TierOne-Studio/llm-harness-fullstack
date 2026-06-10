@@ -1,6 +1,10 @@
 ---
 name: quality-gates
 description: Use when setting up or reviewing the repo's CI pipeline, pre-commit hooks, or merge gates — a GitHub Actions workflow + husky/lint-staged that run typecheck, lint, unit tests, and the Playwright e2e seam on every push/PR. Ships ready-to-copy templates. The point is DETERMINISTIC enforcement at the gate: skills steer the model before it acts, but a green pipeline is what actually blocks a regression from merging. NOT for writing application code (use the stack skills) or for the harness's own template tests.
+harness:
+  tier: shared
+  family: process
+  gist: "CI, pre-commit & permission-gate templates (deterministic enforcement)"
 ---
 
 # Quality Gates — CI + pre-commit (deterministic enforcement)

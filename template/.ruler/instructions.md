@@ -76,7 +76,7 @@ First step of any code task: identify which workspace(s) the change touches, the
 | Change touches | Load | Do NOT load |
 |---|---|---|
 | `apps/web` | Frontend rows (Skill Pointers § Frontend) | Backend skills (`nestjs-*`, `nodejs-best-practices`, `database-transactions`, `db-write-protocol`) |
-| `apps/api` | Backend rows (Skill Pointers § Backend) | Frontend skills (`react-*`, `accessibility`, `frontend-security`, `vite`/`vitest`/`shadcn`/`tailwind-v4-shadcn`, `bundle-size`, `ai-ui-patterns`, React pattern skills) |
+| `apps/api` | Backend rows (Skill Pointers § Backend) | Frontend skills (`react-*`, `accessibility`, `frontend-security`, `vite`/`vitest`/`shadcn`/`tailwind-v4-shadcn`, `bundle-size`, `ai-ui-patterns`, `react-design-patterns`) |
 | `packages/contracts` | the contract seam (`repo-conventions` § 17) + whichever consuming tier you also edit | — |
 | cross-tier vertical slice | BOTH tier sets + the contract seam | — |
 
@@ -258,7 +258,7 @@ Situation → skill (skill bodies are canonical; this is the index). Tier-routed
 | Components, hooks, lifting state, refs, lists | `react-patterns` |
 | Where state lives — local/lifted/context/store/cache | `react-state-management` |
 | Server data — fetching, caching, invalidation | `react-data-fetching` |
-| Rerender cost, memoization, virtualization | `react-performance` (+ `react-render-optimization`) |
+| Rerender cost, memoization, virtualization, deep render mechanics | `react-performance` (index → `topics/`) |
 | Routes, guards, expired-session flow | `react-routing` |
 | Forms — RHF + Zod, accessible errors | `react-forms` |
 | FE tests — Vitest + Testing Library + Playwright | `react-testing` (+ `playwright-best-practices`) |
@@ -270,8 +270,8 @@ Situation → skill (skill bodies are canonical; this is the index). Tier-routed
 | Tailwind v4 + shadcn setup / theming / dark mode | `tailwind-v4-shadcn` |
 | shadcn day-to-day — add/search/composition | `shadcn` |
 | Streaming/chat AI UIs | `ai-ui-patterns` |
-| Modern composition idioms | `react-composition-2026` (+ `react-2026`) |
-| FE design patterns | `hooks-pattern` / `hoc-pattern` / `render-props-pattern` / `provider-pattern` / `compound-pattern` / `presentational-container-pattern` / `module-pattern` / `mixin-pattern` / `proxy-pattern` |
+| Modern stack tour + composition idioms | `react-2026` (index → `topics/`) |
+| FE design patterns — hooks, HOC, render props, provider, compound, presentational/container, module, mixin, proxy | `react-design-patterns` (index → `patterns/<name>.md`) |
 | _**▸ Backend (`apps/api`) only**_ | |
 | Comprehensive NestJS rules (40 rules) | `nestjs-best-practices` |
 | Tactical patterns — providers, Guard/Pipe/Interceptor/Middleware, mixins | `nestjs-patterns` (index → `patterns/<name>.md`) |

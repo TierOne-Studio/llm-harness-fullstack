@@ -1,6 +1,10 @@
 ---
 name: bug-investigation
 description: Use when given a bug report, failing test, CI failure, production incident, or "it's broken" task. NOT for new features, refactors not driven by a defect, design work, or routine code reviews.
+harness:
+  tier: shared
+  family: process
+  gist: "Ranked falsifiable hypotheses before any fix"
 ---
 
 # Bug Investigation

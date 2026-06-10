@@ -1,6 +1,10 @@
 ---
 name: meta-skill-hygiene
 description: Use when reviewing the skill library for quality — typically monthly, after 5+ approved curator proposals, or when skills feel like they're misfiring or overlapping. NOT a routine skill. NOT for adding individual skills (that's lessons-curator). Invoke deliberately for an audit.
+harness:
+  tier: shared
+  family: process
+  gist: "Auditing this skill library itself (overlap, bloat, size ceilings)"
 ---
 
 # Meta-Skill Hygiene

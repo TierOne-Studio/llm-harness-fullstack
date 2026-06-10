@@ -4,6 +4,10 @@ description: "Node.js development principles and decision-making. Framework sele
 risk: unknown
 source: community
 date_added: "2026-02-27"
+harness:
+  tier: backend
+  family: backend-nest
+  gist: "Framework selection, async patterns, security defaults"
 ---
 
 # Node.js Best Practices

@@ -69,6 +69,8 @@ This applies to any value that might be `0`, `NaN`, or `""` — array lengths, s
 
 ## 21. Avoid Layout Thrashing with Batched DOM Reads/Writes
 
+> Canonical home of the batching principle: `js-performance-patterns` § DOM and rendering (Pattern 2). This pattern is the React-side application — keep the two in sync.
+
 **Impact: HIGH** — Prevents forced synchronous layouts that block the main thread.
 
 Reading a layout property (e.g., `offsetHeight`, `getBoundingClientRect()`) after writing to the DOM forces the browser to recalculate layout synchronously. In a loop, this creates layout thrashing.

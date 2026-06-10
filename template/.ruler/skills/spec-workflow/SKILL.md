@@ -1,6 +1,10 @@
 ---
 name: spec-workflow
 description: Use BEFORE implementing any behavioral code change (new feature, improvement, bug fix, refactor that changes behavior, behavioral change, requirement-correction, follow-up) — a Markdown SPEC under docs/specs/ MUST be created or updated, and clarifying questions asked, BEFORE writing code; and reconciled with what shipped AFTER. Governs the docs/specs/ folder, SPEC naming, the SPEC template, create-vs-update rules, the requirements clarification gate, the pre/post workflow, and code↔doc sync. The spec-steward agent is the writer; this skill is the procedure. NOT for non-code, type-only, or config-with-no-behavior changes (state the waiver phrase). Pairs with documentation-and-adrs (ADRs), plan-mode, tdd-workflow, database-transactions, acceptance-verifier, cross-repo-workspace.
+harness:
+  tier: shared
+  family: process
+  gist: "SPEC before code on behavioral changes; reconcile after"
 ---
 
 # Spec Workflow
@@ -61,6 +65,7 @@ SPEC waived — config change with no behavior impact.
 
 "small change", "obvious fix", "trivial", "just a refactor" are **NEVER** valid skips. A pure
 no-behavior refactor needs no new SPEC, but if one exists for that feature, add a Change Log note.
+The waiver-phrase pattern and its forbidden non-waivers are canonical in `tdd-workflow` § Waivers — new exemption categories must be added there first.
 
 ## PRE-coding workflow (before any implementation or test code)
 
@@ -74,7 +79,8 @@ no-behavior refactor needs no new SPEC, but if one exists for that feature, add 
    Assumable-safe / **Must-ask**. If any Must-ask remains, the steward returns `NEEDS-INPUT` and the
    main agent **asks the user** (batched, ≤4, options where possible). **Do NOT write the SPEC or
    any code until material ambiguity is resolved.** Never ask what you can verify in the code;
-   never guess past a material ambiguity.
+   never guess past a material ambiguity. This gate mirrors `plan-mode` § Step 0: when a change
+   needs both a SPEC and a plan, run the gate ONCE and record the assumptions in both artifacts.
 4. **Decide create vs update** — if a SPEC already covers this feature × layer, UPDATE it; never open a second.
 5. **Create/update the SPEC** (via `spec-steward`) from `_template.md`. It must pass the readiness
    rubric before leaving `Draft`: goal + user/caller; in- and out-of-scope; every AC falsifiable +

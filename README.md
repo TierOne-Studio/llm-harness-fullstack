@@ -48,7 +48,10 @@ npx @intellectronica/ruler apply
 │   ├── qa-validator.md
 │   ├── security-reviewer.md
 │   └── lessons-curator.md
-└── skills/                # guides — the union of both stacks:
+└── skills/                # guides — the union of both stacks, grouped into families;
+                           # see skills/README.md for the generated visual catalog
+                           # (mindmap + tables — the dirs stay flat because agent
+                           # runtimes discover skills as skills/<name>/SKILL.md):
                            #   process: tdd-workflow, design-review, plan-mode, bug-investigation,
                            #            failure-mode-analysis, decision-rules, repo-conventions,
                            #            quality-gates, …

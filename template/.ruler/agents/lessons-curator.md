@@ -58,9 +58,9 @@ The library currently includes (for reference, not "load all of these"). Route t
 - **Operational:** `git-workflow`, `documentation-and-adrs`.
 
 **Frontend (`apps/web`):**
-- **React stack:** `react-patterns`, `react-state-management`, `react-performance`, `react-routing`, `react-forms`, `react-testing`, `accessibility`, `frontend-security`, `bundle-size`, `react-2026`, `react-composition-2026`, `react-data-fetching`, `react-render-optimization`, `ai-ui-patterns`.
+- **React stack:** `react-patterns`, `react-state-management`, `react-performance`, `react-routing`, `react-forms`, `react-testing`, `accessibility`, `frontend-security`, `bundle-size`, `react-2026`, `react-data-fetching`, `ai-ui-patterns`.
 - **SPA tooling:** `vite`, `vitest`, `shadcn`, `tailwind-v4-shadcn`, `playwright-best-practices`.
-- **Patterns (specific):** `compound-pattern`, `presentational-container-pattern`, `provider-pattern`, `hooks-pattern`, `hoc-pattern`, `render-props-pattern`, `module-pattern`, `mixin-pattern`, `proxy-pattern`.
+- **Patterns (specific):** `react-design-patterns` (index → `patterns/<name>.md`: hooks, hoc, render-props, provider, compound, presentational-container, module, mixin, proxy).
 
 **Backend (`apps/api`):**
 - **NestJS / Node stack:** `nestjs-best-practices`, `nestjs-clean-architecture`, `nodejs-best-practices`.

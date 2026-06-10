@@ -1,6 +1,10 @@
 ---
 name: tdd-workflow
 description: Use ALWAYS when implementing, modifying, or fixing executable code (features, bug fixes, refactors, integrations, performance work, type changes affecting runtime) — frontend (commonly `apps/web`), backend (commonly `apps/api`), or shared contracts (commonly `packages/contracts`). Use even for "small" or "obvious" changes. NOT for documentation, content drafts, SQL reads, JQL queries, slide decks, config-only changes without behavior impact, plain explanations.
+harness:
+  tier: shared
+  family: process
+  gist: "Failing test first, the waiver phrases, the test-quality rubric"
 ---
 
 # TDD Workflow

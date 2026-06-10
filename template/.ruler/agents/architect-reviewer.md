@@ -61,7 +61,7 @@ Before any evaluation, MUST Read the following:
 - `react-data-fetching` — plan adds/modifies query/mutation hooks or invalidation logic.
 - `accessibility` — any UI plan; force-fire per CLAUDE.md P3.4.
 - `frontend-security` — any auth, token, XSS-sink, env-var, or cross-origin work.
-- `react-performance` and `react-render-optimization` — when the plan calls out perf as a goal or touches hot rerender paths.
+- `react-performance` (incl. its deep render-mechanics topics) — when the plan calls out perf as a goal or touches hot rerender paths.
 - `bundle-size` — when the plan adds a dependency.
 - `playwright-best-practices` — when the plan adds/modifies E2E coverage across the FE↔BE seam.
 
