@@ -1,6 +1,6 @@
 ---
 name: hoc-pattern
-description: Use when reading or modernizing a Higher-Order Component (HOC) in legacy code, OR when comparing HOC vs custom hook vs render props for a NEW cross-cutting concern (auth wrap, analytics, error-boundary). In modern React, hooks are usually the right choice — this skill covers the HOC pattern so you can recognize, refactor, or deliberately keep one. NOT for custom hooks (`hooks-pattern`), provider-based dependency injection (`provider-pattern`), or component composition (`react-composition-2026`).
+description: Use when reading or modernizing a Higher-Order Component (HOC) in legacy code, OR when comparing HOC vs custom hook vs render props for a NEW cross-cutting concern (auth wrap, analytics, error-boundary). In modern React, hooks are usually the right choice — this skill covers the HOC pattern so you can recognize, refactor, or deliberately keep one. NOT for custom hooks (`patterns/hooks.md`), provider-based dependency injection (`patterns/provider.md`), or component composition (`react-2026`).
 paths:
   - "**/*.tsx"
   - "**/*.jsx"
@@ -9,8 +9,7 @@ metadata:
   author: patterns.dev
   version: "1.1"
 related_skills:
-  - "hooks-pattern"
-  - "render-props-pattern"
+  - "react-design-patterns"
 ---
 
 # HOC Pattern

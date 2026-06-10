@@ -31,6 +31,7 @@ function frontmatter(text, file) {
   const lines = text.split('\n');
   if (lines[0] !== '---') throw new Error(`No frontmatter: ${file}`);
   const close = lines.indexOf('---', 1);
+  if (close === -1) throw new Error(`Unclosed frontmatter: ${file}`);
   const fm = lines.slice(1, close);
   const get = (re) => fm.map((l) => l.match(re)).find(Boolean)?.[1] ?? null;
   return {

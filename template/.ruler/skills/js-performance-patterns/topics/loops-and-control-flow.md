@@ -4,7 +4,7 @@ Micro-optimizations for tight loops and frequently-called functions: caching pro
 
 ---
 
-### 3. Cache Property Access in Tight Loops
+## 3. Cache Property Access in Tight Loops
 
 **Impact: MEDIUM** — Reduces repeated property resolution.
 
@@ -32,7 +32,7 @@ This matters for arrays with 10,000+ items or when called at 60fps. For small ar
 
 ---
 
-### 5. Combine Iterations Over the Same Data
+## 5. Combine Iterations Over the Same Data
 
 **Impact: MEDIUM** — Single pass instead of multiple.
 
@@ -62,7 +62,7 @@ For small arrays (< 100 items), the chained version is fine and more readable. O
 
 ---
 
-### 6. Short-Circuit with Length Checks First
+## 6. Short-Circuit with Length Checks First
 
 **Impact: LOW-MEDIUM** — Avoids expensive operations on empty inputs.
 
@@ -81,7 +81,7 @@ function findMatchingItems(items: Item[], query: string): Item[] {
 
 ---
 
-### 7. Return Early to Skip Unnecessary Work
+## 7. Return Early to Skip Unnecessary Work
 
 **Impact: LOW-MEDIUM** — Reduces average-case execution.
 
@@ -113,7 +113,7 @@ function processEvent(event: AppEvent) {
 
 ---
 
-### 8. Hoist RegExp and Constant Creation Outside Loops
+## 8. Hoist RegExp and Constant Creation Outside Loops
 
 **Impact: LOW-MEDIUM** — Avoids repeated compilation.
 

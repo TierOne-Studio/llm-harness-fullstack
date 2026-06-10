@@ -1,5 +1,5 @@
 ---
-name: react-composition-2026
+name: react-2026
 description: Teaches modern React composition patterns for 2025/2026. Use when designing component APIs, building shared UI libraries, or refactoring prop-heavy components.
 context: fork
 allowed-tools: Read, Grep, Glob
@@ -11,8 +11,7 @@ metadata:
   author: patterns.dev
   version: "1.1"
 related_skills:
-  - "hooks-pattern"
-  - "hoc-pattern"
+  - "react-design-patterns"
 ---
 
 # Modern React Composition Patterns

@@ -9,7 +9,7 @@ metadata:
   author: patterns.dev
   version: "1.1"
 related_skills:
-  - "module-pattern"
+  - "react-design-patterns"
   - "singleton-pattern"
 ---
 

@@ -11,8 +11,7 @@ metadata:
   author: patterns.dev
   version: "1.1"
 related_skills:
-  - "hooks-pattern"
-  - "hoc-pattern"
+  - "react-design-patterns"
 ---
 
 # React Stack Patterns
@@ -320,7 +319,7 @@ React in 2026 offers an abundance of choices:
 * **Routing:** If on Next/Remix, use what's built-in. If building your own stack, consider TanStack Router for type safety or React Router for reliability.
 * **State and data libraries:** Use React Query for server data, Zustand or Redux for complex global state.
 * **Embrace new React features:** Hooks are standard. Use React 19 APIs (`use()`, Actions, `useOptimistic`). Understand **Server Components**. Try the React Compiler for auto-memoization.
-* **Performance:** Use `useTransition` for non-urgent updates, derived state over stored state, `useSyncExternalStore` for external subscriptions. See the **react-render-optimization** and **react-data-fetching** skills.
+* **Performance:** Use `useTransition` for non-urgent updates, derived state over stored state, `useSyncExternalStore` for external subscriptions. See the **react-performance** and **react-data-fetching** skills.
 * **AI in your workflow:** Enhance productivity with AI coding assistants, but always validate output.
 
 React is more powerful than ever. By choosing the right stack, you'll be well-equipped to build robust, scalable applications. Happy coding, and may your components re-render only when necessary!

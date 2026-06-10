@@ -4,7 +4,7 @@ Picking the right collection type for lookups, dynamic keys, and immutable array
 
 ---
 
-### 1. Use `Set` and `Map` for Lookups
+## 1. Use `Set` and `Map` for Lookups
 
 **Impact: HIGH for large collections** — O(1) vs O(n) per lookup.
 
@@ -48,7 +48,7 @@ const user = userMap.get(targetId) // O(1)
 
 ---
 
-### 12. Prefer `Map` Over Plain Objects for Dynamic Keys
+## 12. Prefer `Map` Over Plain Objects for Dynamic Keys
 
 **Impact: LOW-MEDIUM** — Better performance for frequent additions/deletions.
 
@@ -70,7 +70,7 @@ items.forEach(item => {
 
 ---
 
-### 9. Use `toSorted()`, `toReversed()`, `toSpliced()` for Immutability
+## 9. Use `toSorted()`, `toReversed()`, `toSpliced()` for Immutability
 
 **Impact: LOW** — Correct immutability without manual copying.
 

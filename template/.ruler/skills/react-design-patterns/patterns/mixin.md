@@ -1,6 +1,6 @@
 ---
 name: mixin-pattern
-description: Use when reading legacy class-based code that uses mixins, OR when judging whether mixin-style multi-source composition is the right answer for sharing behavior across class instances. In modern React/TS, prefer composition (hooks, HOCs, plain functions). NOT for hook composition (`hooks-pattern`), component composition (`react-composition-2026`), or anything purely React.
+description: Use when reading legacy class-based code that uses mixins, OR when judging whether mixin-style multi-source composition is the right answer for sharing behavior across class instances. In modern React/TS, prefer composition (hooks, HOCs, plain functions). NOT for hook composition (`patterns/hooks.md`), component composition (`react-2026`), or anything purely React.
 paths:
   - "**/*.js"
   - "**/*.ts"
@@ -9,7 +9,7 @@ metadata:
   author: patterns.dev
   version: "1.1"
 related_skills:
-  - "module-pattern"
+  - "react-design-patterns"
   - "singleton-pattern"
 ---
 

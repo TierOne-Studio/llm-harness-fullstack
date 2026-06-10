@@ -4,7 +4,7 @@ Avoiding recomputation through memoization, and copying data correctly with `str
 
 ---
 
-### 4. Memoize Expensive Function Results
+## 4. Memoize Expensive Function Results
 
 **Impact: MEDIUM-HIGH** — Avoids recomputing the same result.
 
@@ -49,7 +49,7 @@ For caches that can grow unbounded, use an LRU strategy or `WeakMap` for object 
 
 ---
 
-### 11. Use `structuredClone` for Deep Copies
+## 11. Use `structuredClone` for Deep Copies
 
 **Impact: LOW** — Correct deep cloning without libraries.
 

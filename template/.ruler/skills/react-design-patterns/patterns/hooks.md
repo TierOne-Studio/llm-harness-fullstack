@@ -11,8 +11,7 @@ metadata:
   author: patterns.dev
   version: "1.1"
 related_skills:
-  - "hoc-pattern"
-  - "render-props-pattern"
+  - "react-design-patterns"
 ---
 
 # Hooks Pattern

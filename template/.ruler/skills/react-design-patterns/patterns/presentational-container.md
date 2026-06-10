@@ -9,8 +9,7 @@ metadata:
   author: patterns.dev
   version: "1.1"
 related_skills:
-  - "hooks-pattern"
-  - "hoc-pattern"
+  - "react-design-patterns"
 ---
 
 # Container/Presentational Pattern

@@ -4,7 +4,7 @@ Frontend-only patterns for the browser tier (commonly `apps/web`): batching DOM 
 
 ---
 
-### 2. Batch DOM Reads and Writes
+## 2. Batch DOM Reads and Writes
 
 **Impact: HIGH** — Prevents layout thrashing.
 
@@ -50,7 +50,7 @@ el.style.cssText = 'width:100px;height:200px;margin:10px;'
 
 ---
 
-### 10. Use `requestAnimationFrame` for Visual Updates
+## 10. Use `requestAnimationFrame` for Visual Updates
 
 **Impact: MEDIUM** — Syncs with the browser's render cycle.
 
