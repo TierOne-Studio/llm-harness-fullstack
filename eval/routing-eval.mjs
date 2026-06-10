@@ -19,7 +19,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   readCatalog, callModel, extractJsonArray, readJson,
-  skipIfNoBackend, argValue, DEFAULT_MODEL,
+  skipIfNoBackend, argValue, positiveIntFlag, DEFAULT_MODEL,
 } from './lib.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -41,12 +41,20 @@ const FORCE_FIRE = new Set([
 
 const backend = skipIfNoBackend('routing-eval');
 const model = argValue('--model', DEFAULT_MODEL);
-const limit = Number(argValue('--cases', Infinity));
+const limit = positiveIntFlag('--cases', Infinity);
 const updateBaseline = process.argv.includes('--update-baseline');
+if (updateBaseline && Number.isFinite(limit)) {
+  console.error('Refusing --update-baseline with --cases: a subset-derived baseline would mis-gate full runs.');
+  process.exit(2);
+}
 
 const catalog = readCatalog(SKILLS_DIR);
 const { cases } = readJson(join(here, 'routing-cases.json'));
 const selected = cases.slice(0, limit);
+if (selected.length === 0) {
+  console.error('No routing cases selected — refusing to score an empty eval.');
+  process.exit(2);
+}
 
 // The case prompt is embedded as quoted DATA inside a router-framed question.
 // Do NOT put it in the user position as a live request: under the CLI backend
@@ -134,6 +142,9 @@ const baseline = existsSync(BASELINE_PATH) ? readJson(BASELINE_PATH).routing?.[m
 if (!baseline) {
   console.log(`No routing baseline for ${model} — run with --update-baseline to set one.`);
   process.exit(0);
+}
+if (baseline.cases !== selected.length) {
+  console.log(`NOTE: case count differs from baseline (${selected.length} vs ${baseline.cases}) — scores are not directly comparable; re-baseline after suite changes.`);
 }
 const floor = baseline.meanRecall - RECALL_TOLERANCE;
 if (meanRecall < floor) {

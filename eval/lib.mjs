@@ -99,16 +99,40 @@ export async function callModel({ system, prompt, model = DEFAULT_MODEL, backend
   throw new Error(`Unknown backend: ${backend}`);
 }
 
-/** Extract the first JSON array from model output (tolerates code fences / prose). */
+/**
+ * Extract the first top-level JSON array from model output (tolerates code
+ * fences / prose). Bracket-balance scan rather than a regex: a non-greedy
+ * regex truncates nested arrays at the first `]`, and a greedy one spans
+ * across unrelated brackets in prose.
+ */
 export function extractJsonArray(text) {
-  const m = text.match(/\[[\s\S]*?\]/);
-  if (!m) return null;
-  try {
-    const parsed = JSON.parse(m[0]);
-    return Array.isArray(parsed) ? parsed.map(String) : null;
-  } catch {
-    return null;
+  for (let start = text.indexOf('['); start !== -1; start = text.indexOf('[', start + 1)) {
+    let depth = 0;
+    let inString = false;
+    for (let i = start; i < text.length; i++) {
+      const ch = text[i];
+      if (inString) {
+        if (ch === '\\') i++;
+        else if (ch === '"') inString = false;
+      } else if (ch === '"') {
+        inString = true;
+      } else if (ch === '[') {
+        depth++;
+      } else if (ch === ']') {
+        depth--;
+        if (depth === 0) {
+          try {
+            const parsed = JSON.parse(text.slice(start, i + 1));
+            if (Array.isArray(parsed)) return parsed.map(String);
+          } catch {
+            // not valid JSON from this `[` — try the next candidate
+          }
+          break;
+        }
+      }
+    }
   }
+  return null;
 }
 
 export function readJson(path) {
@@ -131,4 +155,20 @@ export function skipIfNoBackend(evalName) {
 export function argValue(flag, fallback) {
   const i = process.argv.indexOf(flag);
   return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
+}
+
+/**
+ * Parse an integer flag that must be a positive integer when provided.
+ * Rejects 0/negative/NaN loudly: a typo'd `--cases x` would otherwise select
+ * zero cases, make the score NaN, and sail past the regression gate as green.
+ */
+export function positiveIntFlag(flag, fallback) {
+  const raw = argValue(flag, null);
+  if (raw == null) return fallback;
+  const n = Number.parseInt(raw, 10);
+  if (!Number.isInteger(n) || n <= 0 || String(n) !== raw.trim()) {
+    console.error(`Invalid ${flag} value: "${raw}". Use a positive integer.`);
+    process.exit(2);
+  }
+  return n;
 }

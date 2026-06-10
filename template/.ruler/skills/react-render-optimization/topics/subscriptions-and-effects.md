@@ -246,7 +246,7 @@ function useWindowEvent(event: string, handler: (e: Event) => void) {
 }
 ```
 
-If using React 19+, `useEffectEvent` provides this pattern as a built-in:
+If using React 19.2+, `useEffectEvent` provides this pattern as a built-in:
 
 ```tsx
 import { useEffectEvent } from 'react'

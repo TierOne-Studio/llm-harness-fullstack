@@ -5,7 +5,7 @@ description: Use BEFORE declaring any code change complete. Reviews the change a
 
 # Design Review
 
-Single focused pass at the end of an implementation. This is a workflow expectation enforced by process and verified by `.claude/tests/run-acceptance.sh`, not by a runtime hook. For executable-code changes, the response MUST include a `Design review:` block plus a `Confidence:` line, or a valid `design-review waived — …` line.
+Single focused pass at the end of an implementation. This is a workflow expectation enforced by process and verified by `.claude/tests/run-acceptance.sh`, not by a runtime hook. For executable-code changes, the response MUST include a `Design review:` block ending with the P8.1 verification line, or a valid `design-review waived — …` line.
 
 ## Output format (required)
 
@@ -24,7 +24,7 @@ Design review:
 - SSoT:         ...
 - Trade-offs:   <which principle was traded off and why, if any>
 
-Confidence: 0.XX
+Verified: <suite command(s)> run here and green | reviewers: <subagent → verdict, …> | open risks: <none | list>
 ```
 
 If a principle was deliberately traded off, state it explicitly. Conflict resolution order: **correctness → simplicity → clarity → maintainability**.

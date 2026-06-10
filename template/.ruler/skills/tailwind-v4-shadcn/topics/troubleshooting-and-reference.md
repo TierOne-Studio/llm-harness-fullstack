@@ -1,6 +1,6 @@
 # Troubleshooting, Templates & Reference Map
 
-Quick fixes for common symptoms, the file templates shipped with this skill, advanced patterns, and when to load each file in `references/`.
+Quick fixes for common symptoms, the file templates shipped with this skill, advanced patterns, and when to load each file in `../references/`.
 
 ## Common Issues & Quick Fixes
 
@@ -12,13 +12,13 @@ Quick fixes for common symptoms, the file templates shipped with this skill, adv
 | Build fails | `tailwind.config.ts` exists | Delete the file |
 | Text invisible | Wrong contrast colors | Check color definitions in `:root`/`.dark` |
 
-See `reference/common-gotchas.md` for complete troubleshooting guide.
+See `../references/common-gotchas.md` for complete troubleshooting guide.
 
 ---
 
 ## File Templates
 
-All templates are available in the `templates/` directory:
+All templates are available in the `../templates/` directory:
 
 - **index.css** - Complete CSS setup with all color variables
 - **components.json** - shadcn/ui v4 configuration
@@ -33,10 +33,10 @@ Copy these files to your project and customize as needed.
 
 ## Advanced Topics
 
-Load `references/advanced-usage.md` for advanced patterns including:
+Load `../references/advanced-usage.md` for advanced patterns including:
 
 - **Custom Colors**: Add semantic colors beyond default palette
-- **v3 Migration**: See `references/migration-guide.md` for complete guide
+- **v3 Migration**: See `../references/migration-guide.md` for complete guide
 - **Component Best Practices**: Semantic tokens, cn() utility, composition patterns
 
 **Quick Example:**
@@ -46,7 +46,7 @@ Load `references/advanced-usage.md` for advanced patterns including:
 ```
 Usage: `<div className="bg-brand">Branded</div>`
 
-For detailed patterns and component composition examples, load `references/advanced-usage.md`.
+For detailed patterns and component composition examples, load `../references/advanced-usage.md`.
 
 ---
 
@@ -66,32 +66,32 @@ For deeper understanding, see:
 
 Load reference files based on user's specific needs:
 
-### Load `references/common-gotchas.md` when:
+### Load `../references/common-gotchas.md` when:
 - User reports "colors not working" or "bg-primary doesn't exist"
 - Dark mode not switching properly
 - Build fails with Tailwind errors
 - User encounters any CSS/configuration issue
 - Debugging theme problems
 
-### Load `references/dark-mode.md` when:
+### Load `../references/dark-mode.md` when:
 - User asks to implement dark mode
 - Theme switching not working
 - Need ThemeProvider component code
 - Questions about system theme detection
 
-### Load `references/migration-guide.md` when:
+### Load `../references/migration-guide.md` when:
 - Migrating from Tailwind v3 to v4
 - User has hardcoded colors to migrate
 - Questions about v3 → v4 changes
 - Need migration checklist
 
-### Load `references/plugins-reference.md` when:
+### Load `../references/plugins-reference.md` when:
 - User needs Typography plugin (prose class)
 - User needs Forms plugin
 - Questions about @plugin directive
 - Plugin installation errors
 
-### Load `references/advanced-usage.md` when:
+### Load `../references/advanced-usage.md` when:
 - User asks about custom colors beyond defaults
 - Need advanced component patterns
 - Questions about component best practices
@@ -123,7 +123,7 @@ All patterns in this skill have been validated in production.
 
 **Questions? Issues?**
 
-1. Check `reference/common-gotchas.md` first
+1. Check `../references/common-gotchas.md` first
 2. Verify all steps in the 4-step architecture
 3. Ensure `components.json` has `"config": ""`
 4. Delete `tailwind.config.ts` if it exists

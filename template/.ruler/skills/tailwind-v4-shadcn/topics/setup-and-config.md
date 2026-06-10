@@ -8,7 +8,7 @@ Initial setup, agent activation notes, dependencies, plugins, and the full setup
 
 1. **Explicitly state you're using this skill** at the start of the conversation
 2. **Reference patterns from the skill** rather than general knowledge
-3. **Prevent known issues** listed in `reference/common-gotchas.md`
+3. **Prevent known issues** listed in `../references/common-gotchas.md`
 4. **Don't guess** - if unsure, check the skill documentation
 
 **USER ACTION REQUIRED**: Tell Claude to check this skill first!
@@ -172,4 +172,4 @@ Tailwind v4 supports official plugins using the `@plugin` directive in CSS.
 
 **Built-in Features:** Container queries are now core (no `@tailwindcss/container-queries` plugin needed).
 
-Load `references/plugins-reference.md` for complete documentation including Typography plugin (prose classes), Forms plugin, installation steps, and common plugin errors.
+Load `../references/plugins-reference.md` for complete documentation including Typography plugin (prose classes), Forms plugin, installation steps, and common plugin errors.

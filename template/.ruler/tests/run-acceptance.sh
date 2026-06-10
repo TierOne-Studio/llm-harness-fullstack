@@ -252,6 +252,32 @@ done
 
 # ---------------------------------------------------------------------------
 echo
+echo "=== T14: Relative-link integrity — skill-internal file pointers resolve ==="
+# Index-style skills point at topic/reference/template files; a broken pointer
+# ships a dead end to every consumer (this class of bug arrived with the P6
+# splits and was only caught in code review — now it's a gate).
+# A pointer resolves from the referencing file's dir OR from the skill root
+# (the common convention). The leading-boundary group keeps substrings inside
+# URLs (`…/reference/react/hooks`) and other skills' names
+# (`nestjs-patterns/patterns/…`, `testing-patterns/…`) from false-matching.
+BROKEN_LINKS=0
+while IFS= read -r f; do
+  d=$(dirname "$f")
+  rel=${f#$SKILLS/}
+  skillroot="$SKILLS/${rel%%/*}"
+  for ref in $(grep -oE '(^|[^A-Za-z0-9_/.-])(\.\./)?(topics|references|reference|templates|patterns|rules)/[A-Za-z0-9._/-]+' "$f" \
+                 | sed -E 's/^[^A-Za-z0-9.]*//' | sort -u); do
+    if [ ! -e "$d/$ref" ] && [ ! -e "$skillroot/$ref" ]; then
+      echo "  BROKEN: $rel → $ref"
+      BROKEN_LINKS=$((BROKEN_LINKS+1))
+    fi
+  done
+done < <(find "$SKILLS" -name '*.md')
+assert_true "T14: every skill-internal relative pointer resolves to a real file" \
+  "[ $BROKEN_LINKS -eq 0 ]"
+
+# ---------------------------------------------------------------------------
+echo
 echo "==========================="
 echo "Acceptance results: $PASS passed, $FAIL failed"
 if [ "$FAIL" -gt 0 ]; then

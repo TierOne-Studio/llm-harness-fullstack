@@ -76,10 +76,10 @@ This pattern is **mandatory** - skipping steps will break your theme.
 
 ### 1. Create ThemeProvider
 
-See `reference/dark-mode.md` for full implementation or use template:
+See `../references/dark-mode.md` for full implementation or use template:
 
 ```typescript
-// Copy from: templates/theme-provider.tsx
+// Copy from: ../templates/theme-provider.tsx
 ```
 
 ### 2. Wrap Your App
@@ -103,7 +103,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 pnpm dlx shadcn@latest add dropdown-menu
 ```
 
-See `reference/dark-mode.md` for ModeToggle component code.
+See `../references/dark-mode.md` for ModeToggle component code.
 
 ---
 

@@ -20,7 +20,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  callModel, readJson, skipIfNoBackend, argValue, DEFAULT_MODEL,
+  callModel, readJson, skipIfNoBackend, argValue, positiveIntFlag, DEFAULT_MODEL,
 } from './lib.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -30,9 +30,13 @@ const PASS_TOLERANCE = 0.1;
 
 const backend = skipIfNoBackend('adherence-eval');
 const model = argValue('--model', DEFAULT_MODEL);
-const limit = Number(argValue('--cases', Infinity));
-const repeats = Number(argValue('--repeats', 1));
+const limit = positiveIntFlag('--cases', Infinity);
+const repeats = positiveIntFlag('--repeats', 1);
 const updateBaseline = process.argv.includes('--update-baseline');
+if (updateBaseline && Number.isFinite(limit)) {
+  console.error('Refusing --update-baseline with --cases: a subset-derived baseline would mis-gate full runs.');
+  process.exit(2);
+}
 
 const profile = readFileSync(INSTRUCTIONS, 'utf8');
 const system = [
@@ -48,6 +52,10 @@ const system = [
 
 const { cases } = readJson(join(here, 'adherence-cases.json'));
 const selected = cases.slice(0, limit);
+if (selected.length === 0) {
+  console.error('No adherence cases selected — refusing to score an empty eval.');
+  process.exit(2);
+}
 
 function judge(c, text) {
   const missing = c.must.filter((re) => !new RegExp(re, 'i').test(text));
@@ -116,6 +124,9 @@ const baseline = existsSync(BASELINE_PATH) ? readJson(BASELINE_PATH).adherence?.
 if (!baseline) {
   console.log(`No adherence baseline for ${model} — run with --update-baseline to set one.`);
   process.exit(0);
+}
+if (baseline.cases !== selected.length) {
+  console.log(`NOTE: case count differs from baseline (${selected.length} vs ${baseline.cases}) — scores are not directly comparable; re-baseline after suite changes.`);
 }
 const floor = baseline.passRate - PASS_TOLERANCE;
 if (passRate < floor) {

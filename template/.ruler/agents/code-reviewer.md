@@ -285,7 +285,7 @@ Shared contracts (packages/contracts) — include if the diff touches packages/c
 
 ### CLAUDE.md compliance
 - `Design review:` block present:                 yes / no
-- `Confidence:` line present + rubric-computed:   yes / no
+- `Verified:` line present, every claim evidenced:  yes / no
 - Multi-file format (if applicable):              pass / fail / N/A
 - Tests-first ordering:                           pass / fail
 - High-risk restate (P3.3) if applicable:         pass / fail / N/A

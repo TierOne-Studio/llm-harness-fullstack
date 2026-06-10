@@ -19,6 +19,8 @@ jobs:
         node: [20, 22]
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
@@ -42,6 +44,8 @@ jobs:
         model: ${{ github.event.inputs.full_matrix == 'true' && fromJSON('["claude-haiku-4-5-20251001","claude-sonnet-4-6"]') || fromJSON('["claude-haiku-4-5-20251001"]') }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
