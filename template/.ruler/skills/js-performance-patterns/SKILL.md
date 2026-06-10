@@ -11,6 +11,10 @@ metadata:
 related_skills:
   - "react-design-patterns"
   - "singleton-pattern"
+harness:
+  tier: shared
+  family: language
+  gist: "Hot-path runtime performance — 12 patterns (index + topics)"
 ---
 
 # JavaScript Performance Patterns

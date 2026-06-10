@@ -12,6 +12,10 @@ metadata:
   version: "1.1"
 related_skills:
   - "react-design-patterns"
+harness:
+  tier: frontend
+  family: react-core
+  gist: "Server data: caching, invalidation, optimistic updates — 11 patterns (index + topics)"
 ---
 
 # React Data Fetching Patterns
@@ -49,7 +53,7 @@ The most common performance problem in React apps is **request waterfalls** — 
 ## Cross-Cutting Rules
 
 1. **Never fetch sequentially what can run in parallel** — waterfalls (in `async` functions or component trees) are the #1 performance problem. Fetch sibling data at the same level or in a route loader.
-2. **Never ship raw `useEffect` + `fetch` for server state** — use TanStack Query (recommended for Vite apps) or SWR to get deduplication, stale-while-revalidate caching, retries, and background refresh.
+2. **Never ship raw `useEffect` + `fetch` for server state** — use TanStack Query (recommended for Vite apps) or SWR to get deduplication, stale-while-revalidate caching, retries, and background refresh. Server state lives in the query cache, never mirrored into `useState` or Zustand — canonical in `react-state-management` § Hard rules.
 3. **Start promises early, await late** — kick off independent fetches immediately; `await` only at the point where the value is read.
 4. **Prefer Suspense boundaries over per-component `isLoading` flags** — use separate boundaries for independent sections so they load independently.
 5. **Optimistic updates need rollback** — snapshot previous cache state in `onMutate`, restore it in `onError`, and invalidate in `onSettled`.

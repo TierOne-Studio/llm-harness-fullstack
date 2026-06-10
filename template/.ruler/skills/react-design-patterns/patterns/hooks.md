@@ -37,7 +37,7 @@ Although Hooks are not necessarily a design pattern, Hooks play a very important
 ## Instructions
 
 - Use `useState` for local state and `useEffect` for side effects in functional components
-- Create custom hooks (prefixed with `use`) to encapsulate and share reusable logic
+- Create custom hooks (prefixed with `use`) to encapsulate and share reusable logic. Extraction guardrail: inline single-use hooks that wrap one effect; extract only when two components share the behavior or the hook has clear domain identity — canonical in `react-patterns` § Hard rules.
 - Follow the Rules of Hooks: only call hooks at the top level and only in React functions
 - Avoid unnecessary `useEffect` — compute derived state directly in the component body
 - Let the React Compiler handle memoization instead of manual `useMemo`/`useCallback` where possible

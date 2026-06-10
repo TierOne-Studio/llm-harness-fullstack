@@ -276,6 +276,15 @@ assert_true "T14: every skill-internal relative pointer resolves to a real file"
 
 # ---------------------------------------------------------------------------
 echo
+echo "=== T16: Harness metadata — every skill declares tier/family/gist ==="
+for s in $SKILL_LIST; do
+  f="$SKILLS/$s/SKILL.md"
+  assert_true "T16: skill '$s' has harness tier/family/gist" \
+    "grep -q '^harness:' '$f' && grep -qE '^  tier: (frontend|backend|shared)$' '$f' && grep -qE '^  family: [a-z-]+$' '$f' && grep -qE '^  gist: \"' '$f'"
+done
+
+# ---------------------------------------------------------------------------
+echo
 echo "=== T15: Skill catalog — README lists every skill, and only real skills ==="
 CATALOG="$SKILLS/README.md"
 assert_true "T15: skills/README.md (the visual catalog) exists" "test -f '$CATALOG'"

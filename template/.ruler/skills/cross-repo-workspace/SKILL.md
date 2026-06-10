@@ -1,6 +1,10 @@
 ---
 name: cross-repo-workspace
 description: Use ALWAYS when the session spans two or more repositories — a primary cwd plus additional working directories, a feature touching a backend repo AND a frontend repo, or any change coordinated across sibling repos in one workspace. Governs the lens-switching rule (which repo's conventions apply per file), the ADR-qualification rule (repos reuse the same ADR numbers with different meanings), the coordination-doc pattern for cross-repo features, and the prompt-target convention. NOT for single-repo sessions (a monorepo's apps/web + apps/api is ONE repo — this skill is about separate repositories).
+harness:
+  tier: shared
+  family: process
+  gist: "Lens-switching when one session spans two or more repos"
 ---
 
 # Cross-Repo Workspace

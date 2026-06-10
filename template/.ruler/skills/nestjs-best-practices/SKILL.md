@@ -5,6 +5,10 @@ license: MIT
 metadata:
   author: Kadajett
   version: "1.1.0"
+harness:
+  tier: backend
+  family: backend-nest
+  gist: "40 rules across 10 categories (arch, DI, security, perf, testing…)"
 ---
 
 # NestJS Best Practices

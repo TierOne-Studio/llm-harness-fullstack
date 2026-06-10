@@ -1,6 +1,10 @@
 ---
 name: react-patterns
 description: Use ALWAYS when implementing or reviewing React components, hooks, or rendering logic in this SPA. Covers component shape (function components only, default vs named export, controlled vs uncontrolled, lifting state), hook discipline (rules-of-hooks, dependency arrays, cleanup, custom-hook extraction), refs vs state, list keys, and the boundaries between presentation, state, and data layers. NOT for state-placement decisions (use `react-state-management`), data-fetching (use `react-data-fetching`), routing (use `react-routing`), forms (use `react-forms`), or rendering performance (use `react-performance`).
+harness:
+  tier: frontend
+  family: react-core
+  gist: "Components, hooks, lifting state, refs, lists"
 ---
 
 # React Patterns

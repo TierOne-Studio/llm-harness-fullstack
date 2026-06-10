@@ -5,6 +5,10 @@ license: MIT
 metadata:
   author: patterns.dev
   version: "1.1"
+harness:
+  tier: frontend
+  family: react-core
+  gist: "The modern stack tour + composition idioms (index + topics)"
 ---
 
 # React 2026 — Stack & Composition

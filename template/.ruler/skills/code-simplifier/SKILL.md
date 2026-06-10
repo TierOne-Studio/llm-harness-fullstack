@@ -4,6 +4,10 @@ description: 'Simplify and refine recently modified code for clarity, consistenc
 argument-hint: 'Describe the changed files, diff, or scope to simplify.'
 user-invocable: true
 disable-model-invocation: false
+harness:
+  tier: shared
+  family: language
+  gist: "Surgical cleanup of recently-modified code, behavior preserved"
 ---
 
 # Code Simplifier

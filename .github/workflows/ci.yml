@@ -29,6 +29,8 @@ jobs:
       - run: npm test
       # Validate the shipped template stays structurally sound and project-agnostic.
       - run: npm run test:harness
+      # The skill catalog is generated from frontmatter — fail if it's stale.
+      - run: npm run catalog:check
 
   # Live-model evals: skill routing + gate adherence vs the committed per-model
   # baselines (eval/baseline.json). The scripts self-skip (exit 0) when the

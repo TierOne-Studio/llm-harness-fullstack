@@ -1,6 +1,10 @@
 ---
 name: pushback-templates
 description: Use when about to push back on the user — when a simpler in-scope alternative is visible, when scope appears to be creeping, when a hidden risk is detected, or when you genuinely disagree with the framing of the request. Provides full templates with phrasing variants and example dialogues for both frontend (apps/web) and backend (apps/api) work. NOT for normal conversation, agreement situations, or factual questions.
+harness:
+  tier: shared
+  family: process
+  gist: "How to disagree: observation, tradeoff, question — one round"
 ---
 
 # Pushback Templates

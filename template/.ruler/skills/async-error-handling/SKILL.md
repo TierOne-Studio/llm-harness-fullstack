@@ -1,6 +1,10 @@
 ---
 name: async-error-handling
 description: Use when writing or reviewing async code in JavaScript/TypeScript (browser or Node.js) — Promise composition (Promise.all/allSettled/race), error propagation, AbortSignal/timeouts, top-level handlers, where to catch vs let propagate. Applies to React data fetching, hooks, event handlers, the few non-React async paths in the frontend, AND NestJS services, repositories, and external HTTP/DB calls on the backend. NOT for synchronous code, framework-internal lifecycle handlers, or simple sequential awaits with no error-flow decision.
+harness:
+  tier: shared
+  family: language
+  gist: "Promise composition, AbortSignal, where to catch"
 ---
 
 # Async Error Handling

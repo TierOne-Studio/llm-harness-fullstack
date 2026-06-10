@@ -82,3 +82,5 @@ window.addEventListener('scroll', () => {
   }
 }, { passive: true })
 ```
+
+In React, store high-frequency values in a `useRef` and mutate the DOM in the effect — see `react-performance/topics/subscriptions-and-effects.md` (Pattern 7).

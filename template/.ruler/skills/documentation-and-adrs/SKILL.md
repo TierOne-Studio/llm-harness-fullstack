@@ -1,6 +1,10 @@
 ---
 name: documentation-and-adrs
 description: Use when proposing a new load-bearing engineering decision (one that constrains future code or is referenced repeatedly across CLAUDE.md/skills/conventions) — frontend (state-management, server-state, styling, forms, auth-token storage), backend (persistence pattern, error-mapping convention, layering, DTOs), or a shared public-API/contract shape — when superseding an existing decision, OR when a skill/CLAUDE.md section is about to restate the rationale behind an existing decision (cite the ADR instead). NOT for routine implementation, style/formatting choices, reversible local choices, or notes that belong in commit messages.
+harness:
+  tier: shared
+  family: process
+  gist: "ADR format + the layered-router documentation principle"
 ---
 
 # Documentation and ADRs

@@ -1,11 +1,17 @@
 ---
 name: react-performance
 description: Use when investigating actual rerender cost, slow lists, oversized effects, code-splitting decisions, or Core Web Vitals issues — when judging whether a memoization change (`React.memo`, `useMemo`, `useCallback`) is justified — and when reducing unnecessary re-renders (or rerenders), improving state design to avoid keystroke-driven cascades, or diagnosing React performance issues. Carries the 25-pattern deep render-mechanics catalog in topics/ (memoization & derived state, subscriptions & effects, transitions & scheduling, DOM/lists, SSR & resource loading). NOT for general bundle-size concerns (use `bundle-size`), routing-level code splits (use `react-routing`), or server-state caching (use `react-data-fetching`).
+harness:
+  tier: frontend
+  family: react-core
+  gist: "Measurement discipline + the 25-pattern deep render-mechanics catalog (index + topics)"
 ---
 
 # React Performance
 
 Performance work in React is a measurement game, not a memoization game. Premature `useMemo` everywhere is **negative** value — it adds work, costs memory, and obscures the real bottleneck. This skill encodes the discipline.
+
+The systematic MEASURE → IDENTIFY → FIX → VERIFY → GUARD workflow is canonical in `js-performance-patterns` § The 5-step optimization workflow; this skill applies it to React.
 
 ## When this fires
 
@@ -39,7 +45,7 @@ Lists over ~100 visible items benefit from virtualization. Use `@tanstack/react-
 
 ### Code-split heavy routes
 
-Use `React.lazy` + `<Suspense>` for routes that pull in large dependency trees (charts, editors, AI playgrounds). Pair with the route-level boundary so the rest of the app stays fast. See `react-routing` § Code splitting.
+Use `React.lazy` + `<Suspense>` for routes that pull in large dependency trees (charts, editors, AI playgrounds). Pair with the route-level boundary so the rest of the app stays fast. See `react-routing` § Code splitting. Canonical splitting strategy (what to split, when) lives in `bundle-size`; this section covers the React mechanics only.
 
 ### Lazy-load on interaction or visibility
 

@@ -17,6 +17,10 @@ description: |
   typography plugin, forms plugin, prose class, @tailwindcss/typography,
   @tailwindcss/forms
 license: MIT
+harness:
+  tier: frontend
+  family: frontend-platform
+  gist: "Tailwind v4 + shadcn setup, theming, dark mode (index + topics)"
 ---
 
 # Tailwind v4 + shadcn/ui Production Stack

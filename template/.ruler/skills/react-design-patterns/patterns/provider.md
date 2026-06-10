@@ -36,7 +36,7 @@ We often end up with something called _prop drilling_, which is the case when we
 - Create a Context with `React.createContext()` and wrap components with its Provider
 - Use the `useContext` hook in consuming components to access provided values
 - Create custom hooks (e.g., `useThemeContext`) to encapsulate context consumption logic
-- Avoid overusing context for frequently updated values as all consumers re-render on change
+- Avoid overusing context for frequently updated values as all consumers re-render on change. Canonical change-rate discipline (what belongs in context vs ref vs store): `react-state-management` § Hard rules.
 - Split contexts by concern to minimize unnecessary re-renders
 
 ## Details

@@ -1,6 +1,10 @@
 ---
 name: nestjs-clean-architecture
 description: Use when designing or reviewing a NEW domain module (`src/modules/<domain>/`), or when refactoring an existing module that has grown business invariants past the "simple CRUD" exemption. Provides the 4-layer structure (presentation/application/domain/infrastructure), dependency rule, repository port + adapter pattern, and concrete patterns (TypeORM adapter, NestJS Logger, NestJS built-in exceptions). NOT for flat CRUD/projection modules with no business invariants, NOT for adding a route to an existing module that already follows the convention.
+harness:
+  tier: backend
+  family: backend-nest
+  gist: "4-layer domain modules + the dependency rule (index + topics)"
 ---
 
 # NestJS Clean Architecture

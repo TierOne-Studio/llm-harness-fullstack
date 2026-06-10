@@ -12,6 +12,10 @@ metadata:
   version: "1.1"
 related_skills:
   - "react-design-patterns"
+harness:
+  tier: frontend
+  family: frontend-platform
+  gist: "Streaming/chat AI interface patterns"
 ---
 
 # AI UI Patterns

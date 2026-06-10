@@ -1,6 +1,10 @@
 ---
 name: react-design-patterns
 description: Use when choosing or applying a React/JavaScript design pattern — custom hooks (extracting stateful logic, subscriptions, or side effects into a reusable use* function), Higher-Order Components (reading or modernizing a legacy HOC; HOC vs hook vs render props for a new cross-cutting concern), render props (headless/unstyled components exposing state to a caller-controlled render), context providers (sharing data across component trees when prop drilling becomes unwieldy), compound components (tabs, accordions, dropdowns coordinating through shared implicit state), the presentational/container split (separating data fetching and business logic from UI rendering), JavaScript module design (exports, file-private internals, tree-shaking, testability), mixins (judging legacy class-based multi-source composition), or the Proxy API (intercepting property access for instrumentation, immutability wrappers, validation). Each pattern's depth lives in patterns/<name>.md — load only the one that matches. NOT for component-shape decisions (use react-patterns), state placement (use react-state-management), or modern composition idioms (use react-2026).
+harness:
+  tier: frontend
+  family: react-core
+  gist: "Nine classic patterns — hooks, HOC, render props, provider, compound, presentational/container, module, mixin, proxy (index + patterns)"
 ---
 
 # React & JS Design Patterns
