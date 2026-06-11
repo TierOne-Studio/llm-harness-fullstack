@@ -84,18 +84,21 @@ const routerPrompt = (caseprompt) => [
   'Prefer precision: include a skill only when its description clearly applies.',
 ].join('\n');
 
+/** Returns the routed skill names, or null when the call errored or the
+ *  output was unparseable — callers must score null as invalid, NOT as []:
+ *  an empty array would vacuously pass a negative case (recall 1, fp 0). */
 async function routeOnce(id, prompt) {
   try {
     const text = await callModel({ prompt: routerPrompt(prompt), model, backend, maxTokens: 512 });
     const arr = extractJsonArray(text);
     if (!arr) {
       console.error(`NOPARSE: ${id} — raw[:200]: ${text.replace(/\s+/g, ' ').slice(0, 200)}`);
-      return [];
+      return null;
     }
     return arr;
   } catch (err) {
     console.error(`ERROR: ${id} — ${err.message}`);
-    return [];
+    return null;
   }
 }
 
@@ -103,6 +106,7 @@ let sumRecall = 0;
 let sumPrecision = 0;
 let perfect = 0;
 let totalCalls = 0;
+let invalidCalls = 0;
 let totalFP = 0;
 let variantCases = 0;
 let stableVariantCases = 0;
@@ -114,9 +118,18 @@ for (const c of selected) {
   for (const p of prompts) {
     const returned = await routeOnce(c.id, p);
     totalCalls += 1;
-    const s = scoreRouting(c.expected, returned, FORCE_FIRE);
-    totalFP += s.falsePositives.length;
-    variantScores.push({ ...s, returned });
+    // Invalid call (backend error / unparseable output): hard-fail the variant
+    // and keep it out of the FP-rate denominator — it must never inflate a
+    // gated metric in either direction.
+    let s;
+    if (returned === null) {
+      invalidCalls += 1;
+      s = { recall: 0, precision: 0, falsePositives: [], returned: [] };
+    } else {
+      s = { ...scoreRouting(c.expected, returned, FORCE_FIRE), returned };
+      totalFP += s.falsePositives.length;
+    }
+    variantScores.push(s);
   }
   // Worst variant is the case score: routing must survive paraphrase.
   const worst = variantScores.reduce((a, b) => (b.recall < a.recall ? b : a));
@@ -136,11 +149,14 @@ for (const c of selected) {
 const meanRecall = sumRecall / selected.length;
 const meanPrecision = sumPrecision / selected.length;
 const perfectRate = perfect / selected.length;
-const fpRate = totalFP / totalCalls;
+// All-invalid run → fpRate 1 so the gate fails loudly rather than divide by 0.
+const scoredCalls = totalCalls - invalidCalls;
+const fpRate = scoredCalls > 0 ? totalFP / scoredCalls : 1;
 const stability = variantCases ? stableVariantCases / variantCases : null;
 
 console.log('\n=== routing-eval summary ===');
 console.log(`backend=${backend} model=${model} cases=${selected.length} calls=${totalCalls}`);
+if (invalidCalls) console.log(`invalid calls (errored/unparseable — scored recall 0, excluded from FP rate): ${invalidCalls}`);
 console.log(`mean recall (worst-variant): ${meanRecall.toFixed(3)}  (gated)`);
 console.log(`false-positive rate:         ${fpRate.toFixed(3)} per call  (gated)`);
 console.log(`mean precision:              ${meanPrecision.toFixed(3)}  (informative)`);

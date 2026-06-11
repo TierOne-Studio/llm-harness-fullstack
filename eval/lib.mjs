@@ -52,7 +52,7 @@ function flattenTurns(messages) {
   return `Conversation so far:\n\n${transcript}\n\nThe user's NEW message — respond to this:\n${messages[messages.length - 1].content}`;
 }
 
-async function callApi({ system, prompt, model, maxTokens }) {
+async function callApi({ system, messages, model, maxTokens }) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -65,7 +65,7 @@ async function callApi({ system, prompt, model, maxTokens }) {
       max_tokens: maxTokens,
       temperature: 0,
       ...(system ? { system } : {}),
-      messages: prompt,
+      messages,
     }),
   });
   if (!res.ok) {
@@ -106,12 +106,13 @@ async function callCli({ system, prompt, model }) {
 }
 
 /**
- * Single-turn model call, temperature 0 where the backend supports it.
- * backend: 'api' | 'cli'.
+ * Model call — single-turn via `prompt`, or multi-turn via `turns`
+ * ([{role, content}, …] ending on a user turn). Temperature 0 where the
+ * backend supports it. backend: 'api' | 'cli'.
  */
 export async function callModel({ system, prompt, turns, model = DEFAULT_MODEL, backend, maxTokens = 1024 }) {
   const messages = toMessages({ prompt, turns });
-  if (backend === 'api') return callApi({ system, prompt: messages, model, maxTokens });
+  if (backend === 'api') return callApi({ system, messages, model, maxTokens });
   if (backend === 'cli') {
     // Pace sequential CLI calls — rapid bursts intermittently return empty or
     // truncated output from headless `claude -p`.

@@ -45,14 +45,21 @@ function buildFiller(chars) {
   if (chars === 0) return '';
   const skillsDir = join(ROOT, 'template', '.ruler', 'skills');
   const chunks = [];
-  for (const dir of readdirSync(skillsDir, { withFileTypes: true })) {
-    if (!dir.isDirectory()) continue;
+  // Sorted traversal: readdirSync order is platform-dependent, and the filler
+  // content must be identical across runs for decay points to be comparable.
+  const dirs = readdirSync(skillsDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .sort((a, b) => a.name.localeCompare(b.name));
+  for (const dir of dirs) {
     for (const sub of ['topics', 'patterns', 'rules']) {
       const d = join(skillsDir, dir.name, sub);
       try {
-        for (const f of readdirSync(d)) chunks.push(readFileSync(join(d, f), 'utf8'));
+        for (const f of readdirSync(d).sort()) chunks.push(readFileSync(join(d, f), 'utf8'));
       } catch { /* no such subdir */ }
     }
+  }
+  if (chunks.length === 0) {
+    throw new Error(`No filler sources found under ${skillsDir} — filler would be junk and the decay curve meaningless.`);
   }
   let filler = '';
   let i = 0;
@@ -85,13 +92,14 @@ for (const size of SIZES) {
 
   let passed = 0;
   for (const c of probes) {
-    let text = '';
+    let text = null;
     try {
       text = await callModel({ system, prompt: c.prompt, turns: c.turns, model, backend, maxTokens: 2048 });
     } catch (err) {
       console.error(`ERROR: ${c.id} @ ${size} chars — ${err.message}`);
     }
-    const ok = judge(c, text);
+    // Errored call = fail, never judged (same rule as adherence-eval).
+    const ok = text !== null && judge(c, text);
     if (ok) passed += 1;
     console.log(`${ok ? 'PASS' : 'FAIL'}: ${c.id} @ filler=${size.toLocaleString()} chars`);
   }

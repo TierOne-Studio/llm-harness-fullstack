@@ -74,11 +74,17 @@ for (const c of selected) {
   let wins = 0;
   let lastBad = null;
   for (let r = 0; r < repeats; r++) {
-    let text = '';
+    let text = null;
     try {
       text = await callModel({ system, prompt: c.prompt, turns: c.turns, model, backend, maxTokens: 2048 });
     } catch (err) {
       console.error(`ERROR: ${c.id} (run ${r + 1}/${repeats}) — ${err.message}`);
+    }
+    // An errored call is a failed vote, never judged: judging '' would
+    // vacuously PASS a mustNot-only case (e.g. p0-no-ai-attribution).
+    if (text === null) {
+      lastBad = { missing: [], forbidden: [], text: '<call errored — scored as fail>' };
+      continue;
     }
     const v = judge(c, text);
     if (v.ok) wins += 1;

@@ -21,9 +21,20 @@ const ROOT = join(here, '..');
 const INSTRUCTIONS = join(ROOT, 'template', '.ruler', 'instructions.md');
 const SKILLS = join(ROOT, 'template', '.ruler', 'skills');
 
-const modelArg = process.argv.includes('--model')
-  ? ['--model', process.argv[process.argv.indexOf('--model') + 1]]
-  : [];
+/** Value following a flag; loud exit when the flag is present but valueless. */
+function valueAfter(flag) {
+  const i = process.argv.indexOf(flag);
+  if (i === -1) return null;
+  const v = process.argv[i + 1];
+  if (!v || v.startsWith('--')) {
+    console.error(`Missing value for ${flag}.`);
+    process.exit(2);
+  }
+  return v;
+}
+
+const model = valueAfter('--model');
+const modelArg = model ? ['--model', model] : [];
 
 const MUTATIONS = [
   {
@@ -79,7 +90,11 @@ const MUTATIONS = [
     cases: 'feat-route',
     describe: 'Strip react-routing description to two words',
     skill: 'react-routing',
-    apply: (text) => text.replace(/^description: .*$/m, 'description: React routing.'),
+    apply: (text) => {
+      const out = text.replace(/^description: .*$/m, 'description: React routing.');
+      if (out === text) throw new Error('react-routing description not found — no-op mutant');
+      return out;
+    },
   },
   {
     id: 'm-strip-dbwrite-desc',
@@ -87,17 +102,33 @@ const MUTATIONS = [
     cases: 'single-write',
     describe: 'Strip db-write-protocol description to two words',
     skill: 'db-write-protocol',
-    apply: (text) => text.replace(/^description: .*$/m, 'description: Database stuff.'),
+    apply: (text) => {
+      const out = text.replace(/^description: .*$/m, 'description: Database stuff.');
+      if (out === text) throw new Error('db-write-protocol description not found — no-op mutant');
+      return out;
+    },
   },
 ];
 
-const onlyArg = process.argv.indexOf('--mutations');
-const selected = onlyArg !== -1
-  ? MUTATIONS.filter((m) => process.argv[onlyArg + 1].split(',').includes(m.id))
-  : MUTATIONS;
+// Mirrors filterCases in eval/lib.mjs: an unknown id or empty selection exits
+// loudly — a typo'd list would otherwise run zero mutations, compute a NaN
+// kill rate, and exit 0 (no survivors) as if the suite were validated.
+const only = valueAfter('--mutations');
+let selected = MUTATIONS;
+if (only) {
+  const requested = new Set(only.split(',').filter(Boolean));
+  selected = MUTATIONS.filter((m) => requested.has(m.id));
+  const found = new Set(selected.map((m) => m.id));
+  const unknown = [...requested].filter((id) => !found.has(id));
+  if (unknown.length || selected.length === 0) {
+    console.error(`Unknown --mutations ids: ${unknown.join(', ') || '(empty selection)'}. Known: ${MUTATIONS.map((m) => m.id).join(', ')}`);
+    process.exit(2);
+  }
+}
 
 function runEval(args) {
   const res = spawnSync('node', args, { encoding: 'utf8', cwd: ROOT, maxBuffer: 16 * 1024 * 1024 });
+  if (res.error) throw new Error(`eval failed to spawn: ${res.error.message}`);
   return (res.stdout || '') + (res.stderr || '');
 }
 
@@ -119,6 +150,13 @@ for (const m of selected) {
       const file = join(skillsCopy, m.skill, 'SKILL.md');
       writeFileSync(file, m.apply(readFileSync(file, 'utf8')));
       output = runEval(['eval/routing-eval.mjs', '--backend', 'cli', '--skills-dir', skillsCopy, '--only', m.cases, ...modelArg]);
+    }
+    // Red must mean the CASES failed, not that the eval machinery did. With a
+    // dead backend every case errors, prints FAIL/MISS, and every mutant would
+    // count as "killed" — a false-green kill rate. Abort on machinery signals.
+    if (/^SKIP: /m.test(output)) throw new Error(`no live backend — mutation test cannot run (${m.id})`);
+    if (/^(ERROR|NOPARSE): /m.test(output)) {
+      throw new Error(`eval calls errored during ${m.id} — verdict unreliable. output[:300]: ${output.replace(/\s+/g, ' ').slice(0, 300)}`);
     }
     const red = /^(FAIL|MISS): /m.test(output);
     if (red) {
