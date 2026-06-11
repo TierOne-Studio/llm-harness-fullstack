@@ -1,6 +1,7 @@
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, appendFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 export const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
@@ -31,7 +32,27 @@ export function detectBackend() {
   return null;
 }
 
-async function callApi({ system, prompt, model, maxTokens }) {
+/**
+ * Normalize input to a messages array. Callers pass either `prompt` (single
+ * user turn) or `turns` ([{role, content}, …] ending on a user turn) for
+ * multi-turn scenarios (approval flows, mid-task escalation).
+ */
+function toMessages({ prompt, turns }) {
+  if (turns?.length) return turns;
+  return [{ role: 'user', content: prompt }];
+}
+
+/** Flatten a multi-turn conversation into one prompt for the single-shot CLI backend. */
+function flattenTurns(messages) {
+  if (messages.length === 1) return messages[0].content;
+  const transcript = messages
+    .slice(0, -1)
+    .map((m) => (m.role === 'user' ? `User said:\n${m.content}` : `You (assistant) replied:\n${m.content}`))
+    .join('\n\n');
+  return `Conversation so far:\n\n${transcript}\n\nThe user's NEW message — respond to this:\n${messages[messages.length - 1].content}`;
+}
+
+async function callApi({ system, messages, model, maxTokens }) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -44,7 +65,7 @@ async function callApi({ system, prompt, model, maxTokens }) {
       max_tokens: maxTokens,
       temperature: 0,
       ...(system ? { system } : {}),
-      messages: [{ role: 'user', content: prompt }],
+      messages,
     }),
   });
   if (!res.ok) {
@@ -85,18 +106,68 @@ async function callCli({ system, prompt, model }) {
 }
 
 /**
- * Single-turn model call, temperature 0 where the backend supports it.
- * backend: 'api' | 'cli'.
+ * Model call — single-turn via `prompt`, or multi-turn via `turns`
+ * ([{role, content}, …] ending on a user turn). Temperature 0 where the
+ * backend supports it. backend: 'api' | 'cli'.
  */
-export async function callModel({ system, prompt, model = DEFAULT_MODEL, backend, maxTokens = 1024 }) {
-  if (backend === 'api') return callApi({ system, prompt, model, maxTokens });
+export async function callModel({ system, prompt, turns, model = DEFAULT_MODEL, backend, maxTokens = 1024 }) {
+  const messages = toMessages({ prompt, turns });
+  if (backend === 'api') return callApi({ system, messages, model, maxTokens });
   if (backend === 'cli') {
     // Pace sequential CLI calls — rapid bursts intermittently return empty or
     // truncated output from headless `claude -p`.
     await sleep(1000);
-    return callCli({ system, prompt, model });
+    return callCli({ system, prompt: flattenTurns(messages), model });
   }
   throw new Error(`Unknown backend: ${backend}`);
+}
+
+/**
+ * Append a run record to eval/history.jsonl — the score trail that makes
+ * regressions bisectable by commit. Only full runs append (callers guard).
+ */
+export function appendHistory(record) {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const head = spawnSync('git', ['rev-parse', '--short', 'HEAD'], { encoding: 'utf8' });
+  const entry = {
+    ts: new Date().toISOString(),
+    commit: head.status === 0 ? head.stdout.trim() : null,
+    ...record,
+  };
+  appendFileSync(join(here, 'history.jsonl'), JSON.stringify(entry) + '\n');
+}
+
+/**
+ * Score one routing reply against a case's expected skills.
+ * - Negative case (expected []): recall 1 only when no non-whitelisted skill returned.
+ * - falsePositives: returned skills neither expected nor in the whitelist.
+ * - precision ignores whitelisted (force-fire) skills entirely.
+ */
+export function scoreRouting(expected, returned, whitelist) {
+  const got = new Set(returned);
+  const falsePositives = returned.filter((s) => !expected.includes(s) && !whitelist.has(s));
+  const recall = expected.length === 0
+    ? (falsePositives.length === 0 ? 1 : 0)
+    : expected.filter((s) => got.has(s)).length / expected.length;
+  const credited = returned.filter((s) => expected.includes(s)).length;
+  const precision = credited + falsePositives.length > 0
+    ? credited / (credited + falsePositives.length)
+    : 1;
+  return { recall, precision, falsePositives };
+}
+
+/** --only id1,id2 filter for targeted runs (mutation testing, debugging). */
+export function filterCases(cases, argv = process.argv) {
+  const i = argv.indexOf('--only');
+  if (i === -1) return cases;
+  const ids = new Set((argv[i + 1] || '').split(',').filter(Boolean));
+  const picked = cases.filter((c) => ids.has(c.id));
+  if (picked.length !== ids.size) {
+    const found = new Set(picked.map((c) => c.id));
+    console.error(`Unknown --only ids: ${[...ids].filter((x) => !found.has(x)).join(', ')}`);
+    process.exit(2);
+  }
+  return picked;
 }
 
 /**

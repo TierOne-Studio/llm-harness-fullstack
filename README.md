@@ -1,82 +1,204 @@
-# @tierone/llm-harness-fullstack
+# llm-harness-fullstack
 
-An **LLM agent harness** for fullstack (**NestJS + React**) monorepos, distributed as an installable `.ruler/` payload. It is the union of [`@tierone/llm-harness-nest`](https://github.com/TierOne-Studio/llm-harness-nest) and [`@tierone/llm-harness-react`](https://github.com/TierOne-Studio/llm-harness-react) — the backend skills, the frontend skills, the shared engineering disciplines, and dual-tier review agents — in one harness for a monorepo that ships both tiers (e.g. a [fullstack-base](https://github.com/TierOne-Studio/fullstack-base)-style `apps/api` + `apps/web` + `packages/contracts` layout).
+**A governed, measured agent harness for NestJS + React monorepos.** Make every
+AI coding agent on your team work like your best senior engineer: spec-first,
+test-first, clean-architecture-aware, principle-reviewed (SOLID · DRY · KISS ·
+SoC) — and **provably** so, with committed eval baselines instead of promises.
 
 > In the sense of [Martin Fowler's *Harness Engineering*](https://martinfowler.com/articles/harness-engineering.html):
-> `Agent = Model + Harness`. The harness is everything around the model — the
-> **guides** (skills, instructions, conventions) that steer it *before* it acts,
-> and the **sensors** (review agents) that catch problems *after*. This package
-> ships that harness so you can drop it into any React + NestJS monorepo.
+> `Agent = Model + Harness`. You don't control the model — you control everything
+> around it. This package ships that "everything": the **guides** (instructions,
+> skills, conventions) that steer the agent *before* it acts, and the **sensors**
+> (independent review agents, deterministic gates) that catch problems *after*.
 
-It installs into your project's `.ruler/` directory, which [ruler](https://github.com/intellectronica/ruler)
-fans out to `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`, Cursor, etc.
+One `npx` command installs it into your repo's `.ruler/` directory;
+[ruler](https://github.com/intellectronica/ruler) fans the same source out to
+`CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`, Cursor, and
+Windsurf — **one governance investment, every agent tool your team uses**.
 
-## Install
+---
 
-This is **not** a runtime dependency. It copies files into your repo and gets out
-of the way — nothing is left in `node_modules`.
+## The problem it solves
 
-```bash
-# First time — creates ./.ruler and copies the harness in
-npx @tierone/llm-harness-fullstack init
+Your engineers already use AI agents. Without a harness, that means N engineers
+× M personal prompting styles: conventions enforced only at human code review
+(the most expensive point), safety by vigilance, and a rules file nobody can
+prove the model actually follows. The result is the opposite of what
+engineering leadership needs from AI adoption: **unpredictable output quality,
+eroding architecture, and unbounded risk.**
 
-# Later — pull a newer harness version, merging your local edits (3-way)
-npx @tierone/llm-harness-fullstack update
+The harness inverts that:
+
+```mermaid
+flowchart LR
+    G["Guides<br/>operating profile + 44 skills"] --> A["Agent acts"] --> S["Sensors<br/>7 independent review agents"] --> D["Deterministic gates<br/>CI · pre-commit · permissions"]
+    M["Evals + committed baselines"] -.->|regression-gate every<br/>change to the harness| G & S
 ```
 
-Then regenerate your agent config with [ruler](https://github.com/intellectronica/ruler).
-Use the **scoped** package name — the bare `ruler` on npm is an unrelated package with no
-executable, so plain `npx ruler apply` fails with *"could not determine executable to run"*:
+|  | Raw agent + ad-hoc prompts | A static rules file | This harness |
+|---|---|---|---|
+| Conventions | per engineer, per session | shared, advisory | shared + independently reviewed on every PR |
+| Architecture & principles | whatever the model defaults to | mentioned, unenforced | designed in (clean architecture, SOLID/DRY/KISS/SoC) **and** reviewed against, per diff |
+| Safety (main-push, deploys, DB writes) | hope | instructions only | instructions **and** permission denies / CI gates |
+| "Does the model actually follow it?" | unknown | unknown | measured — per-model eval baselines, zero-tolerance safety gating |
+| Survives model upgrades | n/a | silently degrades | re-baseline, review the behavioral diff |
+| Multi-tool (Claude / Copilot / Cursor / Codex) | no | one format | one source, fanned out to all |
+| Taking upstream improvements | n/a | manual copy-paste | versioned `update` with a git 3-way merge |
 
-```bash
-npx @intellectronica/ruler apply
-```
+## How it makes agent output predictable
 
-> **Tip:** to keep typing the short `ruler` command, add it to your project once —
-> `npm i -D @intellectronica/ruler` — after which `npx ruler apply` resolves to the
-> local binary instead of the unrelated public package.
+Five mechanisms, layered so no single one has to be perfect:
+
+1. **A priority-ordered operating profile.** `instructions.md` (P0–P9) is the
+   always-loaded contract. P0 is non-negotiable safety: never touch `main`,
+   explicit human approval for every git write, deploy, DB write, and
+   sensitive-data change. Below it: spec-first for behavioral changes,
+   TDD for every executable change (with exactly four legal waiver phrases —
+   "small change" and "obvious fix" are *forbidden* non-waivers), and an output
+   contract whose last line must be **executed** verification, never claimed.
+2. **Principles you'd enforce in human review, enforced on agents.** Every
+   significant diff gets an independent design review against nine MUST
+   principles — **SOLID, DRY, KISS, Separation of Concerns, YAGNI, high
+   cohesion / low coupling, fail-fast, explicitness over magic, single source
+   of truth** — plus your repo's own conventions. The backend skills encode the
+   clean-architecture dependency rule (domain ← application ← infrastructure);
+   a violation is a finding, not a style note.
+3. **Independent review agents, fresh context, willing to block.** Seven
+   subagents each own one concern — plan review, spec stewardship, design,
+   coverage/edge cases, security (OWASP + SPA + NestJS surfaces), live
+   acceptance verification, lesson capture. They re-read the conventions
+   themselves rather than trusting the implementer, and the final status is the
+   **minimum** over every reviewer that ran — never the average. The acceptance
+   verifier re-runs the real suites and checks tests are non-vacuous: a green
+   test that wouldn't fail if the feature were reverted is flagged, not counted.
+4. **Deterministic gates for what advice can't guarantee.** Ready-to-copy CI,
+   pre-commit, and agent-permission templates turn the rules into enforcement:
+   pushes to `main` are *denied*, deploy/DB-write commands *prompt*, and a red
+   typecheck/lint/test/e2e run blocks the merge — regardless of what any model
+   intended.
+5. **Measurement, so it stays true.** Live-model evals verify routing and gate
+   adherence against committed per-model baselines; mutation tests verify the
+   evals themselves would catch a deleted gate; a context-decay probe measures
+   where instructions degrade. Numbers below.
 
 ## What you get
 
 ```
 .ruler/
-├── instructions.md        # the senior-engineer operating profile (P0–P9), monorepo-aware
-├── ruler.toml             # ruler fan-out config (claude / copilot / codex / cursor / windsurf)
-├── agents/                # dual-tier review subagents (sensors) — review both apps/web and apps/api
-│   ├── architect-reviewer.md
-│   ├── code-reviewer.md
-│   ├── qa-validator.md
-│   ├── security-reviewer.md
-│   └── lessons-curator.md
-└── skills/                # guides — the union of both stacks, grouped into families;
-                           # see skills/README.md for the generated visual catalog
-                           # (mindmap + tables — the dirs stay flat because agent
-                           # runtimes discover skills as skills/<name>/SKILL.md):
-                           #   process: tdd-workflow, design-review, plan-mode, bug-investigation,
-                           #            failure-mode-analysis, decision-rules, repo-conventions,
-                           #            quality-gates, …
-                           #   frontend: react-patterns, react-state-management, react-routing,
-                           #            react-data-fetching, react-forms, accessibility,
-                           #            frontend-security, vite, vitest, shadcn, tailwind-v4-shadcn, …
-                           #   backend: nestjs-best-practices, nestjs-clean-architecture,
-                           #            nestjs-patterns, nodejs-best-practices,
-                           #            database-transactions, db-write-protocol
+├── instructions.md             # the senior-engineer operating profile (P0–P9), monorepo-aware
+├── ruler.toml                  # ruler fan-out config (claude / copilot / codex / cursor / windsurf)
+├── agents/                     # 7 review subagents (sensors) — fresh-context, one concern each
+│   ├── architect-reviewer.md   #   PRE        — plan-level design & risk
+│   ├── spec-steward.md         #   PRE + POST — requirements gate; owns docs/specs/**
+│   ├── code-reviewer.md        #   POST       — design principles (SOLID/DRY/KISS/SoC/…)
+│   ├── qa-validator.md         #   POST       — coverage, edge cases, a11y, docs
+│   ├── security-reviewer.md    #   POST       — OWASP, AuthZ, secrets, XSS, injection
+│   ├── acceptance-verifier.md  #   POST, last — runs the LIVE suites; verdict binding on "done"
+│   └── lessons-curator.md      #   on user correction — proposes ONE harness improvement
+├── skills/                     # 44 guides in 6 families — see the table below
+│   └── <name>/SKILL.md         #   dirs stay flat: runtimes discover skills/<name>/SKILL.md
+└── tests/                      # the harness's own acceptance + skill-trigger suites
 ```
 
-The `repo-conventions` skill ships as a fill-in skeleton covering **both** tiers (frontend
-feature layout / state / routing / auth, backend module layout / authz / persistence) **plus**
-the shared-contract seam — fill it in with your project's actual choices.
+Skills are **tier-routed**: an agent loads only the families matching the
+workspaces a change touches (`instructions.md` § P3.0) — a backend fix never
+drags React guidance into context, and vice versa.
 
-The `quality-gates` skill ships ready-to-copy CI + pre-commit + permission templates
-(`templates/ci.yml`, `templates/pre-commit`, `templates/claude-settings.json`) so the
-practices the skills *teach* become a gate the toolchain *enforces*: typecheck, lint, unit
-tests, and the Playwright FE↔BE seam run on every PR and block a red merge, and Claude
-Code's own permission system denies pushes to `main` and prompts on publish/deploy/DB-write
-commands. Skills and review agents steer the model *before* it acts; the gates are the
-deterministic backstop that catches what advice doesn't. Copy them into `.github/workflows/`,
-`.husky/`, and `.claude/` to turn that guidance into enforcement.
+| Family | Loads for | Skills |
+|---|---|---|
+| 🧭 Process & discipline (15) | any tier | `tdd-workflow` · `design-review` · `plan-mode` · `spec-workflow` · `repo-conventions` · `quality-gates` · `bug-investigation` · `failure-mode-analysis` · `decision-rules` · `documentation-and-adrs` · `git-workflow` · `pushback-templates` · `rlm-explore` · `cross-repo-workspace` · `meta-skill-hygiene` |
+| 🔡 Language & code quality (5) | any tier | `async-error-handling` · `typescript-advanced-types` · `js-performance-patterns` · `code-simplifier` · `cyclomatic-complexity` |
+| ⚛️ React core (9) | `apps/web` | `react-patterns` · `react-state-management` · `react-data-fetching` · `react-routing` · `react-forms` · `react-performance` · `react-testing` · `react-design-patterns` · `react-2026` |
+| 🎨 Frontend platform & quality (9) | `apps/web` | `accessibility` · `frontend-security` · `bundle-size` · `playwright-best-practices` · `vite` · `vitest` · `shadcn` · `tailwind-v4-shadcn` · `ai-ui-patterns` |
+| 🏗️ Backend — NestJS & Node (4) | `apps/api` | `nestjs-best-practices` · `nestjs-clean-architecture` · `nestjs-patterns` · `nodejs-best-practices` |
+| 🗄️ Data & persistence (2) | `apps/api` | `database-transactions` · `db-write-protocol` |
 
-## Commands
+The full generated catalog — mindmap plus a one-line gist per skill — lives in
+[`skills/README.md`](template/.ruler/skills/README.md) (regenerated from each
+skill's frontmatter via `npm run catalog`; CI fails if it drifts).
+
+Two pieces are deliberately **yours to finish**:
+
+- **`repo-conventions`** ships as a fill-in skeleton covering both tiers
+  (frontend feature layout / state / routing / auth; backend module layout /
+  authz / persistence) plus the shared-contract seam. Filling it in is the
+  highest-leverage hour of adoption — it's the file every agent *and* every
+  reviewer treats as "what's correct for this repo."
+- **`quality-gates`** ships the enforcement templates (`templates/ci.yml`,
+  `templates/pre-commit`, `templates/claude-settings.json`). Copy them into
+  `.github/workflows/`, `.husky/`, and `.claude/` to turn guidance into gates:
+  typecheck, lint, unit tests, and the Playwright FE↔BE seam block a red merge,
+  and the agent-permission layer denies pushes to `main` and prompts on
+  publish/deploy/DB-write commands.
+
+## Quick start
+
+This is **not** a runtime dependency — `init` copies plain Markdown into your
+repo and gets out of the way. Nothing is left in `node_modules`; everything is
+inspectable text you own.
+
+```bash
+# 1 · Install the harness into ./.ruler
+npx @tierone/llm-harness-fullstack init
+
+# 2 · Generate every agent's config from it
+npx @intellectronica/ruler apply
+```
+
+> **Note the scoped package name** — the bare `ruler` on npm is an unrelated
+> package with no executable, so plain `npx ruler apply` fails with *"could not
+> determine executable to run."* To keep typing the short command, add it once:
+> `npm i -D @intellectronica/ruler`, after which `npx ruler apply` resolves to
+> the local binary.
+
+Then make it yours: fill in `repo-conventions`, copy the `quality-gates`
+templates into place, and commit — every engineer (and every CI agent run) gets
+the harness on next pull, nothing to install per person. For a structured
+30-day pilot with a metrics framework, follow
+[docs/ADOPTION.md](docs/ADOPTION.md).
+
+When a new harness version ships:
+
+```bash
+npx @tierone/llm-harness-fullstack update   # 3-way merge — your local edits survive
+```
+
+## Measured, not believed
+
+Most agent-guidelines efforts can't answer *"how do you know the model follows
+it?"* This one treats that as a testable claim, with committed, per-model
+baselines ([`eval/baseline.json`](eval/baseline.json)) and an append-only score
+history ([`eval/history.jsonl`](eval/history.jsonl)):
+
+| Layer | Question | Latest committed result |
+|---|---|---|
+| **Routing eval** | Does a live model load the right skills — across paraphrases, and nothing for pure questions? | Sonnet-class: **0.98 recall**. Haiku-class cost floor: 0.93 recall, 0.80 paraphrase stability |
+| **Adherence eval** | Under the full profile, does it emit the literal gates (approval pauses, waivers, path declarations) — calm, multi-turn, and under prompt injection? | Sonnet-class: **100% (21 cases × 3-vote majority)**. Haiku-class on the expanded adversarial suite: 77.8%, safety category 61.5% |
+| **Mutation test** | Would the suites catch a deleted gate or a softened MUST? | **6/6 seeded regressions killed** |
+| **Context decay** | Does adherence degrade as context fills? | 0.67 at empty → **0.33 at ~90k filler tokens** |
+
+Read the weak numbers as design rationale, not fine print: the cost-floor
+model's safety adherence and the decay at 90k tokens are *measurements of where
+instructions alone fail* — which is exactly why every safety rule also exists
+as a deterministic gate that doesn't care about model size or context pressure.
+**Practical model floor:** Sonnet-class for full prose-gate fidelity;
+Haiku-class is sufficient *when the permission layer is installed* — it owns
+exactly the gates the smaller model fumbles.
+
+Two test layers guard every change to the harness itself:
+
+- **Deterministic** (`npm test`, `npm run test:harness`): unit tests for the
+  CLI, a structural acceptance suite (frontmatter integrity, project-agnosticism,
+  write-scope guards, instruction budget), and a static skill-trigger simulation.
+  Zero cost, the CI gate.
+- **Live-model** (`npm run eval`, see [docs/EVALS.md](docs/EVALS.md)): the routing
+  and adherence evals above. Scores gate against the committed baseline; after
+  an intended behavioral change, re-run with `--update-baseline` and commit —
+  **the baseline diff in the PR is the reviewable evidence of behavioral
+  impact**. The scripts self-skip without an API key or `claude` CLI, so the
+  deterministic layer remains the universal gate.
+
+## CLI reference
 
 | Command | What it does |
 |---|---|
@@ -85,8 +207,6 @@ deterministic backstop that catches what advice doesn't. Copy them into `.github
 | `version` | Print the installed package version. |
 | `help` | Usage. |
 
-### Flags
-
 | Flag | Applies to | Effect |
 |---|---|---|
 | `--force` | `init` | Overwrite an existing `.ruler` (unrelated files are preserved). |
@@ -94,54 +214,32 @@ deterministic backstop that catches what advice doesn't. Copy them into `.github
 | `--dry-run` | `update` | Report what would change without writing anything. Exits `1` if the merge would conflict, so it works as a CI check. |
 | `--cwd DIR` | both | Operate on `DIR` instead of the current directory. |
 
-## How `update` works (3-way merge)
+**How `update` works:** `init` records the installed version in a sentinel
+(`.ruler/.harness-version.json`). On `update`, the version you last installed
+is re-downloaded via `npm pack` as the merge BASE, and each file is reconciled
+across BASE → your copy → the new version with `git merge-file` — the same
+engine git itself uses. Non-overlapping edits on both sides survive;
+overlapping edits leave standard `<<<<<<<` conflict markers, and the version is
+**not** advanced until you resolve them and re-run. Files you created yourself
+are never touched. (`update` needs `git`/`npm`/`tar` on `PATH`; `init` and
+`update --force` need nothing.)
 
-On `init`, a sentinel `.ruler/.harness-version.json` records the installed version.
-On `update`:
+## Documentation
 
-1. The **BASE** (the version you last installed) is downloaded via `npm pack`.
-2. Each file is reconciled across **BASE → your local copy → the new version**
-   using `git merge-file` — the same engine git uses for merges.
-3. **Your edits and upstream edits both survive** when they don't overlap.
-4. **Overlapping edits** leave standard `<<<<<<<` conflict markers, the conflicted
-   files are listed, and the version is **not** advanced until you resolve them and
-   re-run `update`.
-5. Files you created yourself (never shipped by the harness) are left untouched.
+| Doc | For | Covers |
+|---|---|---|
+| [docs/WHY-A-HARNESS.md](docs/WHY-A-HARNESS.md) | CTOs, VPs Engineering | the business case: value pillars, the measured evidence, objections answered, compliance mapping |
+| [docs/ADOPTION.md](docs/ADOPTION.md) | the team running the rollout | pilot → measure → scale playbook, metrics framework, honest cost table |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | staff engineers, contributors | internals: the distribution CLI, the payload, the eval harness — with diagrams |
+| [docs/AGENTS-AND-SKILLS.md](docs/AGENTS-AND-SKILLS.md) | anyone customizing the harness | deep dive: how the main agent, review subagents, and skills collaborate, with a worked example |
+| [docs/EVALS.md](docs/EVALS.md) | anyone auditing the numbers | eval methodology: metric definitions, gating tolerances, baselines, how to run and re-baseline |
 
-`update` requires `git`, `npm`, and `tar` on `PATH` (`update --force` and `init` have
-no such requirements). The shipped template is text-only.
-
-## Supported model floor (measured)
-
-Both eval layers were baselined on a cost-floor model (Haiku 4.5) and a consumer-grade
-model (Sonnet 4.6), 3-vote majority per adherence case. Measured result: **skill routing
-is perfect on both tiers** (mean recall 1.000, 32/32 prompts), and gate adherence is
-**1.000 on Sonnet** vs **0.952 on Haiku** — Haiku's one failing gate is the approval
-pause on branch creation, and several of its passes are split votes (2/3), i.e. marginal.
-The marginal layer on both tiers is exact-literal-string emission (the verbatim
-`Awaiting approval (…)` line, the exact waiver phrases): models reliably *do* the gated
-behavior but less reliably emit the mandated token. This is why command-shaped gates
-belong to the deterministic permission layer (`quality-gates` →
-`templates/claude-settings.json`) with the prose protocol as fallback — that division is
-by design. Practical floor: **Sonnet-class for full prose-gate fidelity; Haiku-class is
-sufficient when the deterministic permission layer is installed** (it owns exactly the
-gates Haiku fumbles).
-
-## Evals (how the harness proves itself)
-
-Two layers of self-test guard the shipped template:
-
-- **Deterministic** (`npm run test:harness`): structural acceptance suite (frontmatter,
-  cross-reference integrity, project-agnosticism, write-scope guard, instruction budget,
-  skill-size ceilings) + a keyword-level skill-trigger simulation. Zero cost, runs everywhere.
-- **Live-model** (`npm run eval`, see [`eval/`](./eval/README.md)): a routing eval (does a
-  model route canonical prompts to the right skills, given the shipped catalog?) and a
-  gate-adherence eval (under the full `instructions.md`, does it actually emit the approval
-  pause, waiver phrases, tier routing, and path declaration?). Scores gate against the
-  committed `eval/baseline.json`; the scripts self-skip when no `ANTHROPIC_API_KEY` or
-  `claude` CLI is available. After an intended behavioral change, re-run with
-  `--update-baseline` and commit the diff — that diff is the evidence of impact.
+Single-tier siblings: [`llm-harness-nest`](https://github.com/TierOne-Studio/llm-harness-nest)
+(backend only) · [`llm-harness-react`](https://github.com/TierOne-Studio/llm-harness-react)
+(frontend only). This package is their union for monorepos shipping both tiers
+(e.g. a [fullstack-base](https://github.com/TierOne-Studio/fullstack-base)-style
+`apps/api` + `apps/web` + `packages/contracts` layout).
 
 ## License
 
-[MIT](./LICENSE) © TierOne Studio
+[MIT](LICENSE) © TierOne Studio
