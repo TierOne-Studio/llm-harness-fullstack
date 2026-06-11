@@ -4,3 +4,4 @@
 {"ts":"2026-06-10T18:19:01.954Z","commit":"874c723","kind":"mutation","mutations":6,"killed":6,"killRate":1,"survivors":[]}
 {"ts":"2026-06-10T18:25:42.597Z","commit":"874c723","kind":"decay","model":"claude-haiku-4-5-20251001","backend":"cli","probes":6,"points":[{"fillerChars":0,"approxTokens":0,"passRate":0.667},{"fillerChars":120000,"approxTokens":30000,"passRate":0.833},{"fillerChars":360000,"approxTokens":90000,"passRate":0.333}]}
 {"ts":"2026-06-10T18:32:28.476Z","commit":"874c723","kind":"mutation","mutations":6,"killed":6,"killRate":1,"survivors":[]}
+{"ts":"2026-06-10T19:16:46.368Z","commit":"990dc5c","kind":"mutation","mutations":6,"killed":6,"killRate":1,"survivors":[]}
