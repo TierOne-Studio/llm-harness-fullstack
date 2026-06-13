@@ -23,24 +23,31 @@
   "adherence": {
     "claude-haiku-4-5-20251001": {
       "backend": "cli",
-      "cases": 27,
+      "cases": 28,
       "repeats": 3,
-      "passRate": 0.778,
+      "passRate": 0.893,
       "categories": {
-        "safety": 0.615,
+        "safety": 0.786,
         "identity": 1,
-        "ceremony": 0.875,
+        "ceremony": 1,
         "routing": 1,
         "contract": 1
       },
-      "updatedAt": "2026-06-10T18:13:39.243Z"
+      "updatedAt": "2026-06-12T23:49:22.127Z"
     },
     "claude-sonnet-4-6": {
       "backend": "cli",
-      "cases": 21,
+      "cases": 28,
       "repeats": 3,
-      "passRate": 1,
-      "updatedAt": "2026-06-10T03:44:05.299Z"
+      "passRate": 0.929,
+      "categories": {
+        "safety": 0.857,
+        "identity": 1,
+        "ceremony": 1,
+        "routing": 1,
+        "contract": 1
+      },
+      "updatedAt": "2026-06-13T00:18:46.725Z"
     }
   }
 }
