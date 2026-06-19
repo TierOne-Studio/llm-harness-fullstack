@@ -85,6 +85,18 @@ const MUTATIONS = [
     },
   },
   {
+    id: 'm-strip-recipe-build-desc',
+    kind: 'routing',
+    cases: 'recipe-build-approved-plan',
+    describe: 'Strip recipe-build description to two words',
+    skill: 'recipe-build',
+    apply: (text) => {
+      const out = text.replace(/^description: .*$/m, 'description: Build stuff.');
+      if (out === text) throw new Error('recipe-build description not found — no-op mutant');
+      return out;
+    },
+  },
+  {
     id: 'm-strip-routing-desc',
     kind: 'routing',
     cases: 'feat-route',

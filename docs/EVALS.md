@@ -70,3 +70,11 @@ reviewable evidence of behavioral impact.
 - Adherence: append to `adherence-cases.json`. Assert observable artifacts
   (exact gate lines, waiver phrases), not vibes; keep `must` patterns anchored
   to text the instructions literally mandate.
+
+## Workflow Recipe Evals
+
+Recipe changes require both routing and adherence cases. Routing cases prove the
+model selects the recipe entry point. Adherence cases prove the recipe does not
+override P0 safety, implementation approval stops, or missing-prerequisite
+behavior. Mutation tests seed recipe regressions so weakened workflow gates are
+caught before release.
