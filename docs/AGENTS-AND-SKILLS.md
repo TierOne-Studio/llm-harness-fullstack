@@ -2,7 +2,7 @@
 
 Companion to [ARCHITECTURE.md](ARCHITECTURE.md) §3. That document gives the
 bird's-eye view of the three planes; this one zooms all the way in on the
-**runtime**: who the main agent and the eleven subagents are, what each is
+**runtime**: who the main agent and the twelve subagents are, what each is
 responsible for, how they communicate (with the actual message shapes), and how
 skills mechanically work as the shared knowledge layer — finished with a worked
 end-to-end example.
@@ -14,10 +14,10 @@ Everything here is sourced from the shipped payload:
 
 ---
 
-## 1. Topology — a hub with eleven spokes
+## 1. Topology — a hub with twelve spokes
 
 The main agent is the **orchestrator and the only writer of application code**.
-The eleven subagents are **one-shot specialists**: each is spawned for a single
+The twelve subagents are **one-shot specialists**: each is spawned for a single
 review, runs in a **fresh context** (it does not see the conversation, the main
 agent's reasoning, or its confidence), produces one structured Markdown report,
 and terminates. Subagents never talk to each other — the main agent is the bus
@@ -39,6 +39,7 @@ flowchart TB
         AR["architect-reviewer<br/>read-only"]
     end
     subgraph POST["POST-implementation spokes"]
+        QR["quality-runner<br/>read + run quality gates"]
         CR["code-reviewer<br/>read + run tests"]
         QA["qa-validator<br/>read + run tests"]
         SEC["security-reviewer<br/>read + static checks"]
@@ -53,6 +54,7 @@ flowchart TB
     M -->|"cross-tier docs/contracts"| DS -->|"sync matrix JSON"| M
     M -->|"spawn prompt:<br/>plan + scope"| AR -->|"APPROVE_PLAN /<br/>REVISE_PLAN / BLOCK"| M
     M -->|"spawn prompt:<br/>requirements text"| SS1 -->|"NEEDS-INPUT /<br/>UPDATED + SPEC"| M
+    M -->|"changed files + plan task"| QR -->|"quality verdict JSON"| M
     M -->|"spawn prompt:<br/>the diff"| CR -->|"APPROVE / CHANGES<br/>REQUESTED / BLOCK"| M
     M -->|"the diff"| QA -->|"coverage gaps /<br/>BLOCK"| M
     M -->|"the diff"| SEC -->|"findings /<br/>BLOCK"| M
@@ -184,7 +186,7 @@ The main agent also owns **escalation**: the moment a fast-path change stops
 qualifying it must emit `Path: full — escalated: <reason>` and switch chains
 mid-task (P5.7).
 
-### 4.2 The eleven subagents — one concern each
+### 4.2 The twelve subagents — one concern each
 
 #### Planning agents
 
@@ -200,16 +202,16 @@ architecture, or edit code.
 | **Output** | structured JSON | structured JSON | structured JSON verdict | sync matrix JSON |
 | **May write** | nothing | nothing | nothing | nothing |
 
-#### Review and lifecycle agents
+#### Quality, review, and lifecycle agents
 
-| | architect&#8209;reviewer | spec&#8209;steward | code&#8209;reviewer | qa&#8209;validator | security&#8209;reviewer | acceptance&#8209;verifier | lessons&#8209;curator |
-|---|---|---|---|---|---|---|---|
-| **Phase** | PRE | PRE + POST | POST | POST (∥ code-reviewer) | POST | POST, always LAST | on correction |
-| **Input it receives** | the plan | requirements text (PRE) / shipped diff (POST) | the diff | the diff | the diff | spec criteria + the green suite | correction text, verbatim |
-| **Owns** | plan-level design & risk (10× cost asymmetry) | `docs/specs/**` truth; ambiguity gate | design principles | coverage, edge cases, a11y, docs, compat | OWASP + SPA + NestJS security surfaces | EXECUTED acceptance proof, non-vacuity | one correction → one system change |
-| **Core rubric (skill)** | `design-review` applied to the *plan*; `repo-conventions` | `spec-workflow` (readiness rubric) | `design-review` MUSTs; `repo-conventions` per-tier tables; P3.5 conflict rule | `failure-mode-analysis` 8 categories; test-quality rubric | OWASP top-10; `frontend-security`; three-tier boundary system | `tdd-workflow` rubric item 2 at the acceptance layer | `meta-skill-hygiene`; surveys skills/agents/CLAUDE.md |
-| **Verdicts** | APPROVE_PLAN / REVISE_PLAN / BLOCK | NEEDS-INPUT / SYNCED / UPDATED / BLOCK **(binding)** | APPROVE / CHANGES REQUESTED / BLOCK | findings / BLOCK | findings / BLOCK | ACCEPTED / GAPS / BLOCK **(binding on "done")** | a proposal, approval-gated |
-| **May write** | nothing | `docs/specs/**` ONLY | nothing (Bash = run tests) | nothing | nothing | nothing (Bash = run live suites) | nothing |
+| | architect&#8209;reviewer | spec&#8209;steward | quality&#8209;runner | code&#8209;reviewer | qa&#8209;validator | security&#8209;reviewer | acceptance&#8209;verifier | lessons&#8209;curator |
+|---|---|---|---|---|---|---|---|---|
+| **Phase** | PRE | PRE + POST | POST before review aggregation | POST | POST (parallel with code-reviewer) | POST | POST, always LAST | on correction |
+| **Input it receives** | the plan | requirements text (PRE) / shipped diff (POST) | changed files and plan task | the diff | the diff | the diff | spec criteria + the green suite | correction text, verbatim |
+| **Owns** | plan-level design & risk (10x cost asymmetry) | `docs/specs/**` truth; ambiguity gate | mechanical commands, stubs, skipped/focused tests, failure class | design principles | coverage, edge cases, a11y, docs, compat | OWASP + SPA + NestJS security surfaces | EXECUTED acceptance proof, non-vacuity | one correction -> one system change |
+| **Core rubric (skill)** | `design-review` applied to the *plan*; `repo-conventions` | `spec-workflow` (readiness rubric) | package scripts, CI, harness checks, evals, and smell search | `design-review` MUSTs; `repo-conventions` per-tier tables; P3.5 conflict rule | `failure-mode-analysis` 8 categories; test-quality rubric | OWASP top-10; `frontend-security`; three-tier boundary system | `tdd-workflow` rubric item 2 at the acceptance layer | `meta-skill-hygiene`; surveys skills/agents/CLAUDE.md |
+| **Verdicts** | APPROVE_PLAN / REVISE_PLAN / BLOCK | NEEDS-INPUT / SYNCED / UPDATED / BLOCK **(binding)** | approved / findings / blocked | APPROVE / CHANGES REQUESTED / BLOCK | findings / BLOCK | findings / BLOCK | ACCEPTED / GAPS / BLOCK **(binding on "done")** | a proposal, approval-gated |
+| **May write** | nothing | `docs/specs/**` ONLY | nothing (Bash = run checks) | nothing (Bash = run tests) | nothing | nothing | nothing (Bash = run live suites) | nothing |
 
 Distinguishing details per agent, beyond the table:
 

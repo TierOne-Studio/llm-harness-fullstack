@@ -24,7 +24,7 @@ Produce an evidence-backed review of whether the work is actually ready.
 
 1. Identify changed files and touched tiers.
 2. Read governing SPECs, ADRs, and design docs.
-3. Run `quality-runner` when available, or run relevant quality commands directly.
+3. Run `quality-runner` when available before final reviewer aggregation, or run relevant quality commands directly.
 4. Invoke `code-reviewer`, `qa-validator`, `security-reviewer`, `spec-steward`, `design-sync`, and `acceptance-verifier` according to triggers.
 5. Consolidate findings by severity and binding verdict.
 6. Return required fixes before optional improvements.

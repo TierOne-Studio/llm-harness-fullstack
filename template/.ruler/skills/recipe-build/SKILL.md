@@ -25,7 +25,7 @@ Execute an approved plan without skipping verification.
 1. Read the plan and list remaining tasks.
 2. Execute one task at a time.
 3. For code tasks, run failing test first, implement, and run green verification.
-4. Run `quality-runner` when available, or run the plan's quality commands directly.
+4. Run `quality-runner` when available before final reviewer aggregation, or run the plan's quality commands directly.
 5. Invoke P4 reviewers as triggered.
 6. Ask for commit approval before each commit command.
 7. Continue until all plan tasks are complete or a blocker requires user input.

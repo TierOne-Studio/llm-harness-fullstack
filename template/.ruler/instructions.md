@@ -143,6 +143,7 @@ Subagents run in fresh context for an independent signal. Each owns ONE concern,
 | Unclear/cross-tier design before code | `requirements-analyzer` + `codebase-analyzer` + `design-sync`; `document-reviewer` for docs |
 | Plan with 3+ file changes OR auth/sessions/RBAC/payments/route-guards/state-mgmt-rewrite/data-migration/shared-contract change | `architect-reviewer` (PRE-impl) |
 | Behavioral change (PRE: SPEC; POST: reconcile spec↔code) | `spec-steward` (PRE + POST) |
+| Task complete before review | `quality-runner` |
 | Implementation with 3+ file changes OR auth/sessions/PII/RBAC/payments | `code-reviewer` (POST-impl) |
 | Same conditions, in parallel; also any 1–2 file change that alters observable behavior | `qa-validator` (POST-impl) |
 | Auth, sessions, secrets, encryption, payments, PII, RBAC; XSS sinks, `VITE_*`, postMessage/iframes, uploads; SQL/injection surfaces, contract changes, dependencies | `security-reviewer` (POST-impl) |
