@@ -52,6 +52,7 @@ cyclomatic-complexity decision-rules design-review documentation-and-adrs \
 failure-mode-analysis git-workflow js-performance-patterns meta-skill-hygiene plan-mode \
 pushback-templates quality-gates repo-conventions rlm-explore spec-workflow tdd-workflow typescript-advanced-types \
 recipe-task recipe-design recipe-plan recipe-build recipe-review \
+recipe-fullstack-implement recipe-diagnose recipe-reverse-engineer recipe-add-integration-tests \
 \
 accessibility ai-ui-patterns bundle-size frontend-security playwright-best-practices \
 react-2026 react-data-fetching react-design-patterns react-forms react-patterns \

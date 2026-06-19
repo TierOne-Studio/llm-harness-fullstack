@@ -302,6 +302,18 @@ run_case "recipe-build" \
 run_case "recipe-review" \
   "Review this completed work against specs tests security and acceptance criteria" \
   "recipe-review"
+run_case "recipe-fullstack" \
+  "Implement this fullstack feature across backend frontend shared contracts and e2e" \
+  "recipe-fullstack-implement"
+run_case "recipe-diagnose" \
+  "Investigate this flaky failing CI test and find the root cause before fixing" \
+  "recipe-diagnose"
+run_case "recipe-reverse" \
+  "Generate documentation from existing code behavior without changing implementation" \
+  "recipe-reverse-engineer"
+run_case "recipe-integration-tests" \
+  "Add integration and e2e tests from acceptance criteria" \
+  "recipe-add-integration-tests"
 
 # ============================ FULLSTACK / SEAM ==============================
 echo

@@ -378,6 +378,50 @@
         "Check whether this work is actually done against the docs and tests",
         "Run the full review workflow for this implementation"
       ]
+    },
+    {
+      "id": "recipe-fullstack-implement-vertical",
+      "prompt": "Implement this fullstack feature across backend, React frontend, shared contracts, migrations, and e2e acceptance.",
+      "expected": [
+        "recipe-fullstack-implement"
+      ],
+      "variants": [
+        "Build the complete fullstack workflow with API behavior, UI, shared contract, and acceptance",
+        "Orchestrate this medium fullstack feature from requirements through backend frontend and e2e"
+      ]
+    },
+    {
+      "id": "recipe-diagnose-root-cause",
+      "prompt": "Investigate this flaky failing CI test and find the root cause before fixing it.",
+      "expected": [
+        "recipe-diagnose"
+      ],
+      "variants": [
+        "Diagnose this production-like bug before writing a fix",
+        "The root cause is unclear; reproduce and isolate the failing behavior first"
+      ]
+    },
+    {
+      "id": "recipe-reverse-engineer-docs",
+      "prompt": "Generate documentation from existing code behavior without changing the implementation.",
+      "expected": [
+        "recipe-reverse-engineer"
+      ],
+      "variants": [
+        "Reverse engineer the current workflow into a SPEC from verified code facts",
+        "Document what the existing system does without implementing new behavior"
+      ]
+    },
+    {
+      "id": "recipe-add-integration-tests-acceptance",
+      "prompt": "Add integration and e2e tests from acceptance criteria and verify they are non-vacuous.",
+      "expected": [
+        "recipe-add-integration-tests"
+      ],
+      "variants": [
+        "Add service-backed e2e coverage for these acceptance criteria",
+        "Create integration tests that would fail if the behavior were reverted"
+      ]
     }
   ]
 }

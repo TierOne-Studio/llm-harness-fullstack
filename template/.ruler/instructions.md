@@ -284,15 +284,19 @@ Situation → skill (skill bodies are canonical; this is the index). Tier-routed
 
 ## RECIPE POINTERS
 
-Recipes are workflow entry points. They do not override P0, P3, P4, or P8.
+Recipes sequence gates; P0/P3/P4/P8 still apply.
 
 | Situation | Recipe |
 |---|---|
-| Focused task | `recipe-task` |
-| Design/scope before code | `recipe-design` |
-| Approved docs → implementation plan | `recipe-plan` |
-| Execute approved plan | `recipe-build` |
-| Review work against docs/tests/security/acceptance | `recipe-review` |
+| Task | `recipe-task` |
+| Design | `recipe-design` |
+| Plan | `recipe-plan` |
+| Build | `recipe-build` |
+| Review | `recipe-review` |
+| Fullstack | `recipe-fullstack-implement` |
+| Diagnose | `recipe-diagnose` |
+| Reverse docs | `recipe-reverse-engineer` |
+| Integration/E2E tests | `recipe-add-integration-tests` |
 
 ---
 
