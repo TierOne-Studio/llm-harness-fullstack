@@ -61,7 +61,7 @@ shadcn tailwind-v4-shadcn vite vitest \
 database-transactions db-write-protocol nestjs-best-practices nestjs-clean-architecture \
 nestjs-patterns nodejs-best-practices"
 
-AGENT_LIST="architect-reviewer code-reviewer qa-validator security-reviewer lessons-curator acceptance-verifier spec-steward requirements-analyzer codebase-analyzer document-reviewer"
+AGENT_LIST="architect-reviewer code-reviewer qa-validator security-reviewer lessons-curator acceptance-verifier spec-steward requirements-analyzer codebase-analyzer document-reviewer design-sync"
 
 # ---------------------------------------------------------------------------
 echo "=== T1: Structure — instructions, ruler config, every skill + agent present ==="
@@ -222,6 +222,8 @@ for a in requirements-analyzer codebase-analyzer document-reviewer; do
   assert_true "T10b: '$a' requires JSON or structured Markdown output" \
     "grep -qiE 'JSON|structured|Output format' '$AGENTS/$a.md'"
 done
+assert_true "T10b: design-sync has NO Edit/Write" \
+  "! agent_has_tool '$AGENTS/design-sync.md' Edit && ! agent_has_tool '$AGENTS/design-sync.md' Write"
 
 # ---------------------------------------------------------------------------
 echo

@@ -29,6 +29,8 @@ Produce an evidence-backed review of whether the work is actually ready.
 5. Consolidate findings by severity and binding verdict.
 6. Return required fixes before optional improvements.
 
+Cross-tier work must run `design-sync` before implementation approval and after implementation if docs or behavior changed.
+
 ## Output
 
 A review report with findings, executed commands, reviewer verdicts, and the binding status.

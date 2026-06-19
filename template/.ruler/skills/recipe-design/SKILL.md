@@ -19,6 +19,7 @@ Use this recipe to convert a request into implementable documentation without st
 - Do not implement application code.
 - Resolve material ambiguity before producing a final plan.
 - For cross-tier work, run or request `design-sync` before implementation.
+- Cross-tier work must run `design-sync` before implementation approval and after implementation if docs or behavior changed.
 
 ## Procedure
 
@@ -39,3 +40,4 @@ Return document paths, unresolved questions, risk surfaces, and the exact next r
 - `requirements-analyzer` for purpose, scale, risk, affected layers, and questions.
 - `codebase-analyzer` for objective existing-code facts.
 - `document-reviewer` for document readiness before implementation approval.
+- `design-sync` for cross-tier consistency before implementation approval.
