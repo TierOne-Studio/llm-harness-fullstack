@@ -280,6 +280,18 @@ Situation → skill (skill bodies are canonical; this is the index). Tier-routed
 | Any database write | `db-write-protocol` |
 | Multi-statement DB write | `database-transactions` |
 
+## RECIPE POINTERS
+
+Recipes are workflow entry points. They do not override P0, P3, P4, or P8.
+
+| Situation | Recipe |
+|---|---|
+| Focused task | `recipe-task` |
+| Design/scope before code | `recipe-design` |
+| Approved docs → implementation plan | `recipe-plan` |
+| Execute approved plan | `recipe-build` |
+| Review work against docs/tests/security/acceptance | `recipe-review` |
+
 ---
 
 ## WORKFLOW CHAINS

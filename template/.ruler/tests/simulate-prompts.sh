@@ -284,6 +284,25 @@ run_case "rlm" \
   "I'm new to this repo — help me understand the chat feature's architecture" \
   "rlm-explore,repo-conventions"
 
+# ============================ WORKFLOW RECIPES ==============================
+echo
+echo "--- Case: workflow recipes"
+run_case "recipe-task" \
+  "Use a clear workflow for this small focused bug fix" \
+  "recipe-task"
+run_case "recipe-design" \
+  "Design and scope this medium feature before implementation" \
+  "recipe-design"
+run_case "recipe-plan" \
+  "Convert the approved design doc into an implementation plan" \
+  "recipe-plan"
+run_case "recipe-build" \
+  "Execute the approved implementation plan task by task" \
+  "recipe-build"
+run_case "recipe-review" \
+  "Review this completed work against specs tests security and acceptance criteria" \
+  "recipe-review"
+
 # ============================ FULLSTACK / SEAM ==============================
 echo
 echo "--- Case: cross-repo coordination"

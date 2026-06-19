@@ -51,6 +51,7 @@ SKILL_LIST="async-error-handling bug-investigation code-simplifier cross-repo-wo
 cyclomatic-complexity decision-rules design-review documentation-and-adrs \
 failure-mode-analysis git-workflow js-performance-patterns meta-skill-hygiene plan-mode \
 pushback-templates quality-gates repo-conventions rlm-explore spec-workflow tdd-workflow typescript-advanced-types \
+recipe-task recipe-design recipe-plan recipe-build recipe-review \
 \
 accessibility ai-ui-patterns bundle-size frontend-security playwright-best-practices \
 react-2026 react-data-fetching react-design-patterns react-forms react-patterns \
@@ -184,6 +185,17 @@ for s in tdd-workflow design-review plan-mode repo-conventions react-patterns \
          nestjs-clean-architecture nestjs-patterns database-transactions decision-rules spec-workflow; do
   assert_true "T8: instructions.md references '$s' AND its skill dir exists" \
     "grep -q '$s' '$INSTRUCTIONS' && test -d '$SKILLS/$s'"
+done
+
+echo
+echo "=== T8b: Workflow recipe skills — first-class entry points exist and stay measured ==="
+for s in recipe-task recipe-design recipe-plan recipe-build recipe-review; do
+  assert_true "T8b: instructions.md references '$s' AND its skill dir exists" \
+    "grep -q '$s' '$INSTRUCTIONS' && test -d '$SKILLS/$s'"
+  assert_true "T8b: recipe '$s' frontmatter has process family" \
+    "grep -q 'family: process' '$SKILLS/$s/SKILL.md'"
+  assert_true "T8b: recipe '$s' states P0 remains dominant" \
+    "grep -qiE 'P0|Safety|approval' '$SKILLS/$s/SKILL.md'"
 done
 
 # ---------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 <!-- GENERATED FILE — do not edit by hand. Source of truth: each skill's frontmatter
      (harness: tier/family/gist). Regenerate: npm run catalog. CI fails if stale. -->
 
-44 skills in 6 families. The directories are **flat by requirement** — agent runtimes
+49 skills in 6 families. The directories are **flat by requirement** — agent runtimes
 (Claude Code, Codex, Cursor) discover skills as `skills/<name>/SKILL.md`, so grouping
 lives here, not in the filesystem. Depth lives in each skill's `topics/` / `patterns/` /
 `rules/` files, read on demand. Tier routing rules (what loads when) are in
@@ -24,6 +24,11 @@ mindmap
       plan-mode
       pushback-templates
       quality-gates
+      recipe-build
+      recipe-design
+      recipe-plan
+      recipe-review
+      recipe-task
       repo-conventions
       rlm-explore
       spec-workflow
@@ -64,7 +69,7 @@ mindmap
       db-write-protocol
 ```
 
-## 🧭 Process & discipline — apply on any tier (15)
+## 🧭 Process & discipline — apply on any tier (20)
 
 | Skill | What it gives you |
 |---|---|
@@ -79,6 +84,11 @@ mindmap
 | [plan-mode](./plan-mode/SKILL.md) | Plans for 3+ step / multi-file / architectural work |
 | [pushback-templates](./pushback-templates/SKILL.md) | How to disagree: observation, tradeoff, question — one round |
 | [quality-gates](./quality-gates/SKILL.md) | CI, pre-commit & permission-gate templates (deterministic enforcement) |
+| [recipe-build](./recipe-build/SKILL.md) | Build recipe: execute an approved plan task by task with TDD, quality checks, and reviewer gates. |
+| [recipe-design](./recipe-design/SKILL.md) | Design recipe: requirements, codebase facts, SPEC/design docs, document review, and architecture readiness. |
+| [recipe-plan](./recipe-plan/SKILL.md) | Planning recipe: turn approved docs into executable tasks with tests, risks, and verification commands. |
+| [recipe-review](./recipe-review/SKILL.md) | Review recipe: reconcile code, docs, tests, security, quality gates, and acceptance criteria. |
+| [recipe-task](./recipe-task/SKILL.md) | Small/standard task recipe: path selection, required skills, TDD or waiver, verification, and review. |
 | [repo-conventions](./repo-conventions/SKILL.md) | YOUR repo's binding facts (fill-in skeleton, both tiers + seam) |
 | [rlm-explore](./rlm-explore/SKILL.md) | Slice-based digestion of big or unfamiliar context |
 | [spec-workflow](./spec-workflow/SKILL.md) | SPEC before code on behavioral changes; reconcile after |
