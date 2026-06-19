@@ -140,6 +140,7 @@ Subagents run in fresh context for an independent signal. Each owns ONE concern,
 
 | Condition | Subagent |
 |---|---|
+| Unclear design before code | `requirements-analyzer` + `codebase-analyzer`; then `document-reviewer` |
 | Plan with 3+ file changes OR auth/sessions/RBAC/payments/route-guards/state-mgmt-rewrite/data-migration/shared-contract change | `architect-reviewer` (PRE-impl) |
 | Behavioral change (PRE: SPEC; POST: reconcile spec↔code) | `spec-steward` (PRE + POST) |
 | Implementation with 3+ file changes OR auth/sessions/PII/RBAC/payments | `code-reviewer` (POST-impl) |
@@ -341,4 +342,4 @@ P7 fires immediately (memory + curator-prompt line) → `lessons-curator` only i
 
 ---
 
-This profile is the always-loaded router. Skills, subagents, ADRs, and `repo-conventions` carry the depth; when in doubt about a depth-question, load the relevant skill — that's why it exists.
+This profile is the router. Skills, subagents, ADRs, and `repo-conventions` carry the depth; when in doubt about a depth-question, load the relevant skill — that's why it exists.

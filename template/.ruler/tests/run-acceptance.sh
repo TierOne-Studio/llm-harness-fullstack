@@ -61,7 +61,7 @@ shadcn tailwind-v4-shadcn vite vitest \
 database-transactions db-write-protocol nestjs-best-practices nestjs-clean-architecture \
 nestjs-patterns nodejs-best-practices"
 
-AGENT_LIST="architect-reviewer code-reviewer qa-validator security-reviewer lessons-curator acceptance-verifier spec-steward"
+AGENT_LIST="architect-reviewer code-reviewer qa-validator security-reviewer lessons-curator acceptance-verifier spec-steward requirements-analyzer codebase-analyzer document-reviewer"
 
 # ---------------------------------------------------------------------------
 echo "=== T1: Structure — instructions, ruler config, every skill + agent present ==="
@@ -212,6 +212,15 @@ for a in $AGENT_LIST; do
   [ "$a" = "spec-steward" ] && continue
   assert_true "T10: '$a' has NO Edit (read-only sensor)" "! agent_has_tool '$AGENTS/$a.md' Edit"
   assert_true "T10: '$a' has NO Write (read-only sensor)" "! agent_has_tool '$AGENTS/$a.md' Write"
+done
+
+echo
+echo "=== T10b: Planning/documentation agents are read-only ==="
+for a in requirements-analyzer codebase-analyzer document-reviewer; do
+  assert_true "T10b: '$a' has NO Edit" "! agent_has_tool '$AGENTS/$a.md' Edit"
+  assert_true "T10b: '$a' has NO Write" "! agent_has_tool '$AGENTS/$a.md' Write"
+  assert_true "T10b: '$a' requires JSON or structured Markdown output" \
+    "grep -qiE 'JSON|structured|Output format' '$AGENTS/$a.md'"
 done
 
 # ---------------------------------------------------------------------------

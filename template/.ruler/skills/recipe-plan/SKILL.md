@@ -23,11 +23,20 @@ Produce an implementation plan that another agent can execute task by task.
 ## Procedure
 
 1. Read approved requirements, SPECs, ADRs, and design docs.
-2. Map touched surfaces to tiers: frontend, backend, shared contract, e2e, docs, harness payload, evals.
-3. Split tasks by independently reviewable deliverables.
-4. For each task, include files, interfaces, failing test, implementation notes, verification command, and approval-gated commit command.
-5. Include final validation: `npm test`, `npm run test:harness`, `npm run catalog:check`, and targeted evals when workflow behavior changes.
+2. Use `requirements-analyzer` output for purpose, scale, risk, affected layers, and questions when available.
+3. Use `codebase-analyzer` output for objective existing-code facts when available.
+4. Run or request `document-reviewer` when the source docs are incomplete, inconsistent, or not implementation-ready.
+5. Map touched surfaces to tiers: frontend, backend, shared contract, e2e, docs, harness payload, evals.
+6. Split tasks by independently reviewable deliverables.
+7. For each task, include files, interfaces, failing test, implementation notes, verification command, and approval-gated commit command.
+8. Include final validation: `npm test`, `npm run test:harness`, `npm run catalog:check`, and targeted evals when workflow behavior changes.
 
 ## Output
 
 A Markdown plan under the repo's plan location with checkbox steps.
+
+## Planning agents
+
+- `requirements-analyzer` for purpose, scale, risk, affected layers, and questions.
+- `codebase-analyzer` for objective existing-code facts.
+- `document-reviewer` for document readiness before implementation approval.

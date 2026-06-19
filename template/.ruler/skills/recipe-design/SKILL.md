@@ -33,3 +33,9 @@ Use this recipe to convert a request into implementable documentation without st
 ## Output
 
 Return document paths, unresolved questions, risk surfaces, and the exact next recipe: `recipe-plan` or `recipe-build`.
+
+## Planning agents
+
+- `requirements-analyzer` for purpose, scale, risk, affected layers, and questions.
+- `codebase-analyzer` for objective existing-code facts.
+- `document-reviewer` for document readiness before implementation approval.

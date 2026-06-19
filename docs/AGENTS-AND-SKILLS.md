@@ -2,7 +2,7 @@
 
 Companion to [ARCHITECTURE.md](ARCHITECTURE.md) §3. That document gives the
 bird's-eye view of the three planes; this one zooms all the way in on the
-**runtime**: who the main agent and the seven subagents are, what each is
+**runtime**: who the main agent and the ten subagents are, what each is
 responsible for, how they communicate (with the actual message shapes), and how
 skills mechanically work as the shared knowledge layer — finished with a worked
 end-to-end example.
@@ -14,10 +14,10 @@ Everything here is sourced from the shipped payload:
 
 ---
 
-## 1. Topology — a hub with seven spokes
+## 1. Topology — a hub with ten spokes
 
 The main agent is the **orchestrator and the only writer of application code**.
-The seven subagents are **one-shot verifiers**: each is spawned for a single
+The ten subagents are **one-shot specialists**: each is spawned for a single
 review, runs in a **fresh context** (it does not see the conversation, the main
 agent's reasoning, or its confidence), produces one structured Markdown report,
 and terminates. Subagents never talk to each other — the main agent is the bus
@@ -31,6 +31,9 @@ flowchart TB
     U <-->|"requests · clarifications ·<br/>P0 approvals"| M
 
     subgraph PRE["PRE-implementation spokes"]
+        RA["requirements-analyzer<br/>read-only"]
+        CA["codebase-analyzer<br/>read-only"]
+        DR["document-reviewer<br/>read-only"]
         SS1["spec-steward (PRE)<br/>writes docs/specs/** only"]
         AR["architect-reviewer<br/>read-only"]
     end
@@ -43,6 +46,9 @@ flowchart TB
     end
     LC["lessons-curator<br/>read-only proposer"]
 
+    M -->|"request text"| RA -->|"scope/risk/artifacts JSON"| M
+    M -->|"scope JSON + files"| CA -->|"codebase facts JSON"| M
+    M -->|"PRD/SPEC/ADR/plan"| DR -->|"document readiness JSON"| M
     M -->|"spawn prompt:<br/>plan + scope"| AR -->|"APPROVE_PLAN /<br/>REVISE_PLAN / BLOCK"| M
     M -->|"spawn prompt:<br/>requirements text"| SS1 -->|"NEEDS-INPUT /<br/>UPDATED + SPEC"| M
     M -->|"spawn prompt:<br/>the diff"| CR -->|"APPROVE / CHANGES<br/>REQUESTED / BLOCK"| M
@@ -176,7 +182,23 @@ The main agent also owns **escalation**: the moment a fast-path change stops
 qualifying it must emit `Path: full — escalated: <reason>` and switch chains
 mid-task (P5.7).
 
-### 4.2 The seven subagents — one concern each
+### 4.2 The ten subagents — one concern each
+
+#### Planning agents
+
+These three PRE agents are read-only sensors. They improve separation of
+concerns before implementation starts; they do not write docs, choose the final
+architecture, or edit code.
+
+| | requirements&#8209;analyzer | codebase&#8209;analyzer | document&#8209;reviewer |
+|---|---|---|---|
+| **Phase** | PRE-design | PRE-design / PRE-plan | PRE-implementation |
+| **Input it receives** | request text, nearby docs | request or requirements JSON, affected files | PRD, SPEC, ADR, design doc, or work plan |
+| **Owns** | purpose, scale, affected layers, risks, artifact needs, questions | objective existing-code facts: interfaces, callers, constraints, tests, quality mechanisms | clarity, completeness, consistency, testability, implementation readiness |
+| **Output** | structured JSON | structured JSON | structured JSON verdict |
+| **May write** | nothing | nothing | nothing |
+
+#### Review and lifecycle agents
 
 | | architect&#8209;reviewer | spec&#8209;steward | code&#8209;reviewer | qa&#8209;validator | security&#8209;reviewer | acceptance&#8209;verifier | lessons&#8209;curator |
 |---|---|---|---|---|---|---|---|
