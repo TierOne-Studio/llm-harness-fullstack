@@ -186,11 +186,28 @@ The main agent also owns **escalation**: the moment a fast-path change stops
 qualifying it must emit `Path: full — escalated: <reason>` and switch chains
 mid-task (P5.7).
 
+### 4.1.1 Handoff payload
+
+Every agent handoff should be concrete enough for a fresh context to verify the
+work without trusting the main agent's summary.
+
+| Field | Required content |
+|---|---|
+| `request` | Original user request or the narrowed task statement. |
+| `affected files` | Files, directories, routes, symbols, or docs believed to be in scope. |
+| `changed files` | Diff files when implementation already happened; empty for PRE analysis. |
+| `plan path` | Work plan path when one exists, or `none`. |
+| `spec/design paths` | SPECs, ADRs, PRDs, design docs, or reverse docs the agent must read. |
+| `acceptance criteria` | Numbered criteria or the exact source document section. |
+| `commands run` | Commands already executed, with pass/fail status; never just "tests passed". |
+| `risk surfaces` | Auth, RBAC, sessions, PII, payments, migrations, public API, dependency, deploy, or `none`. |
+| `prior verdicts` | Earlier agent verdicts and unresolved findings, if any. |
+
 ### 4.2 The twelve subagents — one concern each
 
 #### Planning agents
 
-These three PRE agents are read-only sensors. They improve separation of
+These PRE agents are read-only sensors. They improve separation of
 concerns before implementation starts; they do not write docs, choose the final
 architecture, or edit code.
 
@@ -202,7 +219,12 @@ architecture, or edit code.
 | **Output** | structured JSON | structured JSON | structured JSON verdict | sync matrix JSON |
 | **May write** | nothing | nothing | nothing | nothing |
 
-#### Quality, review, and lifecycle agents
+#### Sync, quality, review, and lifecycle agents
+
+`design-sync` verifies cross-tier semantic agreement before and after
+implementation. `quality-runner` runs mechanical verification and looks for
+stubbed, focused, skipped, or non-executed checks before the review verdicts are
+aggregated. Both are read-only.
 
 | | architect&#8209;reviewer | spec&#8209;steward | quality&#8209;runner | code&#8209;reviewer | qa&#8209;validator | security&#8209;reviewer | acceptance&#8209;verifier | lessons&#8209;curator |
 |---|---|---|---|---|---|---|---|---|

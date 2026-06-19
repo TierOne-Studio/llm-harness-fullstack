@@ -31,7 +31,7 @@ The harness inverts that:
 
 ```mermaid
 flowchart LR
-    G["Guides<br/>operating profile + 44 skills"] --> A["Agent acts"] --> S["Sensors<br/>7 independent review agents"] --> D["Deterministic gates<br/>CI · pre-commit · permissions"]
+    G["Guides<br/>operating profile + 53 skills"] --> A["Agent acts"] --> S["Sensors<br/>12 bounded agents"] --> D["Deterministic gates<br/>CI · pre-commit · permissions"]
     M["Evals + committed baselines"] -.->|regression-gate every<br/>change to the harness| G & S
 ```
 
@@ -63,14 +63,16 @@ Five mechanisms, layered so no single one has to be perfect:
    of truth** — plus your repo's own conventions. The backend skills encode the
    clean-architecture dependency rule (domain ← application ← infrastructure);
    a violation is a finding, not a style note.
-3. **Independent review agents, fresh context, willing to block.** Seven
-   subagents each own one concern — plan review, spec stewardship, design,
-   coverage/edge cases, security (OWASP + SPA + NestJS surfaces), live
-   acceptance verification, lesson capture. They re-read the conventions
-   themselves rather than trusting the implementer, and the final status is the
-   **minimum** over every reviewer that ran — never the average. The acceptance
-   verifier re-runs the real suites and checks tests are non-vacuous: a green
-   test that wouldn't fail if the feature were reverted is flagged, not counted.
+3. **Bounded specialist agents, fresh context, willing to block.** Twelve
+   subagents each own one concern — requirements analysis, codebase facts,
+   document readiness, design sync, mechanical quality checks, plan review,
+   spec stewardship, design, coverage/edge cases, security (OWASP + SPA +
+   NestJS surfaces), live acceptance verification, and lesson capture. They
+   re-read the conventions themselves rather than trusting the implementer, and
+   the final status is the **minimum** over every reviewer that ran — never the
+   average. The acceptance verifier re-runs the real suites and checks tests
+   are non-vacuous: a green test that wouldn't fail if the feature were
+   reverted is flagged, not counted.
 4. **Deterministic gates for what advice can't guarantee.** Ready-to-copy CI,
    pre-commit, and agent-permission templates turn the rules into enforcement:
    pushes to `main` are *denied*, deploy/DB-write commands *prompt*, and a red
@@ -85,28 +87,39 @@ Five mechanisms, layered so no single one has to be perfect:
 
 ```
 .ruler/
-├── instructions.md             # the senior-engineer operating profile (P0–P9), monorepo-aware
-├── ruler.toml                  # ruler fan-out config (claude / copilot / codex / cursor / windsurf)
-├── agents/                     # 7 review subagents (sensors) — fresh-context, one concern each
-│   ├── architect-reviewer.md   #   PRE        — plan-level design & risk
-│   ├── spec-steward.md         #   PRE + POST — requirements gate; owns docs/specs/**
-│   ├── code-reviewer.md        #   POST       — design principles (SOLID/DRY/KISS/SoC/…)
-│   ├── qa-validator.md         #   POST       — coverage, edge cases, a11y, docs
-│   ├── security-reviewer.md    #   POST       — OWASP, AuthZ, secrets, XSS, injection
-│   ├── acceptance-verifier.md  #   POST, last — runs the LIVE suites; verdict binding on "done"
-│   └── lessons-curator.md      #   on user correction — proposes ONE harness improvement
-├── skills/                     # 44 guides in 6 families — see the table below
-│   └── <name>/SKILL.md         #   dirs stay flat: runtimes discover skills/<name>/SKILL.md
-└── tests/                      # the harness's own acceptance + skill-trigger suites
+├── instructions.md              # the senior-engineer operating profile (P0–P9), monorepo-aware
+├── ruler.toml                   # ruler fan-out config (claude / copilot / codex / cursor / windsurf)
+├── agents/                      # 12 bounded subagents — fresh-context, one concern each
+│   ├── requirements-analyzer.md #   PRE        — scope, risks, artifact needs, questions
+│   ├── codebase-analyzer.md     #   PRE        — objective codebase facts
+│   ├── document-reviewer.md     #   PRE        — doc readiness and consistency
+│   ├── design-sync.md           #   PRE + POST — cross-tier contract/doc consistency
+│   ├── architect-reviewer.md    #   PRE        — plan-level design & risk
+│   ├── spec-steward.md          #   PRE + POST — requirements gate; owns docs/specs/**
+│   ├── quality-runner.md        #   POST       — mechanical checks, stubs, skipped tests
+│   ├── code-reviewer.md         #   POST       — design principles (SOLID/DRY/KISS/SoC/…)
+│   ├── qa-validator.md          #   POST       — coverage, edge cases, a11y, docs
+│   ├── security-reviewer.md     #   POST       — OWASP, AuthZ, secrets, XSS, injection
+│   ├── acceptance-verifier.md   #   POST, last — runs the LIVE suites; verdict binding on "done"
+│   └── lessons-curator.md       #   on user correction — proposes ONE harness improvement
+├── skills/                      # 53 guides in 6 families — see the table below
+│   └── <name>/SKILL.md          #   dirs stay flat: runtimes discover skills/<name>/SKILL.md
+└── tests/                       # the harness's own acceptance + skill-trigger suites
 ```
 
 Skills are **tier-routed**: an agent loads only the families matching the
 workspaces a change touches (`instructions.md` § P3.0) — a backend fix never
 drags React guidance into context, and vice versa.
 
+Recipe skills are workflow entry points: they select and sequence the existing
+gates for task, design, plan, build, review, fullstack implementation,
+diagnosis, reverse engineering, and integration-test work. Agents remain
+bounded planners, reviewers, and verifiers; the main agent is still the normal
+implementation writer.
+
 | Family | Loads for | Skills |
 |---|---|---|
-| 🧭 Process & discipline (15) | any tier | `tdd-workflow` · `design-review` · `plan-mode` · `spec-workflow` · `repo-conventions` · `quality-gates` · `bug-investigation` · `failure-mode-analysis` · `decision-rules` · `documentation-and-adrs` · `git-workflow` · `pushback-templates` · `rlm-explore` · `cross-repo-workspace` · `meta-skill-hygiene` |
+| 🧭 Process & discipline (24) | any tier | `tdd-workflow` · `design-review` · `plan-mode` · `spec-workflow` · `repo-conventions` · `quality-gates` · `bug-investigation` · `failure-mode-analysis` · `decision-rules` · `documentation-and-adrs` · `git-workflow` · `pushback-templates` · `rlm-explore` · `cross-repo-workspace` · `meta-skill-hygiene` · `recipe-task` · `recipe-design` · `recipe-plan` · `recipe-build` · `recipe-review` · `recipe-fullstack-implement` · `recipe-diagnose` · `recipe-reverse-engineer` · `recipe-add-integration-tests` |
 | 🔡 Language & code quality (5) | any tier | `async-error-handling` · `typescript-advanced-types` · `js-performance-patterns` · `code-simplifier` · `cyclomatic-complexity` |
 | ⚛️ React core (9) | `apps/web` | `react-patterns` · `react-state-management` · `react-data-fetching` · `react-routing` · `react-forms` · `react-performance` · `react-testing` · `react-design-patterns` · `react-2026` |
 | 🎨 Frontend platform & quality (9) | `apps/web` | `accessibility` · `frontend-security` · `bundle-size` · `playwright-best-practices` · `vite` · `vitest` · `shadcn` · `tailwind-v4-shadcn` · `ai-ui-patterns` |

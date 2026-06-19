@@ -20,7 +20,7 @@ the `template/.ruler/` payload:
 
 | Plane | Code | Job |
 |---|---|---|
-| **Payload** (the harness itself) | [template/.ruler/](../template/.ruler/) | `instructions.md` (P0–P9 operating profile), 44 skills, 7 review agents, `ruler.toml` |
+| **Payload** (the harness itself) | [template/.ruler/](../template/.ruler/) | `instructions.md` (P0–P9 operating profile), 53 skills, 12 bounded agents, `ruler.toml` |
 | **Distribution** (getting it into repos) | [bin/cli.js](../bin/cli.js) + [lib/](../lib/) | `init` copies the payload in; `update` 3-way-merges newer versions over consumer edits |
 | **Measurement** (proving it works) | [eval/](../eval/) + [scripts/](../scripts/) + [template/.ruler/tests/](../template/.ruler/tests/) | deterministic structural suites + live-model evals + mutation/decay meta-evals |
 
@@ -39,8 +39,8 @@ flowchart TB
         end
         subgraph TPL["template/.ruler/ — THE PAYLOAD"]
             INSTR["instructions.md<br/>P0–P9 operating profile"]
-            SKILLS["skills/ × 44<br/>SKILL.md guides"]
-            AGENTS["agents/ × 7<br/>review subagents (sensors)"]
+            SKILLS["skills/ × 53<br/>SKILL.md guides"]
+            AGENTS["agents/ × 12<br/>bounded subagents"]
             TOML["ruler.toml<br/>fan-out config"]
             TESTS["tests/<br/>run-acceptance.sh<br/>simulate-prompts.sh"]
         end
@@ -225,6 +225,14 @@ every agent runtime's native config location: `CLAUDE.md` (Claude Code),
 `AGENTS.md` (Codex/Cursor/Windsurf), `.github/copilot-instructions.md` (Copilot).
 One source of truth, N agent frontends.
 
+### Workflow recipe layer
+
+Recipes are first-class skills that select and sequence existing gates. They
+do not override P0 safety, P3 skill loading, P4 reviewers, or P8 verification.
+They make common flows measurable: task, design, plan, build, review,
+fullstack implementation, diagnosis, reverse engineering, and integration-test
+addition.
+
 At runtime the payload works as a layered control system:
 
 ```mermaid
@@ -242,7 +250,7 @@ flowchart LR
 
     PROFILE -- "description match<br/>+ P3.4 force-fire" --> SK["skills/&lt;name&gt;/SKILL.md<br/>loaded on demand (guides)"]
     PROFILE --> WORK["Workflow chains<br/>(task type → skill recipe)"]
-    P4 --> REV["agents/ — review subagents:<br/>code-reviewer · architect-reviewer ·<br/>security-reviewer · qa-validator ·<br/>acceptance-verifier · spec-steward ·<br/>lessons-curator"]
+    P4 --> REV["agents/ — bounded subagents:<br/>requirements-analyzer · codebase-analyzer · document-reviewer ·<br/>design-sync · quality-runner · architect-reviewer ·<br/>security-reviewer · qa-validator · acceptance-verifier ·<br/>spec-steward · code-reviewer · lessons-curator"]
     SK -. "quality-gates skill ships<br/>CI / pre-commit / permission templates" .-> DET["Deterministic backstop:<br/>typecheck · lint · tests · Playwright seam<br/>+ Claude Code permission denies"]
 ```
 
@@ -307,7 +315,7 @@ flowchart TB
     LOAD --> CTX["SKILL.md bodies in context<br/>→ implementation begins"]
 ```
 
-### 3.2 The subagent fleet (P4) — seven sensors, one concern each
+### 3.2 The subagent fleet (P4) — bounded specialists, one concern each
 
 The main agent is the only one that writes application code; the subagents are
 **independent verifiers spawned in fresh context** so their verdict can't be
@@ -319,8 +327,13 @@ allowlist (how its blast radius is bounded).
 
 | Subagent | Phase | Fires when (per PR, never per session) | Owns (anti-overlap) | Verdicts | Tools / write scope |
 |---|---|---|---|---|---|
+| [requirements-analyzer](../template/.ruler/agents/requirements-analyzer.md) | PRE-design | medium/large/cross-tier/high-risk/unclear work | scope, affected layers, risks, artifact needs, questions | structured JSON | Read, Grep, Glob, Bash — read-only |
+| [codebase-analyzer](../template/.ruler/agents/codebase-analyzer.md) | PRE-design / PRE-plan | objective repo facts are needed before design or planning | existing interfaces, consumers, constraints, tests, quality mechanisms | structured JSON | Read, Grep, Glob, Bash — read-only |
+| [document-reviewer](../template/.ruler/agents/document-reviewer.md) | PRE-impl | PRD, SPEC, ADR, design doc, reverse doc, or work plan was created/updated | clarity, completeness, consistency, testability, readiness | approved / needs_revision / rejected | Read, Grep, Glob — read-only |
+| [design-sync](../template/.ruler/agents/design-sync.md) | PRE **and** POST | cross-tier behavior or layer docs changed | backend/frontend/shared-contract agreement on behavior, data, errors, auth, UI states, proving layer | sync matrix | Read, Grep, Glob, Bash — read-only |
 | [architect-reviewer](../template/.ruler/agents/architect-reviewer.md) | PRE-impl | plan touches 3+ files OR auth/RBAC/payments/route-guards/state-rewrite/migration/contract | plan-level design & risk (a flaw here is ~10× cheaper than post-impl) | APPROVE_PLAN / REVISE_PLAN / BLOCK | Read, Grep, Glob — read-only |
 | [spec-steward](../template/.ruler/agents/spec-steward.md) | PRE **and** POST | any behavioral change | `docs/specs/**` truth; PRE clarification gate, POST spec↔code reconcile | NEEDS-INPUT / SYNCED / UPDATED / BLOCK (binding) | only agent allowed to **write** — and only under `docs/specs/**` |
+| [quality-runner](../template/.ruler/agents/quality-runner.md) | POST-impl | before review aggregation, especially after plan/task execution | mechanical verification, stub/focused-test detection, failure classification | approved / findings / blocked | Read, Grep, Glob, Bash — read-only |
 | [code-reviewer](../template/.ruler/agents/code-reviewer.md) | POST-impl | 3+ files OR auth/sessions/PII/RBAC/payments | design principles (SOLID/DRY/KISS/SoC/SSoT…) | APPROVE / CHANGES REQUESTED / BLOCK | read-only + Bash |
 | [qa-validator](../template/.ruler/agents/qa-validator.md) | POST-impl, parallel with code-reviewer | same triggers; also ANY 1–2-file change altering observable behavior | test coverage, edge cases, error paths, a11y, docs | pass / findings / BLOCK | read-only + Bash |
 | [security-reviewer](../template/.ruler/agents/security-reviewer.md) | POST-impl | auth/secrets/PII/RBAC/XSS sinks/`VITE_*`/SQL/uploads/postMessage/deps | OWASP top-10 + SPA + NestJS security surfaces | findings / BLOCK | read-only + Bash |
