@@ -1015,9 +1015,9 @@ No changes are expected in `bin/` or `lib/`; the existing distribution machinery
 
   Search changed files for:
 
-  - `TODO`
-  - `FIXME`
-  - `throw new Error("not implemented")`
+  - to-do markers
+  - fix-me markers
+  - unimplemented error sentinels
   - `return null`
   - `return undefined`
   - `describe.skip`
@@ -1453,7 +1453,7 @@ No changes are expected in `bin/` or `lib/`; the existing distribution machinery
   Run:
 
   ```bash
-  rg -n "TODO|TBD|FIXME|fill in later|not implemented" template/.ruler docs README.md eval scripts
+  rg -n "TO[[:space:]-]?DO|TB[[:space:]-]?D|FIX[[:space:]-]?ME|fill[[:space:]]+in[[:space:]]+later|not[[:space:]-]?implemented" template/.ruler docs README.md eval scripts
   rg -n "44[[:space:]]+skills|7[[:space:]]+review subagents|7[[:space:]]+independent review agents|44[[:space:]]+guides" README.md docs template/.ruler/skills/README.md
   ```
 

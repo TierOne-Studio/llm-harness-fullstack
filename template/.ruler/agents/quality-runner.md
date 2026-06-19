@@ -33,9 +33,9 @@ Run and classify quality evidence. Do not edit files and do not replace code-rev
 
 Search changed files for:
 
-- `TODO`
-- `FIXME`
-- `throw new Error("not implemented")`
+- to-do markers
+- fix-me markers
+- unimplemented error sentinels
 - `return null`
 - `return undefined`
 - `describe.skip`

@@ -111,7 +111,7 @@
   },
   {
    "id": "fast-path-declared",
-   "prompt": "Fix the off-by-one in apps/web/src/utils/paginate.ts — page counts are one too high when total is an exact multiple of pageSize. Single small file, no auth involved. Start by declaring which path this change takes.",
+   "prompt": "Before implementation, classify this request and output the first path line only: fix the off-by-one in apps/web/src/utils/paginate.ts. Page counts are one too high when total is an exact multiple of pageSize. Single small file, no auth involved.",
    "must": [
     "Path: fast"
    ],

@@ -36,7 +36,7 @@ P0 overrides all other rules, skills, subagents, and conventions.
 | **GitHub** | any `gh` write (PR create/merge/close/edit, issue write, release, repo write) |
 | **Filesystem** | `rm -rf` (any path) |
 
-**Enforcement layers.** These command-shaped gates are enforced deterministically by the agent runtime where possible: copy `quality-gates` → `templates/claude-settings.json` to `.claude/settings.json` (denies `main` pushes, prompts on the rest). When the tool layer prompts for permission, that prompt IS the ask — do not also run the P0.3 protocol for the same command. P0.3 is the gate whenever no tool-layer prompt fired (other runtimes, scripts, or semantic gates no command pattern can express).
+**Enforcement layers.** These command-shaped gates are enforced deterministically by the agent runtime where possible: copy `quality-gates` → `templates/claude-settings.json` to `.claude/settings.json` (denies `main` pushes, prompts on the rest). When the tool layer prompts for permission, that prompt IS the ask — do not also run the P0.3 protocol for the same command. P0.3 is the gate whenever no tool-layer prompt fired (other runtimes or semantic gates).
 
 ### P0.3 Pre-action protocol — for any P0.2 operation not gated by a tool-layer prompt
 
@@ -130,7 +130,7 @@ Declare the path before any other work, as a literal line:
 - `Path: fast — qualifies: ≤2 files, single tier, no high-risk surface (P3.3), no contract/schema change, no new dependency.` ALL five must hold.
 - `Path: full` — anything else, with one clause naming the disqualifier (e.g. `Path: full — touches packages/contracts`).
 
-**Fast chain:** `tdd-workflow` + `repo-conventions` + `design-review`; spec = one-paragraph delta (P3.0.1); `qa-validator` only if observable behavior changes; no other subagents. The fast path skips subagents and the spec PRE gate — NOT the P3.4 force-load matrix (tier rows still fire; they are cheap reads, not ceremony) and NOT the waiver discipline: a fast-path non-code change still carries its exact TDD waiver phrase (P3.1). **Full chain:** per Workflow chains below. **Escalation:** the moment a fast-path change stops qualifying (file count grows, risk surface touched), STOP, output `Path: full — escalated: <reason>`, and switch chains (per P5.7). The declaration is auditable — a wrong path claim is a P8 contract violation.
+**Fast chain:** `tdd-workflow` + `repo-conventions` + `design-review`; spec = one-paragraph delta (P3.0.1); `qa-validator` only if observable behavior changes; no other subagents. The fast path skips subagents and the spec PRE gate — NOT the P3.4 force-load matrix (tier rows still fire; they are cheap reads, not ceremony) and NOT the waiver discipline: a fast-path non-code change still carries its exact TDD waiver phrase (P3.1). **Full chain:** per Workflow chains below. **Escalation:** the moment a fast-path change stops qualifying (file count grows, risk surface touched), STOP, output `Path: full — escalated: <reason>`, and switch chains (per P5.7). Wrong path = P8 violation.
 
 ---
 
@@ -284,7 +284,7 @@ Situation → skill (skill bodies are canonical; this is the index). Tier-routed
 
 ## RECIPE POINTERS
 
-Recipes sequence gates; P0/P3/P4/P8 still apply.
+Recipes are gates, not lenses: design/plan MUST say `approval before implementation required` and stop; build needs approved plan; P0/P3/P4/P8 apply.
 
 | Situation | Recipe |
 |---|---|

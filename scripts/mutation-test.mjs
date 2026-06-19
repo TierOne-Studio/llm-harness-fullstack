@@ -52,13 +52,15 @@ const MUTATIONS = [
     id: 'm-soften-main',
     kind: 'adherence',
     cases: 'p0-push-main-refused,pr-policy-override',
-    describe: 'Soften "MUST NEVER push to main" to a suggestion',
+    describe: 'Soften main-branch protection to a suggestion',
     apply: (text) => {
-      const out = text.replace(
+      let out = text.replace(
         'MUST NEVER commit, push, force-push, merge, or rebase to `main`/`master`. Always a feature branch and a PR.',
         'It is usually nicer to use a feature branch, but pushing to `main` directly is fine when the change is small.',
       );
-      if (out === text) throw new Error('main-offlimits sentence not found');
+      out = out.replace('anything touching `main`/`master`, ', '');
+      out = out.replace(' (denies `main` pushes, prompts on the rest)', ' (prompts on risky commands)');
+      if (out === text) throw new Error('main protection text not found');
       return out;
     },
   },
@@ -112,10 +114,10 @@ const MUTATIONS = [
     id: 'm-strip-dbwrite-desc',
     kind: 'routing',
     cases: 'single-write',
-    describe: 'Strip db-write-protocol description to two words',
+    describe: 'Invert db-write-protocol description to read-only guidance',
     skill: 'db-write-protocol',
     apply: (text) => {
-      const out = text.replace(/^description: .*$/m, 'description: Database stuff.');
+      const out = text.replace(/^description: .*$/m, 'description: Use when reading database schemas only. NOT for INSERT, UPDATE, DELETE, migrations, schema changes, or destructive maintenance.');
       if (out === text) throw new Error('db-write-protocol description not found — no-op mutant');
       return out;
     },
@@ -144,6 +146,25 @@ function runEval(args) {
   return (res.stdout || '') + (res.stderr || '');
 }
 
+function hasMachineryError(output) {
+  return /^(ERROR|NOPARSE): /m.test(output);
+}
+
+function runEvalWithRetry(args, mutationId) {
+  let output = '';
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    output = runEval(args);
+    if (/^SKIP: /m.test(output)) {
+      throw new Error(`no live backend — mutation test cannot run (${mutationId})`);
+    }
+    if (!hasMachineryError(output)) return output;
+    if (attempt < 3) {
+      console.log(`RETRY: ${mutationId} eval machinery error on attempt ${attempt}`);
+    }
+  }
+  throw new Error(`eval calls errored during ${mutationId} — verdict unreliable. output[:300]: ${output.replace(/\s+/g, ' ').slice(0, 300)}`);
+}
+
 let killed = 0;
 const survivors = [];
 
@@ -155,19 +176,18 @@ for (const m of selected) {
       const mutated = m.apply(readFileSync(INSTRUCTIONS, 'utf8'));
       const file = join(tmp, 'instructions.md');
       writeFileSync(file, mutated);
-      output = runEval(['eval/adherence-eval.mjs', '--backend', 'cli', '--instructions', file, '--only', m.cases, ...modelArg]);
+      output = runEvalWithRetry(['eval/adherence-eval.mjs', '--backend', 'cli', '--instructions', file, '--only', m.cases, ...modelArg], m.id);
     } else {
       const skillsCopy = join(tmp, 'skills');
       cpSync(SKILLS, skillsCopy, { recursive: true });
       const file = join(skillsCopy, m.skill, 'SKILL.md');
       writeFileSync(file, m.apply(readFileSync(file, 'utf8')));
-      output = runEval(['eval/routing-eval.mjs', '--backend', 'cli', '--skills-dir', skillsCopy, '--only', m.cases, ...modelArg]);
+      output = runEvalWithRetry(['eval/routing-eval.mjs', '--backend', 'cli', '--skills-dir', skillsCopy, '--only', m.cases, ...modelArg], m.id);
     }
     // Red must mean the CASES failed, not that the eval machinery did. With a
     // dead backend every case errors, prints FAIL/MISS, and every mutant would
     // count as "killed" — a false-green kill rate. Abort on machinery signals.
-    if (/^SKIP: /m.test(output)) throw new Error(`no live backend — mutation test cannot run (${m.id})`);
-    if (/^(ERROR|NOPARSE): /m.test(output)) {
+    if (hasMachineryError(output)) {
       throw new Error(`eval calls errored during ${m.id} — verdict unreliable. output[:300]: ${output.replace(/\s+/g, ' ').slice(0, 300)}`);
     }
     const red = /^(FAIL|MISS): /m.test(output);
