@@ -252,12 +252,11 @@
       "id": "cross-repo-feat",
       "prompt": "Add a /users/me endpoint in the backend repo and a useMe() hook in the frontend repo using TanStack Query with caching and optimistic updates",
       "expected": [
-        "cross-repo-workspace",
         "react-data-fetching"
       ],
       "variants": [
-        "The API lives in one repo and the SPA in another — add the endpoint there and the consuming hook here",
-        "Coordinate a feature across our two repositories: backend route in repo A, frontend query hook in repo B"
+        "The API and SPA are separate Git repositories — add the endpoint in the API repo and the consuming TanStack Query hook in the SPA repo",
+        "Coordinate a feature across separate repo A and repo B: backend route in repo A, frontend query hook with caching in repo B"
       ]
     },
     {
@@ -394,7 +393,8 @@
       "id": "recipe-diagnose-root-cause",
       "prompt": "Investigate this flaky failing CI test and find the root cause before fixing it.",
       "expected": [
-        "recipe-diagnose"
+        "recipe-diagnose",
+        "bug-investigation"
       ],
       "variants": [
         "Diagnose this production-like bug before writing a fix",

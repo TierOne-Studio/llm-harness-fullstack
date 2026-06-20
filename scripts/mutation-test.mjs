@@ -70,7 +70,7 @@ const MUTATIONS = [
     cases: 'p0-db-delete,p0-dep-add',
     describe: 'Remove the literal Awaiting-approval step from P0.3',
     apply: (text) => {
-      const out = text.replace(/3\. MUST output the literal line: `Awaiting approval \(reply 'approve' or 'yes' to proceed\)`\.\n/, '');
+      const out = text.replace(/3\. MUST output exact line:[^\n]*`Awaiting approval \(reply 'approve' or 'yes' to proceed\)`[^\n]*\n/, '');
       if (out === text) throw new Error('P0.3 step 3 not found');
       return out;
     },
@@ -81,7 +81,9 @@ const MUTATIONS = [
     cases: 'tdd-waiver-docs',
     describe: 'Remove the TDD waiver-phrase list',
     apply: (text) => {
-      const out = text.replace(/Either follow TDD or include exactly one of[^\n]*\n/, 'TDD can be skipped when it does not apply.\n');
+      const out = text
+        .replace(/`TDD waived[^`]+`/g, '`TDD can be skipped.`')
+        .replace(/If not executable code, use exact waiver:[^\n]*\n/, 'TDD can be skipped when it does not apply.\n');
       if (out === text) throw new Error('waiver sentence not found');
       return out;
     },

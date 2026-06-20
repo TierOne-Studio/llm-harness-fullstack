@@ -1,6 +1,6 @@
 ---
 name: pushback-templates
-description: Use when about to push back on the user — when a simpler in-scope alternative is visible, when scope appears to be creeping, when a hidden risk is detected, or when you genuinely disagree with the framing of the request. Provides full templates with phrasing variants and example dialogues for both frontend (apps/web) and backend (apps/api) work. NOT for normal conversation, agreement situations, or factual questions.
+description: Use when the user asks you to talk them out of a choice, challenge a proposed approach, push back, disagree, flag scope creep, name hidden risk, or offer a simpler in-scope alternative before implementation. Provides templates for frontend and backend work. NOT for normal conversation, agreement situations, or factual questions.
 harness:
   tier: shared
   family: process

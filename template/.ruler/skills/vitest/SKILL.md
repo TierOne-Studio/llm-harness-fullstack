@@ -1,6 +1,6 @@
 ---
 name: vitest
-description: Vitest fast unit testing framework powered by Vite with Jest-compatible API. Use when writing tests, mocking, configuring coverage, or working with test filtering and fixtures.
+description: Vitest fast unit/component testing framework powered by Vite with Jest-compatible API. Use when writing Vitest tests, React/Vue component tests that explicitly name Vitest, mocking with vi, configuring jsdom/coverage, or working with test filtering and fixtures.
 metadata:
   author: Anthony Fu
   version: "2026.1.28"

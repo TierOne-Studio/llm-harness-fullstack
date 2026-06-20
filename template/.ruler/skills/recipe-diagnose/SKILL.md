@@ -1,6 +1,6 @@
 ---
 name: recipe-diagnose
-description: Use for bugs, failing tests, flaky CI, production-like symptoms, or unclear root cause. Applies systematic investigation before fixes, captures evidence, then routes into recipe-task or recipe-plan. NOT for straightforward planned implementation.
+description: Use as the workflow recipe when the user asks to diagnose, root-cause, reproduce, or isolate a bug/failing test/flaky CI/production-like symptom before fixing it. Sequences bug-investigation plus evidence capture, then routes into recipe-task or recipe-plan. NOT for straightforward planned implementation.
 harness:
   tier: shared
   family: process
