@@ -70,3 +70,24 @@ reviewable evidence of behavioral impact.
 - Adherence: append to `adherence-cases.json`. Assert observable artifacts
   (exact gate lines, waiver phrases), not vibes; keep `must` patterns anchored
   to text the instructions literally mandate.
+
+## Workflow Recipe Evals
+
+Workflow changes require eval updates in the same change set. A new recipe,
+agent trigger, handoff rule, safety stop, or quality gate is not shippable on
+documentation alone.
+
+- **Recipe routing cases** live in `routing-cases.json`. They prove the model
+  selects the correct `recipe-*` entry point for task, design, plan, build,
+  review, fullstack implementation, diagnosis, reverse engineering, and
+  integration-test prompts.
+- **Recipe adherence cases** live in `adherence-cases.json`. They prove recipes
+  do not override P0 safety, implementation approval stops, missing-prerequisite
+  stops, design-sync requirements, or quality-runner blocked states.
+- **Mutation seeds** in `scripts/mutation-test.mjs` deliberately weaken recipe
+  safety text, design-sync requirements, approval stops, and quality-runner
+  blocking language. The suite must kill those mutants before release.
+
+Target rule: every workflow behavior change must update deterministic harness
+checks plus the relevant live eval cases, or explicitly document why the change
+does not affect routing, adherence, or mutation coverage.

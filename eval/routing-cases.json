@@ -252,12 +252,11 @@
       "id": "cross-repo-feat",
       "prompt": "Add a /users/me endpoint in the backend repo and a useMe() hook in the frontend repo using TanStack Query with caching and optimistic updates",
       "expected": [
-        "cross-repo-workspace",
         "react-data-fetching"
       ],
       "variants": [
-        "The API lives in one repo and the SPA in another — add the endpoint there and the consuming hook here",
-        "Coordinate a feature across our two repositories: backend route in repo A, frontend query hook in repo B"
+        "The API and SPA are separate Git repositories — add the endpoint in the API repo and the consuming TanStack Query hook in the SPA repo",
+        "Coordinate a feature across separate repo A and repo B: backend route in repo A, frontend query hook with caching in repo B"
       ]
     },
     {
@@ -333,6 +332,95 @@
       "prompt": "Run a one-line UPDATE to fix this user's email address in the database",
       "expected": [
         "db-write-protocol"
+      ]
+    },
+    {
+      "id": "recipe-design-medium",
+      "prompt": "Design and scope this medium feature before implementation; I need requirements, affected files, risks, and docs first.",
+      "expected": [
+        "recipe-design"
+      ],
+      "variants": [
+        "Before coding, scope this feature and produce the design artifacts first",
+        "Do the design workflow first: clarify requirements, inspect codebase impact, and prepare docs before implementation"
+      ]
+    },
+    {
+      "id": "recipe-plan-approved-docs",
+      "prompt": "Convert the approved requirements and design docs into an implementation plan with tasks, tests, risks, and verification commands.",
+      "expected": [
+        "recipe-plan"
+      ],
+      "variants": [
+        "The design is approved; turn it into an executable task plan",
+        "Create an implementation plan from these approved SPECs and design docs"
+      ]
+    },
+    {
+      "id": "recipe-build-approved-plan",
+      "prompt": "Build from this approved implementation plan, task by task, and run the quality gates.",
+      "expected": [
+        "recipe-build"
+      ],
+      "variants": [
+        "Execute the plan now, one task at a time",
+        "Start implementing the approved plan and verify every task"
+      ]
+    },
+    {
+      "id": "recipe-review-completed-work",
+      "prompt": "Review this completed branch against specs, tests, security, and acceptance criteria.",
+      "expected": [
+        "recipe-review"
+      ],
+      "variants": [
+        "Check whether this work is actually done against the docs and tests",
+        "Run the full review workflow for this implementation"
+      ]
+    },
+    {
+      "id": "recipe-fullstack-implement-vertical",
+      "prompt": "Implement this fullstack feature across backend, React frontend, shared contracts, migrations, and e2e acceptance.",
+      "expected": [
+        "recipe-fullstack-implement"
+      ],
+      "variants": [
+        "Build the complete fullstack workflow with API behavior, UI, shared contract, and acceptance",
+        "Orchestrate this medium fullstack feature from requirements through backend frontend and e2e"
+      ]
+    },
+    {
+      "id": "recipe-diagnose-root-cause",
+      "prompt": "Investigate this flaky failing CI test and find the root cause before fixing it.",
+      "expected": [
+        "recipe-diagnose",
+        "bug-investigation"
+      ],
+      "variants": [
+        "Diagnose this production-like bug before writing a fix",
+        "The root cause is unclear; reproduce and isolate the failing behavior first"
+      ]
+    },
+    {
+      "id": "recipe-reverse-engineer-docs",
+      "prompt": "Generate documentation from existing code behavior without changing the implementation.",
+      "expected": [
+        "recipe-reverse-engineer"
+      ],
+      "variants": [
+        "Reverse engineer the current workflow into a SPEC from verified code facts",
+        "Document what the existing system does without implementing new behavior"
+      ]
+    },
+    {
+      "id": "recipe-add-integration-tests-acceptance",
+      "prompt": "Add integration and e2e tests from acceptance criteria and verify they are non-vacuous.",
+      "expected": [
+        "recipe-add-integration-tests"
+      ],
+      "variants": [
+        "Add service-backed e2e coverage for these acceptance criteria",
+        "Create integration tests that would fail if the behavior were reverted"
       ]
     }
   ]

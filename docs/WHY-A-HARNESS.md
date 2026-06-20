@@ -41,11 +41,11 @@ installable artifact:
 flowchart LR
     subgraph BEFORE["Guides — steer BEFORE the agent acts"]
         I["Operating profile<br/>(priority-ordered rules,<br/>safety gates first)"]
-        S["44 skills<br/>(stack conventions,<br/>TDD, security, a11y)"]
+        S["53 skills<br/>(stack conventions,<br/>recipes, TDD,<br/>security, a11y)"]
     end
     A["Agent does the work"]
     subgraph AFTER["Sensors — catch problems AFTER"]
-        R["7 independent review agents<br/>(design · coverage · security ·<br/>specs · live acceptance)"]
+        R["12 bounded agents<br/>(planning · design · quality ·<br/>security · specs · live acceptance)"]
     end
     G["Deterministic gates<br/>CI · pre-commit · permission rules<br/>(catch what advice missed)"]
     M["Measurement<br/>evals · baselines · history<br/>(proof it all still works)"]

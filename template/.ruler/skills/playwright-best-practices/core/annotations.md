@@ -15,7 +15,7 @@
 
 ```typescript
 // Skip unconditionally
-test.skip("feature not implemented", async ({ page }) => {
+test.skip("feature pending implementation", async ({ page }) => {
   // This test won't run
 });
 

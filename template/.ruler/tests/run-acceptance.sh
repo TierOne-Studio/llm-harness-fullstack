@@ -51,6 +51,8 @@ SKILL_LIST="async-error-handling bug-investigation code-simplifier cross-repo-wo
 cyclomatic-complexity decision-rules design-review documentation-and-adrs \
 failure-mode-analysis git-workflow js-performance-patterns meta-skill-hygiene plan-mode \
 pushback-templates quality-gates repo-conventions rlm-explore spec-workflow tdd-workflow typescript-advanced-types \
+recipe-task recipe-design recipe-plan recipe-build recipe-review \
+recipe-fullstack-implement recipe-diagnose recipe-reverse-engineer recipe-add-integration-tests \
 \
 accessibility ai-ui-patterns bundle-size frontend-security playwright-best-practices \
 react-2026 react-data-fetching react-design-patterns react-forms react-patterns \
@@ -60,7 +62,7 @@ shadcn tailwind-v4-shadcn vite vitest \
 database-transactions db-write-protocol nestjs-best-practices nestjs-clean-architecture \
 nestjs-patterns nodejs-best-practices"
 
-AGENT_LIST="architect-reviewer code-reviewer qa-validator security-reviewer lessons-curator acceptance-verifier spec-steward"
+AGENT_LIST="architect-reviewer code-reviewer qa-validator security-reviewer lessons-curator acceptance-verifier spec-steward requirements-analyzer codebase-analyzer document-reviewer design-sync quality-runner"
 
 # ---------------------------------------------------------------------------
 echo "=== T1: Structure — instructions, ruler config, every skill + agent present ==="
@@ -186,6 +188,19 @@ for s in tdd-workflow design-review plan-mode repo-conventions react-patterns \
     "grep -q '$s' '$INSTRUCTIONS' && test -d '$SKILLS/$s'"
 done
 
+echo
+echo "=== T8b: Workflow recipe skills — first-class entry points exist and stay measured ==="
+for s in recipe-task recipe-design recipe-plan recipe-build recipe-review \
+         recipe-fullstack-implement recipe-diagnose recipe-reverse-engineer \
+         recipe-add-integration-tests; do
+  assert_true "T8b: instructions.md references '$s' AND its skill dir exists" \
+    "grep -q '$s' '$INSTRUCTIONS' && test -d '$SKILLS/$s'"
+  assert_true "T8b: recipe '$s' frontmatter has process family" \
+    "grep -q 'family: process' '$SKILLS/$s/SKILL.md'"
+  assert_true "T8b: recipe '$s' states P0 remains dominant" \
+    "grep -qiE 'P0|Safety|approval' '$SKILLS/$s/SKILL.md'"
+done
+
 # ---------------------------------------------------------------------------
 echo
 echo "=== T9: No stray dev artifacts in the shipped template ==="
@@ -201,6 +216,23 @@ for a in $AGENT_LIST; do
   assert_true "T10: '$a' has NO Edit (read-only sensor)" "! agent_has_tool '$AGENTS/$a.md' Edit"
   assert_true "T10: '$a' has NO Write (read-only sensor)" "! agent_has_tool '$AGENTS/$a.md' Write"
 done
+
+echo
+echo "=== T10b: Planning/documentation agents are read-only ==="
+for a in requirements-analyzer codebase-analyzer document-reviewer; do
+  assert_true "T10b: '$a' has NO Edit" "! agent_has_tool '$AGENTS/$a.md' Edit"
+  assert_true "T10b: '$a' has NO Write" "! agent_has_tool '$AGENTS/$a.md' Write"
+  assert_true "T10b: '$a' requires JSON or structured Markdown output" \
+    "grep -qiE 'JSON|structured|Output format' '$AGENTS/$a.md'"
+done
+assert_true "T10b: design-sync requires JSON or structured Markdown output" \
+  "grep -qiE 'JSON|structured|Output format' '$AGENTS/design-sync.md'"
+assert_true "T10b: design-sync has NO Edit/Write" \
+  "! agent_has_tool '$AGENTS/design-sync.md' Edit && ! agent_has_tool '$AGENTS/design-sync.md' Write"
+assert_true "T10b: quality-runner requires JSON or structured Markdown output" \
+  "grep -qiE 'JSON|structured|Output format' '$AGENTS/quality-runner.md'"
+assert_true "T10b: quality-runner has Bash but no Edit/Write" \
+  "agent_has_tool '$AGENTS/quality-runner.md' Bash && ! agent_has_tool '$AGENTS/quality-runner.md' Edit && ! agent_has_tool '$AGENTS/quality-runner.md' Write"
 
 # ---------------------------------------------------------------------------
 echo

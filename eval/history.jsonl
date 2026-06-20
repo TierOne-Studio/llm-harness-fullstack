@@ -10,3 +10,8 @@
 {"ts":"2026-06-12T23:30:10.169Z","commit":"c3cea8a","kind":"mutation","mutations":6,"killed":6,"killRate":1,"survivors":[]}
 {"ts":"2026-06-12T23:49:22.125Z","commit":"c3cea8a","kind":"adherence","model":"claude-haiku-4-5-20251001","backend":"cli","cases":28,"repeats":3,"passRate":0.893,"categories":{"safety":0.786,"identity":1,"ceremony":1,"routing":1,"contract":1}}
 {"ts":"2026-06-13T00:18:46.713Z","commit":"c3cea8a","kind":"adherence","model":"claude-sonnet-4-6","backend":"cli","cases":28,"repeats":3,"passRate":0.929,"categories":{"safety":0.857,"identity":1,"ceremony":1,"routing":1,"contract":1}}
+{"ts":"2026-06-19T18:54:13.066Z","commit":"a79c53d","kind":"mutation","mutations":7,"killed":7,"killRate":1,"survivors":[]}
+{"ts":"2026-06-19T23:33:02.163Z","commit":"49265ba","kind":"routing","model":"claude-haiku-4-5-20251001","backend":"cli","cases":51,"calls":87,"meanRecall":1,"falsePositiveRate":0.391,"meanPrecision":0.836,"perfectRecallRate":1,"paraphraseStability":1}
+{"ts":"2026-06-20T02:34:46.509Z","commit":"49265ba","kind":"adherence","model":"claude-haiku-4-5-20251001","backend":"cli","cases":33,"repeats":3,"passRate":1,"categories":{"safety":1,"identity":1,"ceremony":1,"routing":1,"contract":1}}
+{"ts":"2026-06-20T02:55:26.147Z","commit":"49265ba","kind":"mutation","mutations":7,"killed":7,"killRate":1,"survivors":[]}
+{"ts":"2026-06-20T03:17:44.349Z","commit":"473b710","kind":"mutation","mutations":7,"killed":7,"killRate":1,"survivors":[]}

@@ -2,7 +2,7 @@
 
 Companion to [ARCHITECTURE.md](ARCHITECTURE.md) §3. That document gives the
 bird's-eye view of the three planes; this one zooms all the way in on the
-**runtime**: who the main agent and the seven subagents are, what each is
+**runtime**: who the main agent and the twelve subagents are, what each is
 responsible for, how they communicate (with the actual message shapes), and how
 skills mechanically work as the shared knowledge layer — finished with a worked
 end-to-end example.
@@ -14,10 +14,10 @@ Everything here is sourced from the shipped payload:
 
 ---
 
-## 1. Topology — a hub with seven spokes
+## 1. Topology — a hub with twelve spokes
 
 The main agent is the **orchestrator and the only writer of application code**.
-The seven subagents are **one-shot verifiers**: each is spawned for a single
+The twelve subagents are **one-shot specialists**: each is spawned for a single
 review, runs in a **fresh context** (it does not see the conversation, the main
 agent's reasoning, or its confidence), produces one structured Markdown report,
 and terminates. Subagents never talk to each other — the main agent is the bus
@@ -31,10 +31,15 @@ flowchart TB
     U <-->|"requests · clarifications ·<br/>P0 approvals"| M
 
     subgraph PRE["PRE-implementation spokes"]
+        RA["requirements-analyzer<br/>read-only"]
+        CA["codebase-analyzer<br/>read-only"]
+        DR["document-reviewer<br/>read-only"]
+        DS["design-sync<br/>read-only"]
         SS1["spec-steward (PRE)<br/>writes docs/specs/** only"]
         AR["architect-reviewer<br/>read-only"]
     end
     subgraph POST["POST-implementation spokes"]
+        QR["quality-runner<br/>read + run quality gates"]
         CR["code-reviewer<br/>read + run tests"]
         QA["qa-validator<br/>read + run tests"]
         SEC["security-reviewer<br/>read + static checks"]
@@ -43,8 +48,13 @@ flowchart TB
     end
     LC["lessons-curator<br/>read-only proposer"]
 
+    M -->|"request text"| RA -->|"scope/risk/artifacts JSON"| M
+    M -->|"scope JSON + files"| CA -->|"codebase facts JSON"| M
+    M -->|"PRD/SPEC/ADR/plan"| DR -->|"document readiness JSON"| M
+    M -->|"cross-tier docs/contracts"| DS -->|"sync matrix JSON"| M
     M -->|"spawn prompt:<br/>plan + scope"| AR -->|"APPROVE_PLAN /<br/>REVISE_PLAN / BLOCK"| M
     M -->|"spawn prompt:<br/>requirements text"| SS1 -->|"NEEDS-INPUT /<br/>UPDATED + SPEC"| M
+    M -->|"changed files + plan task"| QR -->|"quality verdict JSON"| M
     M -->|"spawn prompt:<br/>the diff"| CR -->|"APPROVE / CHANGES<br/>REQUESTED / BLOCK"| M
     M -->|"the diff"| QA -->|"coverage gaps /<br/>BLOCK"| M
     M -->|"the diff"| SEC -->|"findings /<br/>BLOCK"| M
@@ -176,16 +186,54 @@ The main agent also owns **escalation**: the moment a fast-path change stops
 qualifying it must emit `Path: full — escalated: <reason>` and switch chains
 mid-task (P5.7).
 
-### 4.2 The seven subagents — one concern each
+### 4.1.1 Handoff payload
 
-| | architect&#8209;reviewer | spec&#8209;steward | code&#8209;reviewer | qa&#8209;validator | security&#8209;reviewer | acceptance&#8209;verifier | lessons&#8209;curator |
-|---|---|---|---|---|---|---|---|
-| **Phase** | PRE | PRE + POST | POST | POST (∥ code-reviewer) | POST | POST, always LAST | on correction |
-| **Input it receives** | the plan | requirements text (PRE) / shipped diff (POST) | the diff | the diff | the diff | spec criteria + the green suite | correction text, verbatim |
-| **Owns** | plan-level design & risk (10× cost asymmetry) | `docs/specs/**` truth; ambiguity gate | design principles | coverage, edge cases, a11y, docs, compat | OWASP + SPA + NestJS security surfaces | EXECUTED acceptance proof, non-vacuity | one correction → one system change |
-| **Core rubric (skill)** | `design-review` applied to the *plan*; `repo-conventions` | `spec-workflow` (readiness rubric) | `design-review` MUSTs; `repo-conventions` per-tier tables; P3.5 conflict rule | `failure-mode-analysis` 8 categories; test-quality rubric | OWASP top-10; `frontend-security`; three-tier boundary system | `tdd-workflow` rubric item 2 at the acceptance layer | `meta-skill-hygiene`; surveys skills/agents/CLAUDE.md |
-| **Verdicts** | APPROVE_PLAN / REVISE_PLAN / BLOCK | NEEDS-INPUT / SYNCED / UPDATED / BLOCK **(binding)** | APPROVE / CHANGES REQUESTED / BLOCK | findings / BLOCK | findings / BLOCK | ACCEPTED / GAPS / BLOCK **(binding on "done")** | a proposal, approval-gated |
-| **May write** | nothing | `docs/specs/**` ONLY | nothing (Bash = run tests) | nothing | nothing | nothing (Bash = run live suites) | nothing |
+Every agent handoff should be concrete enough for a fresh context to verify the
+work without trusting the main agent's summary.
+
+| Field | Required content |
+|---|---|
+| `request` | Original user request or the narrowed task statement. |
+| `affected files` | Files, directories, routes, symbols, or docs believed to be in scope. |
+| `changed files` | Diff files when implementation already happened; empty for PRE analysis. |
+| `plan path` | Work plan path when one exists, or `none`. |
+| `spec/design paths` | SPECs, ADRs, PRDs, design docs, or reverse docs the agent must read. |
+| `acceptance criteria` | Numbered criteria or the exact source document section. |
+| `commands run` | Commands already executed, with pass/fail status; never just "tests passed". |
+| `risk surfaces` | Auth, RBAC, sessions, PII, payments, migrations, public API, dependency, deploy, or `none`. |
+| `prior verdicts` | Earlier agent verdicts and unresolved findings, if any. |
+
+### 4.2 The twelve subagents — one concern each
+
+#### Planning agents
+
+These PRE agents are read-only sensors. They improve separation of
+concerns before implementation starts; they do not write docs, choose the final
+architecture, or edit code.
+
+| | requirements&#8209;analyzer | codebase&#8209;analyzer | document&#8209;reviewer | design&#8209;sync |
+|---|---|---|---|---|
+| **Phase** | PRE-design | PRE-design / PRE-plan | PRE-implementation | PRE + POST for cross-tier behavior |
+| **Input it receives** | request text, nearby docs | request or requirements JSON, affected files | PRD, SPEC, ADR, design doc, or work plan | backend/frontend/shared-contract docs and acceptance criteria |
+| **Owns** | purpose, scale, affected layers, risks, artifact needs, questions | objective existing-code facts: interfaces, callers, constraints, tests, quality mechanisms | clarity, completeness, consistency, testability, implementation readiness | cross-tier agreement on behavior, data shape, errors, auth, migrations, UI states, and proving layer |
+| **Output** | structured JSON | structured JSON | structured JSON verdict | sync matrix JSON |
+| **May write** | nothing | nothing | nothing | nothing |
+
+#### Sync, quality, review, and lifecycle agents
+
+`design-sync` verifies cross-tier semantic agreement before and after
+implementation. `quality-runner` runs mechanical verification and looks for
+stubbed, focused, skipped, or non-executed checks before the review verdicts are
+aggregated. Both are read-only.
+
+| | architect&#8209;reviewer | spec&#8209;steward | quality&#8209;runner | code&#8209;reviewer | qa&#8209;validator | security&#8209;reviewer | acceptance&#8209;verifier | lessons&#8209;curator |
+|---|---|---|---|---|---|---|---|---|
+| **Phase** | PRE | PRE + POST | POST before review aggregation | POST | POST (parallel with code-reviewer) | POST | POST, always LAST | on correction |
+| **Input it receives** | the plan | requirements text (PRE) / shipped diff (POST) | changed files and plan task | the diff | the diff | the diff | spec criteria + the green suite | correction text, verbatim |
+| **Owns** | plan-level design & risk (10x cost asymmetry) | `docs/specs/**` truth; ambiguity gate | mechanical commands, stubs, skipped/focused tests, failure class | design principles | coverage, edge cases, a11y, docs, compat | OWASP + SPA + NestJS security surfaces | EXECUTED acceptance proof, non-vacuity | one correction -> one system change |
+| **Core rubric (skill)** | `design-review` applied to the *plan*; `repo-conventions` | `spec-workflow` (readiness rubric) | package scripts, CI, harness checks, evals, and smell search | `design-review` MUSTs; `repo-conventions` per-tier tables; P3.5 conflict rule | `failure-mode-analysis` 8 categories; test-quality rubric | OWASP top-10; `frontend-security`; three-tier boundary system | `tdd-workflow` rubric item 2 at the acceptance layer | `meta-skill-hygiene`; surveys skills/agents/CLAUDE.md |
+| **Verdicts** | APPROVE_PLAN / REVISE_PLAN / BLOCK | NEEDS-INPUT / SYNCED / UPDATED / BLOCK **(binding)** | approved / findings / blocked | APPROVE / CHANGES REQUESTED / BLOCK | findings / BLOCK | findings / BLOCK | ACCEPTED / GAPS / BLOCK **(binding on "done")** | a proposal, approval-gated |
+| **May write** | nothing | `docs/specs/**` ONLY | nothing (Bash = run checks) | nothing (Bash = run tests) | nothing | nothing | nothing (Bash = run live suites) | nothing |
 
 Distinguishing details per agent, beyond the table:
 
@@ -351,14 +399,14 @@ sequenceDiagram
 
     rect rgb(235, 242, 255)
         note over M,AR: PRE
-        M->>SS: spawn PRE — feature description + where specs live
+        M->>SS: spawn PRE — request=cancel pending invites;<br/>affected files=contracts/api/web/e2e; changed files=none;<br/>plan path=none; spec/design paths=existing member docs;<br/>acceptance criteria=pending-only/admin/audit; commands run=none;<br/>risk surfaces=RBAC, public API; prior verdicts=none
         Note over SS: scans for ambiguity per spec-workflow rubric
         SS-->>M: NEEDS-INPUT — "1· Can an admin cancel an<br/>ALREADY-ACCEPTED invite? 2· Should the invitee<br/>be notified? 3· Audit-log entry required?"
         M->>U: relays the three questions
         U-->>M: "pending only · no email · yes, audit log"
         M->>SS: re-spawn with answers
         SS-->>M: UPDATED — SPEC-041-ui + SPEC-042-contract<br/>created, cross-linked, 5 acceptance criteria
-        M->>AR: spawn — plan (7 files, contract + RBAC ⇒ triggered)
+        M->>AR: spawn — request=approve cancel-invite plan;<br/>affected files=7 planned files; changed files=none;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=doc review pass;<br/>risk surfaces=RBAC, shared contract; prior verdicts=spec-steward UPDATED
         Note over AR: reads plan + 1 level of context;<br/>design-review MUSTs vs the PLAN
         AR-->>M: REVISE_PLAN — [HIGH] plan deletes the invite row;<br/>SPEC says audit log ⇒ soft-state transition +<br/>audit entry, single transaction
         M->>AR: revised plan (status flip + audit write, transactional)
@@ -373,11 +421,11 @@ sequenceDiagram
     rect rgb(255, 244, 235)
         note over M,AV: POST — fresh contexts, parallel
         par
-            M->>CR: spawn — the 9-file diff
+            M->>CR: spawn — request=review implemented diff;<br/>affected files=contracts/api/web/e2e; changed files=9-file diff;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=api/web/e2e green;<br/>risk surfaces=RBAC, public API; prior verdicts=architect APPROVE_PLAN
         and
-            M->>QA: spawn — the 9-file diff
+            M->>QA: spawn — request=validate coverage and edge cases;<br/>affected files=contracts/api/web/e2e; changed files=9-file diff;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=api/web/e2e green;<br/>risk surfaces=async race, RBAC; prior verdicts=architect APPROVE_PLAN
         and
-            M->>SEC: spawn — the 9-file diff (RBAC ⇒ triggered)
+            M->>SEC: spawn — request=security review RBAC diff;<br/>affected files=auth guard, invite service, UI action;<br/>changed files=9-file diff; plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=admin-only cancellation; commands run=api/web/e2e green;<br/>risk surfaces=RBAC, sessions, public API; prior verdicts=architect APPROVE_PLAN
         end
         Note over CR: step 0: re-reads CLAUDE.md, design-review,<br/>repo-conventions, nestjs-*, react-* …<br/>step 2: runs both tier suites — green
         CR-->>M: CHANGES REQUESTED — [MED] invite.service.ts:58<br/>throws bare Error, repo-conventions says<br/>ConflictException; SSoT pass-with-note
@@ -394,9 +442,9 @@ sequenceDiagram
         CR-->>M: APPROVE (0.88)
         QA-->>M: green (0.84)
         SEC-->>M: green (0.90)
-        M->>SS: spawn POST — reconcile SPEC ↔ diff
+        M->>SS: spawn POST — request=reconcile SPEC ↔ shipped diff;<br/>affected files=contracts/api/web/e2e; changed files=final 9-file diff;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=api/web/e2e green;<br/>risk surfaces=RBAC, shared contract; prior verdicts=CR/QA/SEC green
         SS-->>M: UPDATED — AC-to-test links + change log written;<br/>reconciliation matrix all pass
-        M->>AV: spawn LAST — SPEC criteria + suites
+        M->>AV: spawn LAST — request=prove acceptance non-vacuity;<br/>affected files=contracts/api/web/e2e; changed files=final diff;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=Jest/Vitest/Playwright green;<br/>risk surfaces=RBAC, public API; prior verdicts=spec-steward UPDATED, reviewers green
         Note over AV: RUNS Playwright + Jest vs real Postgres;<br/>builds the criteria matrix
         AV-->>M: GAPS — criterion 4 "non-admin sees no Cancel<br/>button" DRIFTED: test asserts the button is disabled,<br/>spec says absent — surface-fidelity failure
         M->>M: fixes the test to assert absence; suite green

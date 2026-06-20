@@ -1,6 +1,6 @@
 ---
 name: rlm-explore
-description: Use when working in a large or unfamiliar codebase, or when the user provides large/dense context (logs, multiple docs, full repos, long error output). NOT for small focused changes where the relevant code is already obvious, factual single-file questions, or trivial bug fixes.
+description: Use when working in a large or unfamiliar codebase, when onboarding to understand a feature/module architecture, or when the user provides large/dense context (logs, multiple docs, full repos, long error output). NOT for small focused changes where the relevant code is already obvious, factual single-file questions, or trivial bug fixes.
 harness:
   tier: shared
   family: process

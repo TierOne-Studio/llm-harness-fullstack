@@ -85,7 +85,7 @@ The waiver-phrase pattern and its forbidden non-waivers are canonical in `tdd-wo
 5. **Create/update the SPEC** (via `spec-steward`) from `_template.md`. It must pass the readiness
    rubric before leaving `Draft`: goal + user/caller; in- and out-of-scope; every AC falsifiable +
    mapped to a planned test; data model fully typed; RBAC scopes stated; every named edge/error
-   case has defined behavior; **no `TBD`/placeholder in a load-bearing section**. If a `contract`
+   case has defined behavior; **no unfinished placeholder in a load-bearing section**. If a `contract`
    entity changes, a migration ships in the same change.
 6. **Load-bearing check** — if the change makes a decision that would force updating 3+
    skills/docs/files, also write/cite an **ADR** (`documentation-and-adrs`).
@@ -261,7 +261,7 @@ restate rationale. `plan-mode` is ephemeral execution sequencing, persisted *int
 1. **Search first** (this index + a grep of `docs/specs/`). One SPEC per feature × layer — never two.
 2. **Resolve ambiguity** — ask the user any material clarifying questions *before* writing (see `spec-workflow`).
 3. `cp docs/specs/_template.md docs/specs/SPEC-NNN-<short-kebab-title>.md` where `NNN` is the next free number; set `layer`.
-4. Fill it in. Acceptance criteria must be falsifiable and each map to a test. No `TBD`/placeholder in a load-bearing section before it leaves `Draft`. If a `contract` entity changes, a migration ships in the same change.
+4. Fill it in. Acceptance criteria must be falsifiable and each map to a test. No unfinished placeholder in a load-bearing section before it leaves `Draft`. If a `contract` entity changes, a migration ships in the same change.
 5. If the change makes a load-bearing decision, also write/cite an ADR (`documentation-and-adrs`).
 6. Add a row to the index above.
 7. For a cross-tier feature, create the sibling-layer spec too, set `counterpart_spec` on both, and write a coordination doc.
