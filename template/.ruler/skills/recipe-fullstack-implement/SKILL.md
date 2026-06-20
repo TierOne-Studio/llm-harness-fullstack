@@ -9,6 +9,18 @@ harness:
 
 # Recipe: Fullstack Implement
 
+## Purpose
+
+Coordinate medium or large changes that span backend, frontend, shared
+contracts, migrations, API behavior, or E2E acceptance.
+
+## Non-Negotiables
+
+- P0 safety and approval gates override this recipe.
+- Do not skip requirements, codebase facts, design sync, planning, or approval.
+- Cross-tier behavior must stay synchronized before and after implementation.
+- Acceptance must be proven at the named user/API surface, not only by unit tests.
+
 ## Procedure
 
 1. Run `requirements-analyzer`.
@@ -22,3 +34,9 @@ harness:
 9. Run `quality-runner`, P4 reviewers, `spec-steward` POST, `design-sync` POST, and `acceptance-verifier`.
 
 P0 remains dominant throughout the recipe.
+
+## Output
+
+Return linked requirements/design artifacts, the implementation plan path,
+design-sync verdicts, quality/reviewer verdicts, acceptance evidence, and open
+risks.

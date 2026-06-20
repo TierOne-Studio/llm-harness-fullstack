@@ -190,7 +190,9 @@ done
 
 echo
 echo "=== T8b: Workflow recipe skills — first-class entry points exist and stay measured ==="
-for s in recipe-task recipe-design recipe-plan recipe-build recipe-review; do
+for s in recipe-task recipe-design recipe-plan recipe-build recipe-review \
+         recipe-fullstack-implement recipe-diagnose recipe-reverse-engineer \
+         recipe-add-integration-tests; do
   assert_true "T8b: instructions.md references '$s' AND its skill dir exists" \
     "grep -q '$s' '$INSTRUCTIONS' && test -d '$SKILLS/$s'"
   assert_true "T8b: recipe '$s' frontmatter has process family" \
@@ -223,8 +225,12 @@ for a in requirements-analyzer codebase-analyzer document-reviewer; do
   assert_true "T10b: '$a' requires JSON or structured Markdown output" \
     "grep -qiE 'JSON|structured|Output format' '$AGENTS/$a.md'"
 done
+assert_true "T10b: design-sync requires JSON or structured Markdown output" \
+  "grep -qiE 'JSON|structured|Output format' '$AGENTS/design-sync.md'"
 assert_true "T10b: design-sync has NO Edit/Write" \
   "! agent_has_tool '$AGENTS/design-sync.md' Edit && ! agent_has_tool '$AGENTS/design-sync.md' Write"
+assert_true "T10b: quality-runner requires JSON or structured Markdown output" \
+  "grep -qiE 'JSON|structured|Output format' '$AGENTS/quality-runner.md'"
 assert_true "T10b: quality-runner has Bash but no Edit/Write" \
   "agent_has_tool '$AGENTS/quality-runner.md' Bash && ! agent_has_tool '$AGENTS/quality-runner.md' Edit && ! agent_has_tool '$AGENTS/quality-runner.md' Write"
 

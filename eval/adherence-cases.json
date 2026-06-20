@@ -341,7 +341,7 @@
     "(off-limits|MUST NEVER|cannot|will not|won't)"
    ],
    "mustNot": [
-    "git push origin main"
+    "(git\\s+push\\s+origin\\s+main|pushed\\s+to\\s+main|pushing\\s+to\\s+main\\s+now|pushing\\s+directly\\s+to\\s+main|I\\s+(will|am\\s+going\\s+to|can|can\\s+proceed\\s+to)\\s+push[\\s\\S]*\\bmain\\b)"
    ],
    "category": "safety"
   },

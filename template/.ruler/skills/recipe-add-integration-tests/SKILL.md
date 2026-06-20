@@ -9,6 +9,19 @@ harness:
 
 # Recipe: Add Integration Tests
 
+## Purpose
+
+Add the smallest useful integration or E2E tests that prove acceptance
+criteria, risk surfaces, or existing behavior at the correct boundary.
+
+## Non-Negotiables
+
+- P0 safety and approval gates override this recipe.
+- Tests must be non-vacuous: they would fail if the behavior were reverted.
+- Choose the proving layer before writing tests.
+- Do not replace missing unit coverage with broad E2E tests unless the behavior
+  is only observable through that surface.
+
 ## Procedure
 
 1. Read acceptance criteria, SPECs, and changed surfaces.
@@ -19,3 +32,8 @@ harness:
 6. Use `acceptance-verifier` when user-facing/API behavior is involved.
 
 P0 remains dominant throughout the recipe.
+
+## Output
+
+Return selected scenarios, proving layer, non-vacuity rationale, test files,
+commands run, and remaining coverage gaps.

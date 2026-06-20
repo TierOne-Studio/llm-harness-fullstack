@@ -399,14 +399,14 @@ sequenceDiagram
 
     rect rgb(235, 242, 255)
         note over M,AR: PRE
-        M->>SS: spawn PRE — feature description + where specs live
+        M->>SS: spawn PRE — request=cancel pending invites;<br/>affected files=contracts/api/web/e2e; changed files=none;<br/>plan path=none; spec/design paths=existing member docs;<br/>acceptance criteria=pending-only/admin/audit; commands run=none;<br/>risk surfaces=RBAC, public API; prior verdicts=none
         Note over SS: scans for ambiguity per spec-workflow rubric
         SS-->>M: NEEDS-INPUT — "1· Can an admin cancel an<br/>ALREADY-ACCEPTED invite? 2· Should the invitee<br/>be notified? 3· Audit-log entry required?"
         M->>U: relays the three questions
         U-->>M: "pending only · no email · yes, audit log"
         M->>SS: re-spawn with answers
         SS-->>M: UPDATED — SPEC-041-ui + SPEC-042-contract<br/>created, cross-linked, 5 acceptance criteria
-        M->>AR: spawn — plan (7 files, contract + RBAC ⇒ triggered)
+        M->>AR: spawn — request=approve cancel-invite plan;<br/>affected files=7 planned files; changed files=none;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=doc review pass;<br/>risk surfaces=RBAC, shared contract; prior verdicts=spec-steward UPDATED
         Note over AR: reads plan + 1 level of context;<br/>design-review MUSTs vs the PLAN
         AR-->>M: REVISE_PLAN — [HIGH] plan deletes the invite row;<br/>SPEC says audit log ⇒ soft-state transition +<br/>audit entry, single transaction
         M->>AR: revised plan (status flip + audit write, transactional)
@@ -421,11 +421,11 @@ sequenceDiagram
     rect rgb(255, 244, 235)
         note over M,AV: POST — fresh contexts, parallel
         par
-            M->>CR: spawn — the 9-file diff
+            M->>CR: spawn — request=review implemented diff;<br/>affected files=contracts/api/web/e2e; changed files=9-file diff;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=api/web/e2e green;<br/>risk surfaces=RBAC, public API; prior verdicts=architect APPROVE_PLAN
         and
-            M->>QA: spawn — the 9-file diff
+            M->>QA: spawn — request=validate coverage and edge cases;<br/>affected files=contracts/api/web/e2e; changed files=9-file diff;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=api/web/e2e green;<br/>risk surfaces=async race, RBAC; prior verdicts=architect APPROVE_PLAN
         and
-            M->>SEC: spawn — the 9-file diff (RBAC ⇒ triggered)
+            M->>SEC: spawn — request=security review RBAC diff;<br/>affected files=auth guard, invite service, UI action;<br/>changed files=9-file diff; plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=admin-only cancellation; commands run=api/web/e2e green;<br/>risk surfaces=RBAC, sessions, public API; prior verdicts=architect APPROVE_PLAN
         end
         Note over CR: step 0: re-reads CLAUDE.md, design-review,<br/>repo-conventions, nestjs-*, react-* …<br/>step 2: runs both tier suites — green
         CR-->>M: CHANGES REQUESTED — [MED] invite.service.ts:58<br/>throws bare Error, repo-conventions says<br/>ConflictException; SSoT pass-with-note
@@ -442,9 +442,9 @@ sequenceDiagram
         CR-->>M: APPROVE (0.88)
         QA-->>M: green (0.84)
         SEC-->>M: green (0.90)
-        M->>SS: spawn POST — reconcile SPEC ↔ diff
+        M->>SS: spawn POST — request=reconcile SPEC ↔ shipped diff;<br/>affected files=contracts/api/web/e2e; changed files=final 9-file diff;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=api/web/e2e green;<br/>risk surfaces=RBAC, shared contract; prior verdicts=CR/QA/SEC green
         SS-->>M: UPDATED — AC-to-test links + change log written;<br/>reconciliation matrix all pass
-        M->>AV: spawn LAST — SPEC criteria + suites
+        M->>AV: spawn LAST — request=prove acceptance non-vacuity;<br/>affected files=contracts/api/web/e2e; changed files=final diff;<br/>plan path=docs/superpowers/plans/cancel-invite.md;<br/>spec/design paths=SPEC-041-ui, SPEC-042-contract;<br/>acceptance criteria=5 SPEC criteria; commands run=Jest/Vitest/Playwright green;<br/>risk surfaces=RBAC, public API; prior verdicts=spec-steward UPDATED, reviewers green
         Note over AV: RUNS Playwright + Jest vs real Postgres;<br/>builds the criteria matrix
         AV-->>M: GAPS — criterion 4 "non-admin sees no Cancel<br/>button" DRIFTED: test asserts the button is disabled,<br/>spec says absent — surface-fidelity failure
         M->>M: fixes the test to assert absence; suite green

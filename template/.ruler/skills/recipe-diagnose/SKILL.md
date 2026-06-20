@@ -9,6 +9,18 @@ harness:
 
 # Recipe: Diagnose
 
+## Purpose
+
+Reproduce a symptom, isolate its root cause, and route the fix through the
+smallest appropriate implementation recipe.
+
+## Non-Negotiables
+
+- P0 safety and approval gates override this recipe.
+- Do not implement until root cause is confirmed or the reproduction blocker is explicit.
+- Preserve the regression test or evidence source that proves the symptom.
+- Stop and ask when reproduction is blocked by missing access, data, or environment.
+
 ## Procedure
 
 1. Load `bug-investigation` and `failure-mode-analysis`.
@@ -19,3 +31,9 @@ harness:
 6. Preserve the regression test as part of the fix.
 
 P0 remains dominant throughout the recipe.
+
+## Output
+
+Return the verified root cause, reproduction command or blocker, regression
+test/evidence path, fix route (`recipe-task` or `recipe-plan`), and commands
+already run.

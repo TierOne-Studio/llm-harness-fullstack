@@ -9,6 +9,18 @@ harness:
 
 # Recipe: Reverse Engineer
 
+## Purpose
+
+Generate PRD, SPEC, architecture, or workflow documentation from existing code
+without changing behavior.
+
+## Non-Negotiables
+
+- P0 safety and approval gates override this recipe.
+- Do not change application behavior.
+- Distinguish confirmed behavior from inferred behavior.
+- Run `document-reviewer` before treating the documentation as ready.
+
 ## Procedure
 
 1. Run `codebase-analyzer` on the target surface.
@@ -18,3 +30,8 @@ harness:
 5. Do not change application behavior.
 
 P0 remains dominant throughout the recipe.
+
+## Output
+
+Return the documentation paths, confirmed behavior evidence, inferred behavior
+notes, reviewer verdict, and remaining documentation gaps.
